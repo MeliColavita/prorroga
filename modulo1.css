@@ -1,68 +1,13 @@
-/* ============================================================
-   MODULO1.CSS — Capítulo 1 "Argentina hoy" — Emi — prefijo: em-
-   ============================================================
-   QUÉ HACE ESTE ARCHIVO: los estilos de la tarjeta del Capítulo 1 y
-   de sus 2 gráficos de barras. Todo lo
-   que tiene prefijo "em-" es PROPIO de este módulo; todo lo que
-   empieza con "ui-" es un componente COMPARTIDO (definido en
-   style.css) que se reutiliza tal cual, para no duplicar código ni
-   que la tarjeta de este módulo se vea distinta a la del módulo 3.
+/* MODULO1.CSS — Capítulo 1 "Argentina hoy" (Emi, prefijo em-): estilos de la tarjeta y de sus 2 gráficos de barras. */
 
-   Convención de nombres de este archivo:
-     .em-card         -> la tarjeta completa
-     .em-tabs/.em-tab -> las 2 pestañas de arriba
-     .em-panel        -> el contenedor donde se dibuja el gráfico activo
-     .em-chart-tipo/
-     .em-chart-edad   -> la fila de columnas de cada gráfico interactivo
-     .em-col          -> una columna (barra + valor + etiqueta)
-     .em-bar          -> la barra en sí (dentro de .em-col)
-     .em-guess-*       -> la zona de arrastre para "adivinar" (Casos por tipo)
-     .em-stack/.em-fly -> la pila "los otros 4 juntos" y sus clones voladores
-     .em-btn           -> "Probar de nuevo" / "Ver los otros 4 juntos" / "Ver por separado"
-     .em-prompt        -> la invitación a interactuar, con el punto que pulsa
-     .em-feedback      -> el mensaje de resultado (Casos por tipo)
-     .em-tipo-result   -> fila de "2 columnas" debajo de los botones
-                         (Casos por tipo): respuesta variable + datos fijos
-     .em-foot          -> fila al pie de la tarjeta (Casos por tipo Y
-                         Casos por edad): bajada + "Fuente"
-     .em-reveal-fade   -> oculta/muestra con opacity (no [hidden]) sin
-                         sacar del flujo (Casos por tipo): así la
-                         tarjeta no cambia de alto al revelar
-     .em-tip           -> el tooltip compartido, hover sobre cualquier barra
-     .em-stat*        -> los "datos sueltos" (número grande + etiqueta)
-     .em-caption      -> texto chico al pie (hoy sin uso en ningún
-                         gráfico puntual, queda por si hace falta)
-   ============================================================ */
-
-/* ============ TARJETA PRINCIPAL ============
-   Esta tarjeta NO define su propio tamaño/fondo/padding: en el HTML
-   lleva DOS clases, "ui-panel em-card" (ver index.html). ".ui-panel"
-   (compartida, en style.css) es la que pone el fondo semitransparente
-   con blur, el borde, el padding y el ancho -- así la tarjeta de este
-   módulo mide EXACTO lo mismo (100% del ancho de .main-col) que la
-   del módulo 3: las dos tarjetas ocupan siempre las columnas 1 y 2
-   del layout de 4 columnas del sitio (la vela vive en la 3ra, el menú
-   de capítulos en la 4ta -- eso lo resuelve .main-col en style.css,
-   compartido por los 3 capítulos).
-
-   ".em-card" entonces solo agrega los ajustes PUNTUALES de este
-   módulo que no le corresponden a ".ui-panel" en general. */
+/* TARJETA PRINCIPAL: lleva las clases "ui-panel em-card"; .ui-panel (style.css) pone fondo, borde, padding y ancho, y .em-card ajusta lo puntual. */
 .em-card {
   margin-bottom: 8px; /* un poco de aire antes del borde de .main-col */
 }
 
-/* El título/pregunta de arriba de la tarjeta ("¿Cuál es la dimensión
-   del cáncer de mama en Argentina?") usa la clase compartida
-   .ui-card-title (definida en style.css), NO una clase propia: así
-   el módulo 3 -- que tiene su propio título dentro de su tarjeta --
-   usa exactamente el mismo tamaño de letra sin que haya 2 reglas
-   CSS separadas que puedan desincronizarse con el tiempo. Por eso acá
-   no hay ninguna regla ".em-question": fue borrada a propósito. */
+/* El título de la tarjeta usa la clase compartida .ui-card-title (style.css) para verse igual que en el módulo 3. */
 
-/* ============ PESTAÑAS (.em-tabs / .em-tab) ============
-   Look propio, en forma de píldora (NO el rectángulo redondeado de
-   .ui-tab, la pestaña compartida que usa el módulo 3): acá van 3
-   botones en una sola fila y con ese otro diseño se leen mejor. */
+/* PESTAÑAS (.em-tabs / .em-tab): botones en forma de píldora para elegir el gráfico. */
 .em-tabs {
   display: flex;
   flex-wrap: nowrap; /* SIEMPRE en un solo renglón, nunca se pasan a una 2da fila */
@@ -70,16 +15,9 @@
   gap: 6px;
   margin-bottom: var(
     --ui-gap-titulo
-  ); /* antes 14px: mismo espacio que título → pestañas (variable compartida, ver style.css) */
+  ); /* mismo espacio que título → pestañas (variable compartida, ver style.css) */
 }
-/* Cada botón de pestaña individual.
-     flex:0 1 auto      -> ocupa SOLO el ancho que su propio texto
-                            necesita (no un tercio repartido entre los
-                            3 por igual)
-     white-space:nowrap -> ese texto nunca se corta en 2 líneas -- es
-                            lo que evita que "Casos por tipo de cáncer"
-                            (el texto más largo) se parta, sin tener
-                            que forzar una letra más chica */
+/* Cada botón de pestaña ocupa solo el ancho de su texto y nunca lo parte en 2 líneas. */
 .em-tab {
   font-family: var(--sans);
   font-size: 0.8rem; /* mismo tamaño que .ui-tab compartida, para que no se note la diferencia */
@@ -95,19 +33,12 @@
   white-space: nowrap;
   text-align: center;
 }
-/* Al pasar el mouse por una pestaña NO activa: el borde y el texto se
-   aclaran un poco, como señal de "esto es clickeable". */
+/* Al pasar el mouse por una pestaña NO activa: el borde y el texto se aclaran un poco, como señal de "esto es clickeable". */
 .em-tab:hover {
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--text);
 }
-/* Pestaña activa: el JS (modulo1.js) le agrega/saca la clase "active"
-   al clickear -- a diferencia de .ui-tab, que usa el ATRIBUTO
-   aria-selected en vez de una clase (dos mecanismos distintos, cada
-   módulo con el suyo, porque el diseño visual también es distinto).
-   Se llena de rosa fuerte, el texto pasa a un bordó oscuro para que
-   siga siendo legible sobre el rosa, y una sombra rosada le da un
-   efecto de brillo/elevación. */
+/* Pestaña activa: el JS (modulo1.js) le agrega/saca la clase "active" al clickear. */
 .em-tab.active {
   background: var(--rose-strong);
   border-color: var(--rose-strong);
@@ -115,21 +46,11 @@
   box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
 }
 
-/* ============ CONTENEDOR DEL GRÁFICO ============
-   .em-panel = el <div id="em-chart-panel"> vacío (ver index.html)
-   donde modulo1.js dibuja, cada vez, el gráfico que le toca a la
-   pestaña activa (lo primero que hace cada función de dibujo es
-   vaciar este contenedor con innerHTML = ''). */
+/* CONTENEDOR DEL GRÁFICO: .em-panel es el div vacío donde modulo1.js dibuja el gráfico de la pestaña activa. */
 .em-panel {
   width: 100%;
 }
-/* Animación de entrada al cambiar de pestaña (.em-tab): un fundido
-   corto + un pequeño desliz hacia arriba -- misma animación que ya
-   usa el módulo 2 al cambiar entre "Por provincia"/"Por año" (ver
-   @keyframes brFadeIn / .br-fade-in en modulo2.css), acá con el
-   prefijo em- de este archivo. modulo1.js se la agrega/saca (ver
-   animarEntrada()) cada vez que se clickea una pestaña -- no en el
-   primer dibujo al cargar la página. */
+/* Entrada al cambiar de pestaña: fundido corto con un pequeño desliz hacia arriba (igual que .br-fade-in del módulo 2). */
 @keyframes em-fade-in {
   from {
     opacity: 0;
@@ -143,39 +64,16 @@
 .em-fade-in {
   animation: em-fade-in 0.35s ease;
 }
-/* (Acá vivía .em-svg, el estilo del <svg> de los gráficos de barras
-   viejos. Se borró junto con todo el dibujado por SVG de modulo1.js:
-   "Casos por tipo" y "Casos por edad" ahora se arman con <div>
-   normales -- ver las reglas nuevas más abajo, desde "GRÁFICOS DE
-   BARRAS INTERACTIVOS".) */
+/* Los gráficos ya no usan <svg> (se borró .em-svg): ahora son divs normales, ver las reglas de más abajo. */
 
-/* El párrafo de bajada ARRIBA de cada gráfico (ej. "Casos nuevos
-   estimados en mujeres, por tipo de cáncer. Argentina, 2024.") no
-   tiene clase propia: reutiliza .ui-sub (la clase compartida de
-   style.css, el mismo texto chico gris que usa el módulo 3) para que
-   el cuerpo de texto mida exactamente lo mismo en los dos módulos.
-   Acá solo se le agrega un poco más de margen inferior (10px en vez
-   de los 6px por defecto de .ui-sub), porque en este caso separa del
-   GRÁFICO que viene justo debajo, no de otro párrafo de texto. */
+/* La bajada de arriba de cada gráfico reutiliza .ui-sub (style.css) para que el texto sea igual al del módulo 3. */
 .em-panel .ui-sub {
   margin-bottom: 10px;
 }
 
-/* ============================================================
-   GRÁFICOS DE BARRAS INTERACTIVOS ("Casos por tipo" / "Casos por edad")
-   Reemplazan a los <svg> viejos: ahora cada barra es un <div> normal,
-   lo que permite animar con Web Animations API (el.animate(), en
-   modulo1.js) para la fusión/separación de columnas y el "clon
-   volador" -- mucho más simple que manejar esas mismas animaciones
-   con coordenadas de SVG. Comparten estas clases las 2 pestañas,
-   salvo donde se aclara "solo tipo" / "solo edad".
-   ============================================================ */
+/* GRÁFICOS DE BARRAS INTERACTIVOS: cada barra es un div, para animarla con Web Animations API desde modulo1.js. */
 
-/* Invitación a interactuar ("¿Hasta dónde creés..." / "Tocá o
-   arrastrá..."), con un puntito que pulsa al lado -- la misma idea
-   que ya usa el prototipo de referencia. display:none cuando
-   modulo1.js le pone [hidden] (ej. apenas se revela la respuesta de
-   "Casos por tipo"). */
+/* Invitación a interactuar ("¿Hasta dónde creés..." / "Tocá o arrastrá..."), con un puntito que pulsa al lado. */
 .em-prompt {
   display: flex;
   align-items: center;
@@ -185,30 +83,14 @@
   font-size: 0.85rem;
   margin-bottom: 12px;
 }
-/* .em-prompt-tipo: variante SOLO del prompt de "Casos por tipo"
-   ("Arrastrá la barra rosa..."), pedida más grande, más cerca del
-   gráfico y centrada en la tarjeta -- a diferencia del de "Casos por
-   edad", que se queda con el tamaño/alineación chica original de
-   arriba. justify-content:center centra el conjunto punto+texto como
-   una unidad (el punto se mueve con el texto, no queda fijo a la
-   izquierda). margin-bottom más chico = menos aire antes de
-   .em-chart-tipo, que es la "cercanía al gráfico" pedida -- no hace
-   falta cuidar que se superponga con el estado "fusionado" (Sumá los
-   otros 4): ese prompt ya está oculto (hidden) desde que se revela la
-   respuesta, y fusionar solo es posible DESPUÉS de revelar, así que
-   los dos nunca están visibles a la vez. */
+/* .em-prompt-tipo: prompt de "Casos por tipo", más grande, centrado y más cerca del gráfico que el de "Casos por edad". */
 .em-prompt-tipo {
   font-size: 1.05rem;
   justify-content: center;
   text-align: center;
   margin-bottom: 6px;
 }
-/* El prompt centrado (tipo/edad) deja de ser flex:
-   cuando el texto no entraba en 1 renglón (pantallas bajas o con
-   zoom), flexbox dejaba el punto solo contra el borde izquierdo y el
-   texto centrado en 2 líneas al lado, lejos del punto. Como bloque
-   de texto normal, el punto va "en línea" pegado a la primera palabra
-   y se centra junto con el texto, ocupe 1 o 2 renglones. */
+/* El prompt centrado deja de ser flex: así el punto queda pegado a la primera palabra aunque el texto ocupe 2 renglones. */
 .em-prompt-tipo {
   display: block;
 }
@@ -219,17 +101,7 @@
   position: relative;
   top: -1px;
 }
-/* .em-prompt-dot, NO ".dot" a secas: style.css ya tiene una clase
-   ".dot" (los puntitos decorativos alrededor del título del
-   capítulo) con sus propias reglas -- entre ellas, position:absolute
-   y, mientras el capítulo está activo, "animation:dotPop" (un pop que
-   aparece una vez y se desvanece). Como ese ".dot" general tiene MÁS
-   especificidad (.chapter.active .dot) que la que tenía acá
-   (.em-prompt .dot), le ganaba a esta animación cada vez que se
-   recreaba el punto (en cada cambio de pestaña) -- el puntito se veía
-   "saltar"/parpadear en vez de pulsar suave, y encima quedaba
-   position:absolute en vez de alineado con el texto. Con un nombre de
-   clase propio, sin nada en común con ".dot", no hay ningún choque. */
+/* .em-prompt-dot (y no ".dot"): style.css ya define ".dot" para los puntitos del título del capítulo y chocarían. */
 .em-prompt-dot {
   width: 8px;
   height: 8px;
@@ -248,33 +120,12 @@
   }
 }
 
-/* .em-col define su propio "display" (flex, ver abajo) -- eso empata
-   en especificidad contra el estilo por defecto del navegador para el
-   atributo [hidden] (que normalmente alcanza solo con poner hidden=""
-   para ocultar cualquier cosa) y, al empatar, GANA la regla más nueva
-   en el archivo, o sea la nuestra: sin esto, modulo1.js podía marcar
-   una columna hidden=true (ej. al fusionar "Los otros 4 cánceres") e
-   igual se seguía viendo. Se fuerza acá explícitamente. ("Casos por
-   tipo" NO usa [hidden] para su prompt/botones/eje -- ver
-   .em-reveal-fade, más abajo, que los oculta sin sacarlos del flujo.) */
+/* .em-col define su propio display, así que [hidden] no alcanza: se fuerza display:none para ocultar la columna. */
 .em-col[hidden] {
   display: none;
 }
 
-/* .em-reveal-fade: "Casos por tipo" -- el prompt, el eje, los botones
-   y los datos fijos (1°/66,2) pasan por acá para mostrarse/ocultarse
-   SIN sacarse del flujo (a diferencia de [hidden], que es display:none
-   y los sacaba del todo): opacity+visibility los oculta pero siguen
-   ocupando su alto real. Pedido explícito de Emi: que la tarjeta mida
-   SIEMPRE lo mismo que mide una vez revelada la respuesta, en vez de
-   agrandarse recién en ese momento. "em-shown" es el estado visible;
-   modulo1.js se la agrega/saca según corresponda (ver
-   renderCasosPorTipo/reveal()).
-   El "transition:visibility" con demora (0s linear .4s al ocultar, 0s
-   sin demora al mostrar) hace que la visibilidad cambie DESPUÉS de
-   que termina el fundido al ocultar (si no, el elemento desaparece de
-   golpe y la opacity nunca llega a animarse), pero ANTES al mostrar
-   (para que sea clickeable/enfocable apenas se empieza a ver). */
+/* .em-reveal-fade: muestra y oculta con opacity+visibility sin sacar el elemento del flujo, para que la tarjeta no cambie de alto. */
 .em-reveal-fade {
   opacity: 0;
   visibility: hidden;
@@ -290,12 +141,7 @@
     visibility 0s linear;
 }
 
-/* Fila de columnas: mismo criterio para "tipo" (6 columnas posibles,
-   la 6ta -- la pila -- oculta hasta fusionar) y "edad" (5 fijas).
-   align-items:flex-end = todas las barras "paran" sobre el mismo
-   piso, sin importar su alto individual. height fija (en vez de
-   depender del contenido) porque la escala de los datos es lo que
-   define cuánto crece cada barra, no el layout. */
+/* Fila de columnas: las barras se paran sobre el mismo piso (align-items:flex-end) y el alto es fijo; la escala la define el dato. */
 .em-chart-tipo,
 .em-chart-edad {
   display: flex;
@@ -305,7 +151,7 @@
     4px,
     1vw,
     10px
-  ); /* antes clamp(6px,1.6vw,16px), y antes de eso clamp(8px,2.5vw,24px) -- Emi pidió juntar más las barras, también en el estado inicial (antes de revelar) */
+  ); /* separación entre barras, entre 4px y 10px según el ancho */
   height: 220px;
   padding-top: 30px; /* aire arriba para que el número más alto no se pegue al borde */
   position: relative;
@@ -313,34 +159,15 @@
   user-select: none; /* arrastrar la manija o tocar barras ya no deja texto seleccionado ("Mama" en azul) */
   -webkit-user-select: none;
 }
-/* Antes "Casos por tipo" compensaba la diferencia de alto con
-   "El tiempo" (módulo 2) con un margen vacío grande más abajo en la
-   tarjeta -- Bren pidió aprovechar ese espacio en vez de dejarlo
-   vacío, por eso acá las barras son más grandes/presentes (250px en
-   vez de 220px). */
+/* "Casos por tipo": barras de 250px en vez de 220px para aprovechar el espacio que antes quedaba vacío. */
 .em-chart-tipo {
   height: 250px;
 }
-/* "Casos por edad" perdió los chips de rango y una línea de la
-   instrucción rosa (ver renderCasosPorEdad en modulo1.js -- ya no se
-   puede agrupar) -- Emi pidió aprovechar ese espacio liberado para que
-   las barras se vean más grandes/diferenciadas entre sí (280px, más
-   incluso que "Casos por tipo": acá no hace falta dejar lugar para
-   ningún eje/botón extra). Ver también EDAD_MAX en modulo1.js, bajado
-   de 8000 a 7000 para que la barra más alta llegue más cerca del
-   techo del gráfico, en vez de quedarse corta. */
+/* "Casos por edad": barras de 280px para que se diferencien mejor entre sí (ver EDAD_MAX en modulo1.js). */
 .em-chart-edad {
   height: 280px;
 }
-/* "Ver los otros 4 juntos": el grid pasa a 2 columnas centradas, del
-   mismo ancho que tenía Mama sola -- --em-colw lo fija modulo1.js al
-   momento de fusionar, leyendo el ancho real de Mama en ese instante.
-   gap más grande que el de base (clamp 8-24px): "Los otros 4
-   cánceres" no entra en una sola línea con el gap chico sin acercarse
-   demasiado a la columna de Mama -- acá solo se pisa el gap PARA el
-   estado fusionado (la pestaña sin fusionar y "Casos por edad", que
-   comparten la misma .em-chart-tipo/.em-chart-edad, se quedan con el
-   gap de base). */
+/* Estado fusionado ("¿Y si sumamos los otros 4?"): 2 columnas centradas del ancho de Mama (--em-colw, la fija modulo1.js). */
 .em-chart-tipo.em-merged {
   justify-content: center;
   gap: 48px;
@@ -348,34 +175,16 @@
 .em-chart-tipo.em-merged .em-col {
   flex: 0 0 var(--em-colw);
 }
-/* El texto no debe partirse en 2 líneas -- como la columna es angosta
-   (el mismo ancho que una barra sola, ver --em-colw arriba), el texto
-   se desborda un poco a los costados en vez de ajustarse al ancho de
-   la columna; como sigue centrado (text-align:center, heredado de
-   .em-lbl) y nada le recorta el desborde (.em-chart-tipo no tiene
-   overflow:hidden), se ve bien igual -- para eso es el gap más grande
-   de arriba, para que no llegue a pisar la columna de Mama. */
+/* El texto no se parte en 2 líneas: se desborda un poco a los costados y sigue centrado. */
 #em-sum-col .em-lbl {
   white-space: nowrap;
 }
 
-/* Una columna (barra + valor + etiqueta). flex:1 = todas se reparten
-   el ancho disponible por igual (salvo en modo "fusionado", ver
-   arriba). position:relative porque la zona de arrastre de Mama
-   (.em-guess-zone) se posiciona absolute adentro suyo. */
+/* Una columna (barra + valor + etiqueta): flex:1 reparte el ancho y position:relative aloja la zona de arrastre de Mama. */
 .em-col {
   flex: 1;
   min-width: 0;
-  /* max-width: la columna nunca mide más que la barra (96px) + 4px.
-     Antes, en pantallas anchas las 5 columnas se estiraban para
-     llenar todo el gráfico y las barras quedaban separadas por ~44px;
-     con zoom (o en pantallas más angostas) las columnas se achicaban
-     y las barras quedaban casi pegadas (~14px). Emi pidió que se vea
-     SIEMPRE así de juntas: con este techo, la separación es de ~14px
-     (estos 4px + el gap del gráfico) en cualquier ancho, y el grupo
-     de barras queda centrado (ver justify-content:center en
-     .em-chart-tipo/.em-chart-edad). En pantallas angostas la columna
-     sigue achicándose como antes (flex:1 + min-width:0). */
+  /* max-width: la columna nunca mide más que la barra (96px) + 4px, para que las barras no se separen de más ni se achiquen. */
   max-width: 100px;
   height: 100%;
   display: flex;
@@ -385,11 +194,7 @@
   position: relative;
   transition: opacity 0.35s ease;
 }
-/* "Ver por separado" en pleno vuelo: mientras cada bloque vuela de
-   vuelta a su columna, el número/etiqueta de ESA columna arrancan
-   invisibles (onLand, en modulo1.js, les saca esta clase apenas
-   aterriza su bloque -- así el dato "aparece" recién cuando el
-   bloque llega, no antes). */
+/* "Ver por separado" en vuelo: el número y la etiqueta de la columna arrancan invisibles hasta que aterriza su bloque. */
 .em-col.em-ghost .em-val,
 .em-col.em-ghost .em-lbl {
   opacity: 0;
@@ -404,10 +209,7 @@
   white-space: nowrap;
   transition: opacity 0.3s ease;
 }
-/* .em-val-q: SOLO mientras la columna de Mama muestra "?" (antes de
-   arrastrar) -- lo agranda para que invite más a jugar. modulo1.js le
-   saca esta clase apenas hay un número real (arrastrando o ya
-   revelado), así que nunca agranda un número de verdad, solo el "?". */
+/* .em-val-q: agranda el "?" de Mama mientras no hay un número real (modulo1.js saca la clase apenas lo hay). */
 .em-val-q {
   font-size: clamp(
     1.6rem,
@@ -417,20 +219,14 @@
   line-height: 1; /* caja justa al signo, para poder centrarlo adentro de la barra punteada */
   z-index: 2; /* por encima del fondo rosado de la barra punteada (.em-guess-zone), no detrás */
 }
-/* .em-val-live: el número que se va eligiendo al arrastrar (Mama,
-   antes de confirmar) -- más grande que los números de las barras,
-   porque con Mama sola en el gráfico es la única referencia de cuánto
-   se está estimando. modulo1.js la saca al revelar. */
+/* .em-val-live: el número que se va eligiendo al arrastrar, más grande que los de las barras (se saca al revelar). */
 .em-val-live {
   font-size: clamp(1.05rem, 2.4vw, 1.3rem);
   color: var(--rose-strong);
   z-index: 2;
 }
 
-/* "Casos por tipo", antes de confirmar la estimación: las otras 4
-   columnas no se muestran (Mama queda sola y centrada -- el gráfico ya
-   centra sus columnas, ver justify-content:center). modulo1.js saca
-   esta clase al revelar y las hace aparecer una por una. */
+/* Antes de confirmar, las otras 4 columnas no se muestran y Mama queda sola y centrada (se saca al revelar). */
 .em-col.em-col-pending {
   display: none;
 }
@@ -442,13 +238,7 @@
   transition: opacity 0.3s ease;
 }
 
-/* La barra en sí. Color por defecto = rosa apagado (el mismo que ya
-   usaba este sitio para "lo no destacado" -- PANEL.barMuted en
-   modulo1.js); .em-bar-mama (siempre, la columna de Mama en "Casos
-   por tipo") y .em-bar-sel (el rango elegido en "Casos por edad") la
-   pasan a rosa fuerte. height la fija modulo1.js en cada barra según
-   su valor -- acá solo se anima el CAMBIO (el crecimiento al revelar
-   la respuesta real, o al cambiar de rango de edad). */
+/* La barra: rosa apagado por defecto; .em-bar-mama y .em-bar-sel la pasan a rosa fuerte. */
 .em-bar {
   position: relative; /* para ubicar el número (.em-val) encima de la punta, ver abajo */
   width: min(100%, 96px);
@@ -460,13 +250,7 @@
     background 0.25s ease;
 }
 
-/* .em-plot: el área de dibujo de cada columna (todo MENOS la
-   etiqueta). El height en % de cada barra (puesto por modulo1.js) se
-   mide contra esta caja. Antes se medía contra la columna entera, que
-   también tenía adentro el número y la etiqueta: las barras altas
-   pedían más lugar del que quedaba libre y flexbox las recortaba
-   todas al mismo alto (las 4 "cajas iguales" de "Casos por edad" en
-   la compu de Bren, o Mama más baja de lo que corresponde). */
+/* .em-plot: el área de dibujo de cada columna (todo MENOS la etiqueta). */
 .em-plot {
   flex: 1 1 auto;
   min-height: 0;
@@ -477,11 +261,7 @@
   justify-content: flex-end;
   align-items: center;
 }
-/* El número va ADENTRO de la barra (o de la pila), flotando justo
-   encima de su punta: no ocupa lugar en el área de dibujo y sube/baja
-   junto con la barra cuando crece. El margin-bottom de .em-val (6px)
-   es la separación con la punta. El aire de arriba para el número de
-   la barra más alta lo da el padding-top del gráfico. */
+/* El número va ADENTRO de la barra (o de la pila), flotando justo encima de su punta. */
 .em-bar > .em-val,
 .em-stack > .em-val {
   position: absolute;
@@ -497,19 +277,14 @@
   cursor: pointer;
 } /* toda la columna (no solo la barra) responde al clic en "Casos por edad" */
 
-/* "Casos por edad": las barras arrancan parejas, grises y sin número
-   (.em-bar-pending, la pone modulo1.js) hasta que se las toca. Gris
-   neutro, sin el rosado de las barras con dato, para que se lean como
-   "todavía sin revelar". */
+/* "Casos por edad": las barras arrancan parejas, grises y sin número. */
 .em-bar.em-bar-pending {
   background: rgba(169, 154, 166, 0.28);
 }
 .em-bar.em-bar-pending > .em-val {
   opacity: 0; /* el número ya está escrito, pero no se ve hasta tocar la barra */
 }
-/* Al tocarla, la barra sube o baja hasta su valor real más despacio que
-   un cambio de color común (0,9s, con frenado al final): que se vea
-   bien cuánto sube 45-59 o 60-74 frente a la altura pareja de antes. */
+/* Al tocarla, la barra sube o baja a su valor real en 0,9s con frenado al final, para notar bien la diferencia. */
 .em-chart-edad .em-bar {
   transition:
     height 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -523,52 +298,30 @@
   font-size: 0.85rem;
   margin-top: -4px;
 }
-/* Solo "Casos por tipo": acá sí hace falta más aire que el -4px base
-   -- "Cuello uterino" se parte en 2 líneas, y con el margen negativo
-   esta nota quedaba prácticamente pisando esa segunda línea ("se ve
-   apretado"). "Casos por edad" usa la misma clase .em-axis-note pero
-   sus etiquetas ("15-29", "30-44"...) nunca se parten en 2 líneas, así
-   que ahí el -4px de base sigue andando bien -- no se tocó. */
+/* Solo "Casos por tipo": más aire arriba del eje porque "Cuello uterino" se parte en 2 líneas y el margen base lo pisaba. */
 .em-chart-tipo + .em-axis-note {
-  /* 18px/22px (antes 9px/14px): Emi pidió más aire entre el gráfico y
-     este eje, y entre el eje y los botones de abajo. */
+  /* Más aire entre el gráfico y el eje, y entre el eje y los botones de abajo. */
   margin-top: 18px;
-  /* color: probé con var(--text) (más contraste) en una vuelta
-     anterior, pero Emi pidió volver al gris apagado -- el mismo
-     var(--text-dim) que ya usa .ui-sub (la bajada "Casos nuevos
-     estimados..."), para que las dos notas chicas de la tarjeta
-     combinen entre sí. */
+  /* color: gris apagado (var(--text-dim)), igual que .ui-sub, para que las 2 notas chicas de la tarjeta combinen. */
   color: var(--text-dim);
   margin-bottom: 22px;
 }
 
-/* Solo "Casos por edad": despega la nota "Años" de las etiquetas de las
-   barras y la deja centrada debajo del gráfico. */
+/* Solo "Casos por edad": despega la nota "Años" de las etiquetas de las barras y la deja centrada debajo del gráfico. */
 .em-chart-edad + .em-axis-note {
   margin-top: 12px;
   text-align: center;
 }
 
 /* ---- "Casos por tipo": zona de arrastre + línea "Tu respuesta" ---- */
-/* Capa sobre la columna de Mama, desde la etiqueta hacia arriba --
-   pointer-events:none a propósito (pedido de Emi): solo la MANIJA
-   (.em-handle, más abajo) tiene que responder al click/arrastre, no
-   toda esta zona ni la barra -- antes cualquier toque acá adentro se
-   tomaba como respuesta final sin haber arrastrado nada, lo que
-   generaba respuestas "sin querer". */
+/* Capa sobre la columna de Mama (desde la etiqueta hacia arriba) con pointer-events:none: solo la manija responde al arrastre. */
 .em-guess-zone {
   position: absolute;
   inset: 0; /* ocupa toda la .em-plot de Mama: misma escala que la barra real */
   pointer-events: none;
 }
 /* La barra punteada que sigue al arrastre, con la manija "↕" arriba. */
-/* animation: destello constante (pedido de Emi) para que se note, sin
-   necesidad de leer el texto, que ESTA barra punteada es la que hay
-   que arrastrar -- mismo criterio visual que .em-prompt-dot (pulso de
-   box-shadow con --rose-glow), pero acá en loop sobre el borde
-   entero, no un puntito. Se corta solo al soltar: setupDrag() saca
-   esta zona del DOM apenas termina el arrastre (ver pointerup, más
-   abajo), así que la animación nunca sigue corriendo "de más". */
+/* animation: destello constante en el borde para que se note que esta barra punteada es la que hay que arrastrar. */
 .em-guess-bar {
   position: absolute;
   bottom: 0;
@@ -580,10 +333,7 @@
   background: rgba(255, 111, 156, 0.18);
   animation: em-guess-pulse 1.6s ease-in-out infinite;
 }
-/* Después del primer movimiento (arrastrando o quieta antes de
-   confirmar) la barra punteada deja de brillar: lo único que titila es
-   "Confirmar resultado" (pedido de Emi). La clase la pone modulo1.js
-   (markMoved, en setupDrag). */
+/* Después del primer movimiento la barra punteada deja de brillar (lo pone modulo1.js en markMoved). */
 .em-guess-quiet .em-guess-bar {
   animation: none;
 }
@@ -596,18 +346,8 @@
     box-shadow: 0 0 16px 3px var(--rose-glow);
   }
 }
-/* .em-handle es la ÚNICA parte interactiva de toda la zona de
-   arrastre (ver el comentario de .em-guess-zone, arriba) --
-   pointer-events:auto le devuelve la interactividad que su padre le
-   sacó. cursor:ns-resize (antes en .em-guess-zone) se mueve para acá,
-   así el ícono del mouse avisa "esto se arrastra" justo donde
-   corresponde. */
-/* Ahora dice "↕ Arrastrá" (antes solo "↕", 38px de ancho fijo): el
-   ancho sale del texto (width:max-content + padding). Se centra con
-   left/right:0 + margin:auto en vez de left:50% + transform, para que
-   "transform" quede libre para la animación de abajo. El alto (20px)
-   y top:-13px NO se tocan: modulo1.js los usa para ubicar el "?" y el
-   número (ver placeQ/placeVal en setupDrag). */
+/* .em-handle es la única parte interactiva de la zona de arrastre: pointer-events:auto y cursor ns-resize. */
+/* La manija dice "↕ Arrastrá": el ancho sale del texto y se centra con left/right:0 + margin:auto para dejar libre transform. */
 .em-handle {
   position: absolute;
   left: 0;
@@ -628,9 +368,7 @@
   pointer-events: auto;
   cursor: ns-resize;
   touch-action: none;
-  /* Sube y baja apenas, en loop, hasta el primer movimiento: dice
-     "agarrame y movéme" sin tener que leer nada (pedido de Emi: la
-     gente no se daba cuenta de que era un juego). */
+  /* Sube y baja apenas, en loop, hasta el primer movimiento: dice "agarrame y movéme" sin tener que leer nada. */
   animation: em-handle-bob 1.4s ease-in-out infinite;
 }
 @keyframes em-handle-bob {
@@ -642,23 +380,17 @@
     transform: translateY(-4px);
   }
 }
-/* Después del primer movimiento ya se entendió: deja de moverse sola
-   (la agrega modulo1.js, ver markMoved en setupDrag). */
+/* Después del primer movimiento ya se entendió: deja de moverse sola (la agrega modulo1.js, ver markMoved en setupDrag). */
 .em-handle.em-handle-used {
   animation: none;
 }
-/* Foco con teclado (Tab): un anillo visible, para saber que las
-   flechas la mueven. */
+/* Foco con teclado (Tab): un anillo visible, para saber que las flechas la mueven. */
 .em-handle:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }
-/* Línea punteada que marca dónde quedó la respuesta adivinada, una
-   vez revelada la real -- queda puesta ahí de forma permanente (hasta
-   "Volver a adivinar"), para poder comparar a simple vista. */
-/* left:0/right:0: el ancho de la columna de Mama nomás -- antes medía
-   130% y se salía por la izquierda del gráfico, hasta el borde de la
-   tarjeta. modulo1.js le pone "bottom" en % de .em-plot. */
+/* Línea punteada que marca dónde quedó la respuesta adivinada, una vez revelada la real. */
+/* left:0/right:0: solo el ancho de la columna de Mama; modulo1.js le pone "bottom" en % de .em-plot. */
 .em-guess-line {
   position: absolute;
   left: 0;
@@ -677,21 +409,14 @@
   background: var(--panel);
   padding: 0 4px;
 }
-/* Respuesta cerca del valor real: la línea pasa por donde está el
-   número, así que el texto va abajo de la línea para no taparlo. */
+/* Respuesta cerca del valor real: la línea pasa por donde está el número. */
 .em-guess-line-below span {
   top: 4px;
 }
 
 /* ---- "Casos por tipo": la pila "Los otros 4 juntos" ---- */
-/* Cada segmento de la pila mide "flex:<valor>" (puesto inline por
-   modulo1.js) -- así el alto de cada franja es proporcional a su
-   propio valor, sin tener que calcular porcentajes a mano. */
-/* Sin overflow:hidden (antes recortaba las esquinas redondeadas): el
-   número del total ahora vive adentro de la pila, flotando encima, y
-   se cortaría. Las esquinas las redondean el primer y el último
-   segmento por su cuenta. Los segmentos se eligen por [data-i] para
-   no confundirlos con ese número. */
+/* Cada segmento de la pila mide flex:<valor> (inline desde modulo1.js), así su alto es proporcional a su valor. */
+/* Sin overflow:hidden (cortaría el número del total que flota encima): el primer y el último segmento redondean sus propias esquinas. */
 .em-stack {
   position: relative;
   width: min(100%, 96px);
@@ -723,10 +448,7 @@
   border-top: 0;
 }
 
-/* El clon "volador" durante la fusión/separación: una copia temporal
-   que modulo1.js anima de una posición a otra con el.animate() y
-   saca del DOM al llegar -- mismo look que una barra/segmento, para
-   que el "viaje" se vea continuo. */
+/* El clon volador de la fusión/separación: copia temporal que modulo1.js anima con el.animate() y saca al llegar. */
 .em-fly {
   position: absolute;
   display: flex;
@@ -744,45 +466,30 @@
   pointer-events: none;
 }
 
-/* Mensaje de resultado ("¡Muy cerca!", "Colorrectal + ... = ..."),
-   debajo del gráfico. min-height reserva 1 línea siempre, para que no
-   "salte" el layout cuando pasa de vacío a tener texto. */
+/* Mensaje de resultado. */
 .em-feedback {
   min-height: 1.5em;
   font-size: 0.95rem;
   color: var(--text);
-  margin-bottom: 16px; /* antes 0, pegado contra los botones de abajo -- mismo motivo que el margin-bottom de .em-axis-note */
+  margin-bottom: 16px; /* aire entre la respuesta y los botones de abajo */
 }
 .em-feedback b {
   color: var(--rose-strong);
 }
-/* Un número del mensaje que NO es de mama (ej. el total de "los otros
-   4") va en blanco: el rosa queda reservado para mama (pedido de Emi). */
+/* Un número del mensaje que NO es de mama (ej. el total de "los otros 4") va en blanco: el rosa queda reservado para mama. */
 .em-feedback b.em-fb-neutral {
   color: var(--text);
 }
 
-/* Botones "Probar de nuevo" / "Ver los otros 4 juntos" / "Ver por
-   separado". Mismo look de píldora que .em-tab, pero CONTORNEADOS
-   (fondo transparente) en vez de rellenos -- para que se lean como
-   una acción secundaria, no como otra pestaña más.
-   justify-content:center: pedido explícito de Emi (antes quedaban
-   pegados a la izquierda). */
+/* Botones "Probar de nuevo" / "Ver los otros 4 juntos" / "Ver por separado". */
 .em-tipo-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 16px; /* antes 0, pegados contra lo de abajo */
+  margin-bottom: 16px; /* aire entre los botones y lo que sigue */
 }
-/* "Confirmar resultado" ("Casos por tipo", antes de revelar): al
-   costado DERECHO de la barra de Mama, a la altura de su base (pedido de Emi)
-   -- modulo1.js lo agrega adentro del área de la barra de Mama (.em-plot), que ya es
-   position:relative. Arranca oculto (.em-reveal-fade) y aparece
-   recién cuando la persona movió la barra por primera vez, titilando
-   (un brillo rosa que se prende y se apaga) para invitar a tocarlo
-   después de arrastrar. Relleno rosa suave en vez de solo el borde,
-   para que se distinga de "Probar de nuevo"/"Ver los otros 4 juntos". */
+/* "Confirmar resultado": al costado derecho de la barra de Mama, a la altura de su base; arranca oculto y modulo1.js lo agrega en .em-plot. */
 .em-btn-confirm {
   position: absolute;
   left: calc(100% + 16px);
@@ -796,11 +503,7 @@
 .em-btn-confirm.em-shown {
   animation: em-confirm-blink 2.4s ease-in-out infinite;
 }
-/* Titileo SUTIL, el MISMO que el buscador "Escribí tu localidad" del
-   módulo 3 (@keyframes me-search-pulse en modulo3.css -- pedido de
-   Emi): no cambia el fondo, solo el borde (de gris a rosa), un anillo
-   fino de 4px alrededor y el texto (de gris a blanco), en 2,4s. Lo
-   comparten "Confirmar resultado" y "¿Y si sumamos los otros 4?". */
+/* Titileo SUTIL, el MISMO que el buscador "Escribí tu localidad" del módulo 3. */
 @keyframes em-confirm-blink {
   0%,
   100% {
@@ -814,8 +517,7 @@
     color: var(--text);
   }
 }
-/* Celular: al costado de la barra queda poco lugar -- el texto pasa a
-   2 renglones en vez de salirse de la tarjeta. */
+/* Celular: al costado de la barra queda poco lugar -- el texto pasa a 2 renglones en vez de salirse de la tarjeta. */
 @media (max-width: 600px) {
   .em-btn-confirm {
     max-width: 100px;
@@ -842,58 +544,31 @@
   opacity: 0.5;
   cursor: default;
 }
-/* (Acá vivía .em-btn-ghost, el formato más apagado -- borde gris --
-   de "Probar de nuevo". Se sacó: Emi pidió que los 2 botones tengan
-   el mismo formato.) */
-/* .em-btn-sum: ancho fijo (lo bastante para "¿Y si sumamos los otros
-   4?", el más largo de sus 2 textos) -- como .em-tipo-actions centra
-   el grupo entero, si este botón cambiaba de ancho según su texto
-   ("¿Y si sumamos los otros 4?" / "Ver por separado") también corría
-   de lugar a "Probar de nuevo", al lado. Con ancho fijo el grupo
-   entero mide siempre lo mismo, así que nada se mueve (pedido de Emi). */
+/* Se sacó .em-btn-ghost: los 2 botones ahora tienen el mismo formato. */
+/* .em-btn-sum: ancho fijo para el más largo de sus 2 textos, así no corre de lugar al otro botón al cambiar de texto. */
 .em-btn-sum {
   width: 236px;
   max-width: 100%;
   text-align: center;
 }
-/* "Probar de nuevo" mide LO MISMO que el otro botón (pedido de Emi):
-   con anchos distintos (142px y 236px) el grupo quedaba centrado,
-   pero el hueco entre los 2 caía ~47px a la izquierda del centro de
-   la tarjeta, y "Probar de nuevo" parecía corrido. Con los 2 iguales,
-   el hueco queda justo en el centro. max-width: en pantallas angostas
-   los 2 siguen entrando lado a lado (el texto pasa a 2 renglones). */
+/* "Probar de nuevo" mide lo mismo que el otro botón, para que el hueco entre los 2 quede centrado en la tarjeta. */
 .em-tipo-actions .em-btn {
   width: 236px;
   max-width: calc(50% - 5px); /* 5px = la mitad del gap entre botones */
   text-align: center;
 }
-/* Guía después de revelar (pedido de Emi): "¿Y si sumamos los otros
-   4?" titila con el mismo brillo sutil que "Confirmar resultado"
-   (@keyframes em-confirm-blink), para invitar al paso siguiente.
-   modulo1.js saca esta clase apenas se lo toca: "Ver por separado" ya
-   NO titila (pedido de Emi), y desde ahí los 2 botones quedan iguales. */
+/* Guía después de revelar: "¿Y si sumamos los otros 4?" titila (em-confirm-blink) hasta que se lo toca. */
 .em-btn.em-btn-blink {
   animation: em-confirm-blink 2.4s ease-in-out infinite;
 }
-/* "Probar de nuevo" mientras titila "¿Y si sumamos los otros 4?": borde
-   apagado (gris), para que no compita con el botón que titila (pedido
-   de Emi). modulo1.js saca la clase al tocar "¿Y si sumamos...?": desde
-   "Ver por separado" los 2 botones tienen el borde rosa. */
+/* "Probar de nuevo" mientras titila el otro botón: borde gris para no competir con él (modulo1.js saca la clase al tocarlo). */
 .em-btn.em-btn-quiet {
   border-color: var(--panel-border);
 }
 
-/* La nota chica al pie de "Casos por edad" (antes ".em-note", definida
-   acá) ahora es ".ui-note", compartida en style.css -- módulo 3 la
-   necesita también para su propia aclaración, mismo criterio visual.
-   Ver modulo1.js (la línea que le pone la clase al elemento). */
+/* La nota chica al pie de "Casos por edad" ahora es .ui-note, compartida en style.css (la necesita también el módulo 3). */
 
-/* ---- Tooltip compartido (hover sobre cualquier barra/segmento) ----
-   Mismo criterio visual que .br-tooltip en módulo 2 (tarjeta chica
-   con fondo + borde + sombra), pero vive en <body> -- modulo1.js lo
-   reposiciona con JS en cada pointermove en vez de depender de un
-   contenedor position:relative fijo, porque puede aparecer sobre
-   CUALQUIERA de las columnas o segmentos de la pila. */
+/* Tooltip compartido: tarjeta chica con fondo, borde y sombra (como .br-tooltip del módulo 2) que vive en <body> y sigue al mouse. */
 .em-tip {
   position: absolute;
   z-index: 30;
@@ -925,9 +600,7 @@
   font-weight: 600;
   white-space: nowrap; /* el número nunca se parte en 2 renglones */
 }
-/* Respeta "reducir movimiento": apaga las transiciones CSS de los
-   elementos nuevos (el.animate(), en modulo1.js, ya se salta solo con
-   duration:0 cuando corresponde -- ver reduceMotion ahí). */
+/* Respeta "reducir movimiento": apaga las transiciones CSS de los elementos nuevos. */
 @media (prefers-reduced-motion: reduce) {
   .em-bar,
   .em-val,
@@ -945,9 +618,7 @@
   }
 }
 
-/* Texto chico ABAJO del gráfico -- hoy ningún gráfico puntual lo usa,
-   queda definida la clase por si en algún momento hace falta una
-   aclaración al pie (por ejemplo, una nota corta sobre algún dato). */
+/* Texto chico debajo del gráfico: hoy ningún gráfico lo usa, queda definido por si hace falta una aclaración. */
 .em-caption {
   font-family: var(--sans);
   font-size: 0.78rem;
@@ -955,15 +626,7 @@
   margin: 12px 0 0;
 }
 
-/* ============ "DATOS SUELTOS" (.em-stat) ============
-   Un dato suelto individual (ej. "66,2" arriba + "casos cada 100.000
-   mujeres..." abajo): una columna angosta con el número grande arriba
-   y su descripción chica debajo.
-   Mismo TAMAÑO de letra que .ui-big/.ui-lab (las clases que usa el
-   módulo 3 para su propio número grande), pero en rosa en vez de
-   blanco -- acá el número ES el protagonista central de la tarjeta
-   (no un dato secundario al costado de un gráfico), por eso se
-   diferencia con color aunque comparta tamaño. */
+/* DATOS SUELTOS (.em-stat): columna angosta con el número grande arriba y su descripción chica debajo. */
 .em-stat {
   display: flex;
   flex-direction: column;
@@ -983,22 +646,7 @@
   color: var(--text-dim);
   line-height: 1.3;
 }
-/* .em-inline-stats agrupa TODOS los datos sueltos de un gráfico (ej.
-   los 2 de "Casos por edad" o "Casos por tipo") en una grilla de 2
-   columnas IGUALES -- antes era flex, que solo separaba los 2 datos
-   por el gap fijo (24px) sin importar el ancho de la tarjeta: con un
-   primer dato corto ("1°") y la tarjeta ancha, el segundo quedaba
-   pegado contra el primero en vez de arrancar en una posición fija,
-   bien separados (pedido de Emi: "que cada uno inicie al principio de
-   cada columna"). repeat(2,1fr) = cada dato ocupa EXACTAMENTE la
-   mitad del ancho disponible, sin importar cuánto texto tenga.
-     auto-fit/minmax en vez de un "2" fijo -> en una tarjeta angosta
-                       (celular), si no entran los 300px mínimos para
-                       2 columnas, cae solo a 1 columna apilada (mismo
-                       resultado que el "flex-wrap:wrap" de antes)
-     border-top     -> una línea sutil que los separa visualmente del
-                       gráfico de arriba, para que se lean como una
-                       sección aparte */
+/* .em-inline-stats: agrupa los datos sueltos de un gráfico en una grilla de 2 columnas iguales. */
 .em-inline-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1007,34 +655,16 @@
   padding-top: 10px;
   border-top: 1px solid var(--panel-border);
 }
-/* Solo "Casos por edad" (.em-inline-stats no se usa en otra pestaña):
-   la oración gris debajo de los números rosas ("casos ocurren
-   entre...", "diagnósticos por día...") +1px, pedido de Emi. Los
-   datos de "Casos por tipo" tienen su propio tamaño, más abajo
-   (.em-tipo-result-stats .em-stat-label). */
+/* Solo "Casos por edad": la oración gris debajo de los números rosas un poco más grande (+1px). */
 .em-inline-stats .em-stat-label {
-  font-size: calc(0.8rem + 1px); /* antes 0.8rem (el tamaño base de .em-stat-label) */
+  font-size: calc(0.8rem + 1px); /* un poco más grande que el tamaño base (0.8rem) de .em-stat-label */
 }
-/* "Casos por edad" antes del primer toque: los 2 datos quedan vacíos
-   (pedido de Emi), pero ocupando su lugar -- así la tarjeta no salta de
-   alto con el primer toque. La línea separadora de arriba sigue. */
+/* "Casos por edad" antes del primer toque: los 2 datos quedan vacíos, pero ocupando su lugar. */
 .em-inline-stats.em-stats-empty .em-stat {
   visibility: hidden;
 }
-/* ============================================================
-   "Casos por tipo": prompt/resultado y pie (reemplazan a
-   .em-inline-stats para esta pestaña -- "Casos por edad" sigue
-   usando esa, sin cambios)
-   ============================================================ */
-/* .em-tipo-top: el prompt rosa ("¿Cuántos casos...") y el mensaje de
-   resultado (.em-feedback) comparten el MISMO lugar -- un grid de una
-   sola celda donde los 2 hijos se superponen (grid-area:1/1, mismo
-   truco que .ui-panels en style.css), así que solo se ve el que esté
-   "em-shown" (ver .em-reveal-fade, más arriba). Antes eran 2 bloques
-   separados (el prompt arriba, el feedback más abajo con los datos
-   fijos) y al revelar quedaba un hueco vacío donde estaba el prompt
-   -- pedido de Emi: que el mensaje de resultado aproveche ESE lugar
-   en vez de dejarlo perdido. */
+/* "Casos por tipo": prompt/resultado y pie. */
+/* .em-tipo-top: el prompt y el mensaje de resultado comparten el mismo lugar (grid de una celda) y se ve solo el que está "em-shown". */
 .em-tipo-top {
   display: grid;
 }
@@ -1042,60 +672,24 @@
   grid-area: 1/1;
 }
 .em-tipo-top .em-feedback {
-  /* Antes (cuando compartía fila con los datos fijos, en una columna
-     de medio ancho) hacía falta más min-height para 2-3 líneas; acá,
-     con el ancho COMPLETO de la tarjeta disponible (el mismo lugar
-     que ocupaba el prompt), el mensaje entra casi siempre en 1-2
-     líneas -- 2.6em alcanza de sobra y evita que la tarjeta salte de
-     alto al revelar. */
+  /* Con el ancho completo de la tarjeta el mensaje entra en 1-2 líneas: 2.6em evita que la tarjeta cambie de alto al revelar. */
   min-height: 2.6em;
-  margin-bottom: 6px; /* mismo margen que .em-prompt-tipo, para que no cambie el alto de este lugar al pasar de uno a otro */
-  text-align: center; /* antes justify -- Emi pidió que quede centrada, como el prompt al que reemplaza en este mismo lugar */
+  margin-bottom: 6px; /* mismo margen que .em-prompt-tipo, para que no cambie el alto al pasar de uno a otro */
+  text-align: center; /* centrado, como el prompt al que reemplaza */
 }
 
-/* .em-tipo-result: ahora solo contiene los 2 datos fijos ("1°"/"66,2"),
-   EN UN SOLO RENGLÓN (pedido de Emi) -- antes compartía esta fila con
-   .em-feedback (que se movió a .em-tipo-top, arriba).
-   flex:1 + display:flex + justify-content:center: el contenedor del
-   gráfico (.em-panel, más abajo) es flex-column y suele quedar MÁS
-   ALTO que la suma de su contenido (se estira a la altura de la vela
-   del capítulo, al costado) -- antes esa sobra quedaba como espacio
-   vacío al pie, debajo de todo. Con flex:1 esta fila CRECE para
-   ocupar ese sobrante, y justify-content:center centra los datos
-   fijos adentro de ese espacio (entre los botones de arriba y la
-   bajada+Fuente de abajo), en vez de quedar pegados contra los
-   botones (pedido de Emi: "los bajaría más, que queden centrados en
-   el espacio que hay"). Si no hay sobra (tarjeta justa), esto no
-   cambia nada -- flex:1 no tiene de dónde crecer. */
+/* .em-tipo-result: ahora solo contiene los 2 datos fijos, en un solo renglón y centrados. */
 .em-tipo-result {
-  /* Antes 20px: la tarjeta NO se estira para llenar el alto de la
-     vela de al lado (se midió -- .ui-panel/.em-panel siempre terminan
-     midiendo justo lo que su contenido necesita, nunca más), así que
-     no hay "espacio sobrante" real para centrar algo adentro con
-     flexbox -- probado y descartado. En cambio, se baja más este
-     margen a mano (pedido de Emi: "los bajaría más, que queden
-     centrados en el espacio que hay entre los botones y la
-     descripción de abajo") para que no queden pegados contra los
-     botones de arriba. */
+  /* margin-top fijo: la tarjeta no se estira al alto de la vela de al lado, así que no hay espacio sobrante para centrar con flexbox. */
   margin-top: 44px;
 }
 .em-tipo-result-stats {
-  /* Vuelve a grid de 2 columnas (pedido de Emi: "volvé a la
-     estructura de división de dos columnas") -- cada dato arranca
-     justo al principio de SU columna, en vez de ir uno pegado al otro
-     con un gap fijo (que con flex podía dejar al segundo dato
-     empezando en cualquier punto, según el ancho del primero). */
+  /* Vuelve a grid de 2 columnas: cada dato arranca justo al principio de su columna. */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 24px;
 }
-/* .em-stat de base apila el número arriba de la etiqueta (2 líneas,
-   ver más arriba) -- acá, en la columna de datos fijos, Emi pidió que
-   cada dato sea UN SOLO renglón: número en rosa seguido del texto en
-   gris, en la misma línea. align-items:baseline los alinea por el
-   PISO del texto (no por el borde de la caja), que es lo que se ve
-   prolijo cuando el número y la etiqueta tienen tamaños de letra
-   distintos. */
+/* .em-stat de base apila número y etiqueta; acá cada dato va en un solo renglón (número rosa + texto gris) alineado por el piso del texto. */
 .em-tipo-result-stats .em-stat {
   flex-direction: row;
   align-items: baseline;
@@ -1105,8 +699,7 @@
   grid-column: 2;
   grid-row: 2;
 }
-/* Título del bloque de datos fijos ("El cáncer de mama es:"): ocupa
-   las 2 columnas, así "1°..." y el % quedan en el renglón de abajo. */
+/* Título del bloque de datos fijos ("El cáncer de mama es:") */
 .em-tipo-result-stats .em-stats-lead {
   grid-column: 1;
   grid-row: 1;
@@ -1124,36 +717,21 @@
   grid-column: 1;
   grid-row: 2;
 }
-/* El tamaño de letra de estos 2 datos se agranda un poco (pedido de
-   Emi) -- SCOPEADO acá, a propósito: .em-stat-value/.em-stat-label son
-   clases compartidas que también usa "Casos por edad" (ver
-   renderInlineStats en modulo1.js), y ese gráfico no pidió el mismo
-   cambio. */
+/* Letra un poco más grande para estos 2 datos, limitada acá porque .em-stat-value/.em-stat-label también los usa "Casos por edad". */
 .em-tipo-result-stats .em-stat-value {
-  font-size: 1.55rem; /* antes 1.4rem (el tamaño base de .em-stat-value) */
+  font-size: 1.55rem; /* un poco más grande que el tamaño base (1.4rem) de .em-stat-value */
 }
 .em-tipo-result-stats .em-stat-label {
-  font-size: 0.9rem; /* antes 0.8rem (el tamaño base de .em-stat-label) */
+  font-size: 0.9rem; /* un poco más grande que el tamaño base (0.8rem) de .em-stat-label */
 }
-/* La bajada del pie ("Casos nuevos estimados...") iguala su tamaño al
-   nuevo tamaño (agrandado) de los datos fijos de arriba -- pedido de
-   Emi. Clase propia (no toca la .ui-sub compartida): "Casos por edad"
-   se queda con el tamaño de siempre. */
+/* La bajada del pie iguala el tamaño agrandado de los datos fijos (clase propia; no toca .ui-sub). */
 .em-foot-sub-lg {
   font-size: var(
     --ui-fs-pie
-  ); /* antes 0.9rem fijo -- ahora las 2 pestañas usan este mismo valor (ver .em-foot .ui-sub, más abajo) */
+  ); /* mismo valor en las 2 pestañas, desde la variable compartida */
 }
 
-/* .em-foot: la bajada que antes iba arriba de todo ("Casos nuevos
-   estimados...") + "Fuente", en la misma fila, al pie de la tarjeta
-   (pedido de Emi) -- usada por "Casos por tipo" Y "Casos por edad"
-   (esta última se sumó después, mismo criterio). "Fuente" es el
-   MISMO elemento .ui-src compartido de siempre (ver index.html) --
-   modulo1.js lo mueve acá adentro en cada render de la pestaña activa,
-   y lo devuelve a su lugar de origen (afuera de #em-chart-panel) antes
-   de que cualquier otra pestaña vuelva a vaciar el panel, para no
-   perderlo (ver render1() en modulo1.js). */
+/* .em-foot: la bajada + "Fuente" en la misma fila, al pie de la tarjeta, en las 2 pestañas. */
 .em-foot {
   display: flex;
   justify-content: space-between;
@@ -1164,10 +742,7 @@
 }
 .em-foot .ui-sub {
   margin: 0;
-  /* Mismo tamaño en las 2 pestañas (antes "Por edad" quedaba en
-     0.84rem, más chicas que "Por tipo") -- el valor sale
-     de la variable compartida de style.css ("MEDIDAS COMPARTIDAS"),
-     la misma que usa el pie del módulo 2. */
+  /* Mismo tamaño en las 2 pestañas, tomado de la variable compartida --ui-fs-pie de style.css. */
   font-size: var(--ui-fs-pie);
 }
 .em-foot .ui-src {
@@ -1176,44 +751,20 @@
   margin-left: auto; /* siempre a la derecha, aunque baje de renglón: solucion en pantallas angostas*/
 }
 
-/* ============ "FUENTE" ============
-   No existe una clase ".em-src" propia: el acordeón de "Fuente" (el
-   <details>/<summary> al pie de la tarjeta) reutiliza DIRECTAMENTE la
-   clase compartida .ui-src (ver style.css) -- ya trae armado el
-   ícono que rota, el popover flotante y el triangulito que apunta
-   hacia la etiqueta. Acá solo se ajusta el margen superior, para
-   separarla del bloque que tenga justo arriba (los datos sueltos
-   .em-inline-stats, según qué pestaña esté activa). */
+/* FUENTE: no hay clase .em-src propia, se reutiliza .ui-src (style.css) con su ícono, popover y triangulito. */
 .em-card .ui-src {
   margin-top: 12px;
 }
 
-/* ============ PANTALLAS BAJAS (alto chico) ============
-   Complemento del @media (max-height:760px) de style.css (ver ahí la
-   explicación general y modulo2.css para el mismo criterio aplicado
-   al mapa de módulo 2).
-
-   .em-chart-tipo/.em-chart-edad (la fila de barras de las 2
-   pestañas) NUNCA habían recibido este tratamiento -- a diferencia
-   del mapa de módulo 2, tenían una altura
-   fija en px (220px/250px, ver más arriba en este archivo) sin ningún
-   techo por vh. Por eso esas 2 pestañas seguían con barra de scroll
-   en pantallas bajas aunque el resto del sitio ya no la tuviera.
-   min(242px,38vh)/min(210px,34vh): valores medidos a mano para que,
-   sumados al resto de la tarjeta, entren justo por debajo de 760px de
-   alto (mismo método que ya usamos en .br-map-card). */
+/* PANTALLAS BAJAS (alto chico): achica los gráficos de barras para que no aparezca scroll vertical, igual que style.css. */
 @media (max-height: 760px) {
   .em-chart-tipo {
     height: min(193px, 30vh);
-  } /* bajado de 203px/31vh: el .chapter-header ahora deja más aire antes del título (ver style.css), así que el gráfico tiene que ceder esos px */
+  } /* alto del gráfico en pantallas bajas: cede px al .chapter-header */
   .em-chart-edad {
     height: min(140px, 21vh);
-  } /* mismo motivo */
-  /* "Casos por tipo" ahora reserva SIEMPRE el alto de la versión
-     revelada (pedido de Emi, ver .em-reveal-fade) -- eso agrega alto
-     fijo que antes no estaba en pantallas bajas (el eje, los botones y
-     el min-height de .em-feedback para 2-3 líneas). Se achica acá lo
-     mismo que ya se achicaba el resto del sitio en este escalón. */
+  } /* alto del gráfico de edad en pantallas bajas */
+  /* "Casos por tipo" reserva siempre el alto de la versión revelada, así que en pantallas bajas se achican el eje, los botones y el feedback. */
   .em-tipo-top .em-feedback {
     min-height: 1.5em;
   }
@@ -1235,67 +786,27 @@
   }
 }
 
-/* ============ PANTALLAS MUY BAJAS (segundo escalón) ============
-   Complemento del @media (max-height:660px) de style.css (ver ahí la
-   explicación general: el corte quedó en 660px, no en 620px, para
-   cubrir también la franja intermedia donde ningún escalón alcanzaba
-   del todo). Acá va la segunda vuelta de achique para
-   .em-chart-tipo/.em-chart-edad, medida contra los 601px reales de
-   Brenda -- a esa altura, el escalón de 760px solo no alcanzaba
-   (seguían pasándose 57-77px) porque sus barras no se achicaban lo
-   suficiente. */
+/* PANTALLAS MUY BAJAS (segundo escalón): segunda vuelta de achique para los gráficos, complemento del @media (max-height:660px) de style.css. */
 @media (max-height: 660px) {
   .em-chart-tipo {
     height: min(186px, 31vh);
-  } /* bajado de 193px/32vh: el .chapter-header ahora deja más aire antes del título (ver style.css), así que el gráfico tiene que ceder esos px */
+  } /* alto del gráfico en pantallas muy bajas: cede px al .chapter-header */
   .em-chart-edad {
     height: min(136px, 23vh);
-  } /* mismo motivo */
+  } /* alto del gráfico de edad en pantallas muy bajas */
 }
 
-/* ============ TARJETA DE ALTO FIJO (solo compu, más de 900px de ancho) ============
-   Antes la tarjeta medía lo que medía su contenido: cada pestaña
-   quedaba de un alto distinto ("Por edad" la más baja) y, para que
-   no apareciera la barra de scroll en pantallas bajas, los gráficos
-   tenían altos fijos en px que los 2 escalones de arriba (760px y
-   660px) achicaban a mano. En la compu de Bren (601px de alto útil,
-   o cualquier notebook con zoom/escalado de Windows) eso dejaba
-   "Casos por edad" en apenas 136px, con barras recortadas, y la
-   tarjeta terminando bastante antes que la vela de al lado.
-
-   Ahora el capítulo mide EXACTAMENTE lo mismo que la vela
-   (.chapter-media en style.css usa la misma cuenta: alto de la
-   ventana - 44px, entre 300px y 760px) y todo hacia adentro es
-   flex-column: título y pestañas miden lo suyo, y el gráfico activo
-   se queda con TODO el alto que sobra (flex:1). Resultado:
-     - las 2 pestañas miden lo mismo y la tarjeta termina justo al
-       pie de la vela, en cualquier alto de pantalla;
-     - el gráfico crece o se achica solo según el lugar disponible,
-       sin números medidos a mano por escalón;
-     - nunca hay barra de scroll (el capítulo no puede medir más que
-       la ventana).
-   El piso de 480px (y el min-height:min-content) es para ventanas
-   absurdamente bajas: ahí sí aparece scroll, pero el contenido no se
-   aplasta ni se corta.
-
-   En celular/tablet (900px o menos) no se toca nada: el layout pasa
-   a 1 columna con scroll normal y los gráficos vuelven a sus altos
-   en px de siempre. */
+/* TARJETA DE ALTO FIJO (compu, más de 900px de ancho): la tarjeta mide siempre lo mismo y el gráfico de barras se queda con el alto que sobra. */
 @media (min-width: 901px) {
   #chapter-1.active {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 44px); /* respaldo para navegadores sin dvh */
     height: clamp(480px, calc(100dvh - 44px), 760px);
-    /* Red de seguridad: si en una ventana MUY baja y angosta a la vez
-       el contenido no entra ni con los gráficos en su mínimo, el
-       capítulo crece (y aparece scroll) en vez de recortar el pie de
-       la tarjeta -- .chapter tiene overflow:hidden (style.css). */
+    /* Red de seguridad: si la ventana es muy baja y angosta, el capítulo crece (con scroll) en vez de recortar el pie de la tarjeta. */
     min-height: min-content;
   }
-  /* Sin min-height:0 a propósito en estos contenedores: así no pueden
-     achicarse por debajo de su contenido (con los gráficos en su
-     mínimo), y el min-content del capítulo, arriba, los cuenta bien. */
+  /* Sin min-height:0 a propósito: así los contenedores no se achican por debajo de su contenido. */
   .em-wrap {
     flex: 1;
     display: flex;
@@ -1311,8 +822,7 @@
     display: flex;
     flex-direction: column;
   }
-  /* El gráfico de barras se queda con el alto que sobra (pisa los
-     280px/250px y los min(...) de los escalones de arriba). */
+  /* El gráfico de barras se queda con el alto que sobra (pisa los 280px/250px y los min(...) de los escalones de arriba). */
   .em-chart-tipo,
   .em-chart-edad {
     flex: 1 1 0;
@@ -1321,29 +831,14 @@
   }
 }
 
-/* ============ ESPACIO ENTRE BLOQUES (igual en los 3 módulos) ============
-   Entre bloque y bloque de cada pestaña va el mismo espacio que entre
-   el título y las pestañas: la variable compartida --ui-gap-titulo
-   (ver "MEDIDAS COMPARTIDAS" en style.css: 20px, 14px en pantallas
-   bajas). Los GRUPOS que van juntos a propósito NO se separan:
-     - un gráfico con su leyenda ("Años" / "Los 5 cánceres...")
-   Excepción pedida por Emi: "1° / 66,2" en "Por tipo" mantiene su
-   separación grande con los botones (.em-tipo-result, margin-top:44px).
-   Va AL FINAL del archivo a propósito: les gana a los márgenes
-   sueltos de más arriba y a los de los escalones de pantallas bajas
-   (760px / 660px). Todo con .em-card adelante: módulo 2 también usa
-   .em-prompt/.em-prompt-tipo para sus instrucciones rosas, y esto no
-   lo tiene que tocar. */
+/* ESPACIO ENTRE BLOQUES: entre bloque y bloque va el mismo espacio que entre título y pestañas (--ui-gap-titulo de style.css). */
 
 /* Instrucción rosa (o respuesta variable de "Por tipo") → gráfico */
 .em-card .em-prompt-tipo,
 .em-card .em-tipo-top .em-feedback {
   margin-bottom: var(--ui-gap-titulo);
 }
-/* Los gráficos de barras reservan arriba SOLO el alto del número de
-   la barra más alta (18px de número + 6px de separación con la
-   barra) -- antes 30px, que sumaban aire de más entre la instrucción
-   y lo que se ve. Ver también EDAD_MAX en modulo1.js. */
+/* Los gráficos reservan arriba solo el alto del número de la barra más alta (18px de número + 6px de separación). */
 .em-card .em-chart-tipo,
 .em-card .em-chart-edad {
   padding-top: 24px;
@@ -1352,8 +847,7 @@
 .em-card .em-chart-tipo + .em-axis-note {
   margin-bottom: var(--ui-gap-titulo);
 }
-/* "Por edad": "Años" → "3 de cada 100..." (la línea separadora de
-   arriba de los datos queda a este espacio de "Años") */
+/* "Por edad": "Años" → "3 de cada 100..." (la línea separadora de arriba de los datos queda a este espacio de "Años") */
 .em-card .em-inline-stats {
   margin-top: var(--ui-gap-titulo);
 }
@@ -1362,38 +856,14 @@
   margin-top: var(--ui-gap-titulo);
 }
 
-/* ============ "POR TIPO": BARRAS MÁS ALTAS ============
-   Pedido de Emi, para que las barras se diferencien mejor: en
-   pantallas de alto normal, "1° / 66,2" pasa del margen grande de
-   44px al espacio parejo entre bloques (--ui-gap-titulo). Esos px los
-   toma el gráfico, que crece solo (es el que se queda con el alto que
-   sobra de la tarjeta). En pantallas bajas (760px o menos) ese margen
-   ya era chico (10px, ver el escalón de 760px), así que ahí no cambia.
-   (Que el número que se va eligiendo no pise la manija cerca del
-   máximo lo resuelve modulo1.js -- ver placeVal en setupDrag -- sin
-   quitarle alto al gráfico.) */
+/* "POR TIPO": BARRAS MÁS ALTAS: los datos fijos usan el espacio parejo entre bloques y el gráfico crece con esos px. */
 @media (min-height: 761px) {
   .em-card .em-tipo-result {
     margin-top: var(--ui-gap-titulo);
   }
 }
 
-/* ============ "POR TIPO": MENSAJE DE RESULTADO PEGADO AL GRÁFICO ============
-   Pedido de Emi: que el mensaje de resultado ("Dijiste... Se estiman...",
-   y también el de "¿Y si sumamos los otros 4?") quede a la altura de
-   "Tu respuesta" cuando está arriba de todo, en CUALQUIER pantalla.
-     1) El texto va al FONDO de su caja (antes quedaba arriba, con un
-        renglón vacío abajo: la caja reserva 2 renglones para que la
-        tarjeta no salte de alto). modulo1.js lo envuelve en un <span>
-        (setFeedback) para que baje como un solo bloque.
-     2) Baja además hacia el espacio libre entre el mensaje y el gráfico
-        (--ui-gap-titulo: 20px, 14px en pantallas bajas), hasta quedar a
-        4px del gráfico -- justo arriba de donde aparece "Tu respuesta"
-        en su punto más alto (adentro del aire de arriba del gráfico).
-   Se mueve con transform: no cambia el alto de nada, y como solo usa
-   espacio vacío, nunca se encima con el gráfico. Es el mismo elemento
-   para todos los mensajes, así que con "¿Y si sumamos los otros 4?"
-   queda exactamente a la misma altura. */
+/* "POR TIPO": MENSAJE DE RESULTADO PEGADO AL GRÁFICO: queda a la altura de "Tu respuesta" en cualquier pantalla. */
 .em-card .em-tipo-top .em-feedback {
   display: flex;
   flex-direction: column;
@@ -1401,12 +871,7 @@
   transform: translateY(calc(var(--ui-gap-titulo) - 4px));
 }
 
-/* ============ "POR TIPO": ANIMACIÓN DE ENTRADA (una sola vez) ============
-   El <canvas> donde vuelan los guiones que arman el borde punteado de
-   la barra de Mama la primera vez que se ve la pestaña (ver
-   armarBarraConGuiones en modulo1.js -- mismo movimiento que el lazo
-   del módulo 3). Va encima del gráfico, no recibe clics, y al terminar
-   se desvanece. */
+/* "POR TIPO": ANIMACIÓN DE ENTRADA (una sola vez): canvas encima del gráfico donde vuelan los guiones del borde de Mama. */
 .em-intro-puntos {
   position: absolute;
   inset: 0;
@@ -1420,17 +885,7 @@
   opacity: 0;
 }
 
-/* ============ "POR TIPO": ENTRADA SIN CORTE ============
-   Cuando los guiones terminan de armar el contorno, la barra real toma
-   el relevo en pasos encadenados (pedido de Emi: "siento que se corta").
-   modulo1.js pone .em-intro-entrada en la zona de arrastre y en el "?"
-   durante 1,2s y después la saca: como el estado final de cada paso es
-   igual al normal, al sacarla no se nota nada.
-     1) borde   (0 - 0,5s):    se enciende mientras los guiones dibujados
-                               se desvanecen (transición cruzada)
-     2) relleno (0,15 - 0,65s): sube desde la base de la barra
-     3) manija  (0,45 - 0,9s):  aparece con un rebote chico
-     4) "?"     (0,65 - 1,15s): aparece con un rebote suave */
+/* "POR TIPO": ENTRADA SIN CORTE: la barra real toma el relevo en pasos encadenados con .em-intro-entrada (modulo1.js). */
 .em-guess-zone.em-intro-entrada .em-guess-bar {
   background: transparent; /* el relleno lo pone el ::before, que sube */
   animation: em-intro-borde 0.5s ease both;
@@ -1473,8 +928,7 @@
     transform: scale(1);
   }
 }
-/* El "?" ya está centrado con translateX(-50%) (ver .em-bar > .em-val):
-   el rebote lo tiene que mantener. */
+/* El "?" ya está centrado con translateX(-50%): el rebote lo tiene que mantener. */
 .em-val.em-intro-entrada {
   animation: em-intro-q 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.65s both;
 }
@@ -1489,11 +943,54 @@
   }
 }
 
-/* "Casos por tipo": mientras se adivina, la barra de Mama se llama
-   "Cáncer de mama" (ver lblText en modulo1.js), que es más largo que la
-   columna (100px). Va en un solo renglón, centrado y desbordando un poco
-   a los costados: en ese momento la barra está sola en el gráfico, así
-   que no pisa nada. Al revelar pasa a "Mama", que entra sin problema. */
+/* "Casos por tipo": mientras se adivina, la etiqueta "Cáncer de mama" va en un solo renglón, centrada y desbordando un poco. */
 .em-chart-tipo .em-col:first-child .em-lbl {
   white-space: nowrap;
+}
+/* "Casos por tipo": el prompt y la respuesta suben a la fila de las pestañas (modulo1.js los mueve adentro de .em-tabs) */
+.em-card .em-tabs .em-tipo-top {
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: center;
+  margin-left: 12px;
+}
+.em-card .em-tabs .em-prompt-tipo,
+.em-card .em-tabs .em-tipo-top .em-feedback {
+  margin-bottom: 0;
+  min-height: 0;
+  transform: none;
+  justify-content: center;
+}
+@media (max-width: 700px) {
+  .em-card .em-tabs {
+    flex-wrap: wrap;
+  }
+  .em-card .em-tabs .em-tipo-top {
+    flex: 1 1 100%;
+    margin: 8px 0 0;
+  }
+}
+/* Instrucción "Arrastrá la barra para adivinar.": centrada sobre la barra de Mama (que está centrada en el gráfico).
+   Con la fila de pestañas ancha (>= 560px) se centra respecto de TODA la fila; si no entra, vuelve a su
+   renglón propio debajo de las pestañas (donde ya queda centrada igual que el gráfico). */
+.em-card .em-tabs {
+  position: relative; /* referencia para centrar la instrucción */
+  container-type: inline-size; /* @container según el ancho real de la fila, no de la pantalla */
+  flex-wrap: wrap;
+}
+@container (min-width: 560px) {
+  .em-card .em-tabs .em-tipo-top > .em-prompt-tipo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 380px); /* deja libres las pestañas a la izquierda y el mismo espacio a la derecha */
+    pointer-events: none;
+  }
+}
+@container (max-width: 559px) {
+  .em-card .em-tabs .em-tipo-top {
+    flex: 1 1 100%;
+    margin: 8px 0 0;
+  }
 }

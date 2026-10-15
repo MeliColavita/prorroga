@@ -22,3 +22,10 @@ El HTML de cada módulo va dentro de su capítulo en `index.html` (hay un `<div 
 - Al abrir la carpeta en VS Code, aceptá instalar las extensiones recomendadas (**Prettier** ordena el código al guardar, **Live Server** abre el sitio).
 - Datos del módulo 3: están en el objeto `DATOS` al principio de `modulo3.js`.
 - Cada módulo puede tener sus propios datos del mismo modo.
+
+## Animación (archivos generales)
+- `animacion.js` usa **GSAP** (CDN en `index.html`). Anima el marco de cada capítulo (título, bajada, pestañas, leyendas) y el popover de "Fuente". No toca los gráficos de cada módulo.
+- Primera entrada a un módulo: la hace `transicion.js` (bolitas). Desde la segunda vez: GSAP.
+- `style.css` (final del archivo, "MOVIMIENTO COMPARTIDO"): variables `--ease-out`, `--dur-fast/med/slow`, `--stagger` y la clase opcional `.mov-cascada` (usá `--i` en cada hijo). Usalas en tus módulos en vez de inventar duraciones.
+- Regla de oro: animar solo `opacity` y `transform`, con desplazamientos chicos. Nada que cambie el alto o ancho de las tarjetas (no debe aparecer scroll vertical).
+- Si GSAP no carga o el sistema pide "reducir movimiento", el sitio funciona igual que antes.

@@ -379,6 +379,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: top 0.4s ease; /* el mapa crece suave hacia arriba al irse la pista */
 }
 /* El mapa ocupa TODO el alto disponible menos la leyenda; el ancho
    sale solo del aspect-ratio. */
@@ -442,6 +443,13 @@
 .br-widget g.br-dots circle {
   fill: var(--br-rose);
   opacity: 0.9;
+  transition: fill 0.15s ease;
+}
+/* Puntos de la provincia que está en rosa fuerte (hover o seleccionada):
+   oscuros para que contrasten con el fondo. La clase la pone modulo2.js. */
+.br-widget g.br-dots circle.on-rose {
+  fill: var(--br-bg);
+  opacity: 1;
 }
 
 /* Aclaración debajo del mapa: ahora es un texto de 2-3 líneas, centrado. */

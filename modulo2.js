@@ -210,6 +210,16 @@
     function highlight(p) {
       const group = GROUPED_PROVINCES[p.name] || [p.name];
       pathEls.forEach((o) => o.el.classList.toggle('active', group.includes(o.data.name)));
+      syncDotsOnRose();
+    }
+
+    // Los puntos de una provincia que está en rosa (hover/seleccionada) pasan a
+    // oscuro para que se vean: les agrega/saca la clase "on-rose" (ver modulo2.css).
+    function syncDotsOnRose() {
+      const activas = new Set(pathEls.filter((o) => o.el.classList.contains('active')).map((o) => o.data.name));
+      dotsGroup.querySelectorAll('circle').forEach((c) => {
+        c.classList.toggle('on-rose', activas.has(c.getAttribute('data-prov')));
+      });
     }
 
     DATA.provinces.forEach((p) => {
@@ -281,9 +291,11 @@
           c.setAttribute('cx', x.toFixed(1));
           c.setAttribute('cy', y.toFixed(1));
           c.setAttribute('r', 2.8);
+          c.setAttribute('data-prov', p.name);
           dotsGroup.appendChild(c);
         });
       });
+      syncDotsOnRose(); // al cambiar de año se redibujan: mantener oscuros los de la provincia activa
     }
 
     // Pisa total/cancer/pct de cada provincia con los datos del año elegido.
@@ -384,7 +396,7 @@
             const value = dataset.data[index];
             ctx.save();
             ctx.fillStyle = '#f2e9ee';
-            ctx.font = '600 13px "DM Sans", system-ui, sans-serif';
+            ctx.font = '600 13px Inter, system-ui, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillText(value.toLocaleString('es-AR'), bar.x, bar.y - 6);
@@ -494,7 +506,52 @@
       pathEls.forEach((o) => {
         if (group.includes(o.data.name)) o.el.classList.add('active');
       });
+      syncDotsOnRose();
       updateProvinceChart(initial.data);
+    }
+
+    // ---------- El mapa crece hacia arriba cuando se va la pista rosa ----------
+    // La pista (#brProvPrompt) vive en la fila de las pestañas (al lado de los
+    // botones, o en un renglón propio si no entra) y, cuando se va
+    // (br-prompt-gone), solo se vuelve invisible: ese espacio queda vacío. Ahí el
+    // mapa se estira hacia arriba, hasta el techo de la pista (sube --br-map-lift,
+    // ver modulo2.css); al volver la pista, vuelve a 0. Solo aplica con mapa y
+    // gráfico lado a lado (en una columna, .br-map-inner no es absolute). Si la
+    // pista comparte renglón con los botones, el mapa sube solo si su columna queda
+    // a la derecha de ellos (para no taparlos).
+    const mapInner = document.querySelector('#brPanelProvincia .br-map-inner');
+    const mapCol = document.querySelector('#brPanelProvincia .br-map-col');
+    function ajustarAlturaMapa() {
+      if (!mapInner || !mapCol || !promptProv) return;
+      let lift = 0;
+      if (
+        promptProv.classList.contains('br-prompt-gone') &&
+        !promptProv.classList.contains('br-hidden') &&
+        getComputedStyle(mapInner).position === 'absolute'
+      ) {
+        const colR = mapCol.getBoundingClientRect();
+        const promptR = promptProv.getBoundingClientRect();
+        let botonesRight = 0;
+        let botonesBottom = 0;
+        document.querySelectorAll('.br-tabs .br-tab-btn').forEach((btn) => {
+          const r = btn.getBoundingClientRect();
+          botonesRight = Math.max(botonesRight, r.right);
+          botonesBottom = Math.max(botonesBottom, r.bottom);
+        });
+        const mismoRenglon = promptR.top < botonesBottom - 1;
+        if (!mismoRenglon || colR.left > botonesRight + 8) {
+          lift = Math.max(0, colR.top - promptR.top);
+        }
+      }
+      mapInner.style.setProperty('--br-map-lift', lift + 'px');
+    }
+    if (promptProv) {
+      // se dispara cada vez que modulo2.js le agrega/saca "br-prompt-gone" o "br-hidden"
+      new MutationObserver(ajustarAlturaMapa).observe(promptProv, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+      window.addEventListener('resize', ajustarAlturaMapa);
     }
 
     // ---------- Slider de año ----------
@@ -1090,7 +1147,7 @@
             lineas = [],
             lineH = 0;
           for (; size >= 8; size--) {
-            c.font = `italic ${size}px "DM Sans", system-ui, sans-serif`;
+            c.font = `italic ${size}px Inter, system-ui, sans-serif`;
             lineH = size * 1.25;
             lineas = envolver(texto, maxW);
             for (let w = 90; w < maxW; w += 6) {
