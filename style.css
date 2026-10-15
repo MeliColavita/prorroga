@@ -1597,3 +1597,317 @@ body {
     margin-bottom: 8px;
   } /* pisa el 12px del escalón de 760px: todavía menos aire, pero nunca 0 -- misma razón que ahí */
 }
+
+/* ============================================================
+   BARRA DE CAPÍTULOS (abajo) + ANIMACIÓN DE ENTRADA (transicion.js)
+   Reemplaza el menú lateral de la columna 4. Va AL FINAL del archivo
+   a propósito: pisa las reglas viejas de .side-nav / .nav-item (que
+   quedan arriba sin usarse; se pueden borrar más adelante).
+   --bar-h es el alto de la barra: se lo suma al padding del .layout y se
+   lo resta a la vela (.chapter-media) y al capítulo 1, así el total sigue
+   siendo el alto de la ventana (sin scroll nuevo).
+   ============================================================ */
+:root {
+  --bar-h: 60px;
+}
+@media (max-height: 760px) {
+  :root {
+    --bar-h: 54px;
+  }
+}
+@media (max-height: 660px) {
+  :root {
+    --bar-h: 50px;
+  }
+}
+
+/* Sin la columna 4 (el menú ya no vive ahí): 3 columnas iguales */
+.layout {
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-bottom: calc(max(22px, env(safe-area-inset-bottom)) + var(--bar-h));
+}
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-height: 760px) {
+  .layout {
+    padding-bottom: calc(14px + var(--bar-h));
+  }
+}
+@media (max-height: 660px) {
+  .layout {
+    padding-bottom: calc(6px + var(--bar-h));
+  }
+}
+@media (min-width: 901px) {
+  .chapter-media {
+    height: calc(100vh - 44px - var(--bar-h)); /* respaldo */
+    height: clamp(300px, calc(100dvh - 44px - var(--bar-h)), 760px);
+  }
+  /* misma cuenta que modulo1.css (con más especificidad para pisarla sin tocar ese archivo) */
+  #experience #chapter-1.active {
+    height: calc(100vh - 44px - var(--bar-h)); /* respaldo */
+    height: clamp(480px, calc(100dvh - 44px - var(--bar-h)), 760px);
+  }
+}
+
+/* La barra */
+.side-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+  transform: none;
+  grid-column: auto;
+  z-index: 30;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+  padding: 0 max(24px, calc((100vw - 640px) / 2)) env(safe-area-inset-bottom, 0px);
+  overflow: visible;
+  background: linear-gradient(to top, rgba(7, 5, 10, 0.95), rgba(7, 5, 10, 0.6));
+  backdrop-filter: blur(6px);
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0;
+}
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  width: auto;
+  min-width: 0;
+  padding: 4px;
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  box-shadow: none;
+  color: var(--text-dim);
+}
+.nav-item .num {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  font-size: 0.95rem;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  transition:
+    background 0.35s,
+    color 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s,
+    opacity 0.3s;
+}
+.nav-item .label {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.nav-item:not(.active):hover {
+  border-color: transparent;
+  color: var(--text);
+}
+.nav-item:not(.active):hover .num {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.nav-item.done .num {
+  color: var(--rose);
+  border-color: var(--rose-strong);
+  background: rgba(255, 111, 156, 0.1);
+}
+.nav-item.active {
+  border-color: transparent;
+  box-shadow: none;
+}
+.nav-item.active .num {
+  background: var(--rose-strong);
+  color: #1a0510;
+  border-color: var(--rose);
+  box-shadow: 0 0 16px var(--rose-glow);
+}
+/* bolita que orbita el círculo del capítulo actual */
+.nav-item.active .num::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: 0 0 8px var(--rose-glow);
+  animation: navOrbita 3.2s linear infinite;
+}
+@keyframes navOrbita {
+  from {
+    transform: rotate(0) translateX(19px);
+  }
+  to {
+    transform: rotate(360deg) translateX(19px);
+  }
+}
+/* el capítulo que sigue late con un pulso */
+@keyframes navPulso {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 111, 156, 0.55);
+  }
+  60% {
+    box-shadow: 0 0 0 9px rgba(255, 111, 156, 0);
+  }
+}
+.nav-item.next .num {
+  border-color: var(--rose);
+  animation: navPulso 1.8s ease-out infinite 1.5s;
+}
+/* mientras las bolas salen del círculo, el círculo se apaga */
+.nav-item.tr-lift .num {
+  opacity: 0;
+}
+
+/* Hilo de bolitas entre capítulos: se prenden de a una al avanzar */
+.nav-trail {
+  flex: 1;
+  min-width: 36px;
+  margin: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-trail i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--dot-off);
+  transition:
+    background 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.nav-trail.full i {
+  background: var(--rose-strong);
+  box-shadow: 0 0 6px var(--rose-glow);
+  transform: scale(1.15);
+  transition-delay: calc(var(--k, 0) * 60ms);
+}
+
+/* Silencio de efectos (izquierda) y "Volver a la presentación" (derecha) */
+.nav-sfx {
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  top: calc(var(--bar-h) / 2);
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.nav-sfx:hover {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.nav-sfx:focus-visible {
+  outline: 2px solid var(--rose-strong);
+  outline-offset: 3px;
+}
+.nav-sfx .i-off {
+  display: none;
+}
+.nav-sfx[aria-pressed='true'] .i-on {
+  display: none;
+}
+.nav-sfx[aria-pressed='true'] .i-off {
+  display: block;
+}
+.nav-back {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  top: calc(var(--bar-h) / 2);
+  transform: translateY(-50%);
+  width: auto;
+  flex: none;
+  padding: 6px 12px;
+}
+@media (max-width: 1100px) {
+  .nav-back-txt {
+    display: none; /* queda solo la flecha (con tooltip) para no pisar la barra */
+  }
+}
+@media (max-width: 700px) {
+  .side-nav {
+    padding-left: 56px;
+    padding-right: 56px;
+  }
+  .nav-item .label {
+    display: none; /* en pantallas angostas solo el capítulo actual muestra su nombre */
+  }
+  .nav-item.active .label {
+    display: block;
+  }
+  .nav-trail {
+    min-width: 20px;
+    margin: 0 6px;
+  }
+}
+
+/* Animación de entrada de cada módulo (la 1ª vez): canvas de bolas + frase puente */
+#trCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 35; /* por encima de la barra: las bolas salen del círculo numerado */
+  pointer-events: none;
+}
+.tr-puente {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 36;
+  width: min(560px, 86vw);
+  text-align: center;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.4;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.tr-puente.on {
+  opacity: 1;
+}
+/* mientras corre la animación se esconden el título y la tarjeta reales; después entran con fundido */
+.chapter.tr-h .chapter-header {
+  opacity: 0;
+}
+.chapter.tr-c .ui-wrap {
+  opacity: 0;
+}
+.chapter.tr-revela .chapter-header,
+.chapter.tr-revela .ui-wrap {
+  transition: opacity 0.7s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-item.active .num::after,
+  .nav-item.next .num {
+    animation: none;
+  }
+}

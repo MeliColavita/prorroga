@@ -1057,3 +1057,21 @@
     --me-h: clamp(160px, 34vh, 250px);
   }
 }
+
+/* ---- "Una última cosa" a la altura de "Fuente" ----
+   El botón sale de la fila propia que ocupaba: queda centrado en la misma línea que
+   "Fuente" (modulo3.js lo alinea en vertical), así la tarjeta es más baja y el lazo
+   de puntos vuelve a su tamaño de antes. En celular vuelve a ir en su propia fila. */
+.me-body {
+  min-height: 0;
+}
+@media (min-width: 681px) {
+  .me-card > .me-final {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: max-content;
+    z-index: 1;
+  }
+}

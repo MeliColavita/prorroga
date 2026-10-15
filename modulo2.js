@@ -384,7 +384,7 @@
             const value = dataset.data[index];
             ctx.save();
             ctx.fillStyle = '#f2e9ee';
-            ctx.font = '600 13px Inter, system-ui, sans-serif';
+            ctx.font = '600 13px "DM Sans", system-ui, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillText(value.toLocaleString('es-AR'), bar.x, bar.y - 6);
@@ -1090,7 +1090,7 @@
             lineas = [],
             lineH = 0;
           for (; size >= 8; size--) {
-            c.font = `italic ${size}px Inter, system-ui, sans-serif`;
+            c.font = `italic ${size}px "DM Sans", system-ui, sans-serif`;
             lineH = size * 1.25;
             lineas = envolver(texto, maxW);
             for (let w = 90; w < maxW; w += 6) {

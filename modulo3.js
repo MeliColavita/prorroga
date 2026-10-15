@@ -1144,3 +1144,41 @@
   ];
   uiFuente(src, FUENTES_ME);
 })();
+
+// ============================================================
+// "Una última cosa" a la altura de "Fuente": el botón queda en la misma línea que la
+// etiqueta "Fuente" (siempre centrado en la tarjeta).
+// El CSS lo saca de la fila (position:absolute, solo en pantallas > 680px) y acá se
+// calcula su altura. Se recalcula cuando la tarjeta cambia de tamaño.
+// ============================================================
+(function () {
+  const b = document.getElementById('me-final');
+  const card = b ? b.closest('.me-card') : null;
+  const src = card ? card.querySelector(':scope > .ui-src') : null;
+  if (!b || !card || !src) return;
+  const chico = window.matchMedia('(max-width: 680px)');
+
+  function alinear() {
+    if (chico.matches) {
+      b.style.top = b.style.left = b.style.right = '';
+      return;
+    }
+    const c = card.getBoundingClientRect();
+    const s = src.getBoundingClientRect();
+    if (!c.height || !s.height) return; // tarjeta oculta (otro capítulo)
+    b.style.top = s.top - c.top + s.height / 2 - b.offsetHeight / 2 + 'px';
+    // siempre centrado horizontalmente en la tarjeta (lo hace el CSS: left/right:0 + margin:auto)
+    b.style.left = b.style.right = '';
+    b.style.margin = '';
+  }
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(alinear);
+    ro.observe(card);
+    ro.observe(src);
+  }
+  window.addEventListener('resize', alinear);
+  if (chico.addEventListener) chico.addEventListener('change', alinear);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alinear);
+  alinear();
+})();

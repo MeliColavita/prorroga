@@ -2,6 +2,49 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <!-- Sonido "carga" de la intro: va PRIMERO en el <head>, antes de los CSS y las fuentes
+         (que bloquean los scripts que vienen después), para que empiece a bajar y a sonar
+         lo antes posible. transicion.js reutiliza este mismo audio (window.__sfxCarga).
+         Los navegadores bloquean el sonido hasta el primer toque: si pasa, espera ese toque. -->
+    <script>
+      (function () {
+        var silencio = false;
+        try {
+          silencio = sessionStorage.getItem('sfxSilencio') === '1';
+        } catch (e) {}
+        var a = new Audio('sonidos/carga.mp3');
+        a.preload = 'auto';
+        a.volume = 0.5; // igual que SONIDOS.carga.vol en transicion.js
+        window.__sfxCarga = a;
+        if (silencio) return;
+        var hecho = false;
+        function esperarToque() {
+          var eventos = ['pointerdown', 'pointerup', 'touchend', 'keydown'];
+          function alToque() {
+            eventos.forEach(function (ev) {
+              document.removeEventListener(ev, alToque, true);
+            });
+            var intro = document.getElementById('intro');
+            if (hecho || (intro && intro.classList.contains('hidden'))) return;
+            try {
+              if (sessionStorage.getItem('sfxSilencio') === '1') return;
+            } catch (e) {}
+            hecho = true;
+            a.currentTime = 0;
+            a.play().catch(function () {});
+          }
+          eventos.forEach(function (ev) {
+            document.addEventListener(ev, alToque, true);
+          });
+        }
+        var p = a.play();
+        if (p && p.then) {
+          p.then(function () {
+            hecho = true;
+          }).catch(esperarToque);
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
@@ -21,13 +64,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="modulo1.css" />
     <link rel="stylesheet" href="modulo2.css" />
     <link rel="stylesheet" href="modulo3.css" />
+    <!-- Tipografía de todo el sitio: DM Serif Display (títulos y números) + DM Sans (textos).
+         Pisa las variables --serif / --sans de style.css (por eso va después de todos los CSS).
+         DM Serif Display solo existe en peso normal: font-synthesis evita el "negrita falsa". -->
+    <style>
+      :root,
+      body {
+        --serif: 'DM Serif Display', Georgia, serif;
+        --sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-synthesis-weight: none;
+      }
+      /* Barra de capítulos de abajo (los 3 círculos): un punto más grande */
+      .side-nav {
+        zoom: 1.12;
+      }
+      body,
+      button,
+      input,
+      select,
+      textarea {
+        font-family: var(--sans);
+      }
+    </style>
   </head>
   <body>
     <!-- ================= INTRO ================= -->
@@ -214,9 +279,8 @@
            ahora vive en la columna .chapter-media, junto a los videos
            de los otros 2 capítulos (ver más abajo, antes de .side-nav).
            script.js decide cuál de los 3 se ve según el capítulo activo. -->
-          <section class="chapter active" id="chapter-1">
+          <section class="chapter active" id="chapter-1" data-puente="Antes de hablar de cambios, empecemos por lo más simple: contar.">
             <div class="chapter-header">
-              <p class="chapter-eyebrow">Capítulo 1</p>
               <h2 class="chapter-title">
                 Argentina hoy
                 <!-- Puntitos rosa animados alrededor del título.
@@ -293,9 +357,8 @@
           </section>
 
           <!-- CAPÍTULO 2 -->
-          <section class="chapter" id="chapter-2">
+          <section class="chapter" id="chapter-2" data-puente="Ahora que sabemos cuánto pesa, ¿esto viene cambiando?">
             <div class="chapter-header">
-              <p class="chapter-eyebrow">Capítulo 2</p>
               <h2 class="chapter-title">
                 El tiempo
                 <span class="title-dots" aria-hidden="true">
@@ -504,9 +567,8 @@
           </section>
 
           <!-- CAPÍTULO 3 -->
-          <section class="chapter" id="chapter-3">
+          <section class="chapter" id="chapter-3" data-puente="Si lo vemos a tiempo, hay mucho por hacer.">
             <div class="chapter-header">
-              <p class="chapter-eyebrow">Capítulo 3</p>
               <h2 class="chapter-title">
                 El futuro
                 <span class="title-dots" aria-hidden="true">
@@ -698,23 +760,72 @@
          cada capítulo. data-target coincide con el número al final de cada
          id="chapter-X" -->
         <nav class="side-nav" aria-label="Capítulos">
+          <!-- Barra de abajo: círculos numerados unidos por un hilo de bolitas.
+           transicion.js marca cuál está activo (.active), cuáles ya se vieron
+           (.done) y cuál sigue (.next), y prende el hilo (.full). -->
+          <button type="button" class="nav-sfx" id="navSfx" aria-pressed="false" aria-label="Silenciar efectos de sonido">
+            <svg class="i-on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z" />
+            </svg>
+            <svg class="i-off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z" />
+              <path d="M16 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+            </svg>
+          </button>
           <button type="button" class="nav-item active" data-target="1">
             <span class="num">1</span><span class="label">Argentina hoy</span>
           </button>
+          <span class="nav-trail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
           <button type="button" class="nav-item" data-target="2">
             <span class="num">2</span><span class="label">El tiempo</span>
           </button>
+          <span class="nav-trail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
           <button type="button" class="nav-item" data-target="3">
             <span class="num">3</span><span class="label">El futuro</span>
           </button>
-          <button type="button" class="nav-back" id="navBack">
-            <span aria-hidden="true">←</span> Volver a la presentación
+          <button type="button" class="nav-back" id="navBack" aria-label="Volver a la presentación" title="Volver a la presentación">
+            <span aria-hidden="true">←</span><span class="nav-back-txt"> Volver a la presentación</span>
           </button>
         </nav>
       </div>
     </div>
 
+    <!-- Animación de entrada de cada módulo (solo la 1ª vez): bolas que se arman
+     como el título y viajan a la tarjeta. Ver transicion.js y el final de style.css -->
+    <canvas id="trCanvas" aria-hidden="true"></canvas>
+    <div id="trPuente" class="tr-puente" aria-hidden="true"></div>
+
+    <!-- Tipografía: si style.css todavía nombra "Fraunces" o "Inter" directamente (en vez de usar
+         --serif / --sans), este script las cambia por DM Serif Display / DM Sans en todo el sitio,
+         incluso en lo que dibujan los módulos después. Cuando style.css use las variables, se puede borrar. -->
+    <script>
+      (function () {
+        var SERIF = '"DM Serif Display", Georgia, serif';
+        var SANS = '"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif';
+        function arreglar(el) {
+          if (!el || el.nodeType !== 1) return;
+          var f = getComputedStyle(el).fontFamily || '';
+          if (/Fraunces/i.test(f)) el.style.fontFamily = SERIF;
+          else if (/\bInter\b/i.test(f)) el.style.fontFamily = SANS;
+        }
+        function todo(raiz) {
+          arreglar(raiz);
+          var h = raiz.querySelectorAll ? raiz.querySelectorAll('*') : [];
+          for (var i = 0; i < h.length; i++) arreglar(h[i]);
+        }
+        todo(document.body);
+        var pend = [];
+        new MutationObserver(function (muts) {
+          if (!pend.length) requestAnimationFrame(function () {
+            var l = pend; pend = [];
+            l.forEach(todo);
+          });
+          muts.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) pend.push(n); }); });
+        }).observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
     <script src="script.js"></script>
+    <script src="transicion.js"></script>
     <script src="modulo1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <script src="mapa_provincias.js"></script>

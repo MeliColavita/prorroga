@@ -93,6 +93,18 @@ function enterExperience() {
       .play()
       .catch((err) => console.warn('No se pudo reproducir el video del capítulo activo:', err));
   }
+
+  // Sonido "modulo" (el mismo de los módulos 2 y 3) y animación de entrada del módulo 1.
+  // La animación espera 700 ms a que termine el fundido de la intro (1,1 s) para que se
+  // vea de verdad. (El sonido "carga" suena en la intro cuando aparece el título.)
+  if (window.Transicion) {
+    window.Transicion.sfx('modulo');
+    window.Transicion.entrar(
+      document.querySelector('.chapter.active'),
+      document.querySelector('.nav-item.active'),
+      700,
+    );
+  }
 }
 
 const AUDIO_FAIL_TEXT = 'Continuar →';
@@ -292,6 +304,8 @@ function fadeVolume(target, ms = 1500) {
 // chapters: las 3 secciones .chapter (cada una con su video de fondo y título)
 navItems.forEach((item) => {
   item.addEventListener('click', () => {
+    // Efecto de sonido de cambio de módulo (solo si se toca un capítulo distinto del actual)
+    if (!item.classList.contains('active') && window.Transicion) window.Transicion.sfx('modulo');
     const actual = document.querySelector('.chapter.active');
     const fuentesQueSalen = actual ? actual.querySelectorAll('.ui-src') : [];
     uiFuenteSalir(fuentesQueSalen, () => {
@@ -334,6 +348,10 @@ navItems.forEach((item) => {
         void dot.offsetWidth; // fuerza un reflow (lee una propiedad de layout)
         dot.style.animation = ''; // se la devuelve: ahora arranca desde cero
       });
+
+      // Barra de abajo + animación de entrada de bolas (SOLO la primera vez de cada módulo).
+      // Ver transicion.js. Si ese archivo no carga, el cambio de módulo funciona igual.
+      if (window.Transicion) window.Transicion.entrar(chapter, item);
     });
   });
 });
