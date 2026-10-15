@@ -111,7 +111,7 @@
       <!-- Audio de fondo. Sin "loop": necesitamos que dispare el evento 'ended'
        para que el JS oculte este botón y muestre "deslizá para comenzar". -->
       <audio id="bgAudio" preload="auto">
-        <source src="AUDIO_FINAL.mp3" type="audio/mpeg" />
+        <source src="AUDIO_FINAL.MP3" type="audio/mpeg" />
       </audio>
 
       <!-- Botón "Saltear intro": aparece (abajo a la derecha) una vez que
@@ -279,7 +279,11 @@
            ahora vive en la columna .chapter-media, junto a los videos
            de los otros 2 capítulos (ver más abajo, antes de .side-nav).
            script.js decide cuál de los 3 se ve según el capítulo activo. -->
-          <section class="chapter active" id="chapter-1" data-puente="Antes de hablar de cambios, empecemos por lo más simple: contar.">
+          <section
+            class="chapter active"
+            id="chapter-1"
+            data-puente="Antes de hablar de cambios, empecemos por lo más simple: contar."
+          >
             <div class="chapter-header">
               <h2 class="chapter-title">
                 Argentina hoy
@@ -357,7 +361,11 @@
           </section>
 
           <!-- CAPÍTULO 2 -->
-          <section class="chapter" id="chapter-2" data-puente="Ahora que sabemos cuánto pesa, ¿esto viene cambiando?">
+          <section
+            class="chapter"
+            id="chapter-2"
+            data-puente="Ahora que sabemos cuánto pesa, ¿esto viene cambiando?"
+          >
             <div class="chapter-header">
               <h2 class="chapter-title">
                 El tiempo
@@ -567,7 +575,11 @@
           </section>
 
           <!-- CAPÍTULO 3 -->
-          <section class="chapter" id="chapter-3" data-puente="Si lo vemos a tiempo, hay mucho por hacer.">
+          <section
+            class="chapter"
+            id="chapter-3"
+            data-puente="Si lo vemos a tiempo, hay mucho por hacer."
+          >
             <div class="chapter-header">
               <h2 class="chapter-title">
                 El futuro
@@ -763,28 +775,54 @@
           <!-- Barra de abajo: círculos numerados unidos por un hilo de bolitas.
            transicion.js marca cuál está activo (.active), cuáles ya se vieron
            (.done) y cuál sigue (.next), y prende el hilo (.full). -->
-          <button type="button" class="nav-sfx" id="navSfx" aria-pressed="false" aria-label="Silenciar efectos de sonido">
+          <button
+            type="button"
+            class="nav-sfx"
+            id="navSfx"
+            aria-pressed="false"
+            aria-label="Silenciar efectos de sonido"
+          >
             <svg class="i-on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z" />
+              <path
+                fill="currentColor"
+                d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"
+              />
             </svg>
             <svg class="i-off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z" />
-              <path d="M16 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+              <path
+                d="M16 9.5l5 5m0-5l-5 5"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
             </svg>
           </button>
           <button type="button" class="nav-item active" data-target="1">
             <span class="num">1</span><span class="label">Argentina hoy</span>
           </button>
-          <span class="nav-trail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="nav-trail" aria-hidden="true"
+            ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+          ></span>
           <button type="button" class="nav-item" data-target="2">
             <span class="num">2</span><span class="label">El tiempo</span>
           </button>
-          <span class="nav-trail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="nav-trail" aria-hidden="true"
+            ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+          ></span>
           <button type="button" class="nav-item" data-target="3">
             <span class="num">3</span><span class="label">El futuro</span>
           </button>
-          <button type="button" class="nav-back" id="navBack" aria-label="Volver a la presentación" title="Volver a la presentación">
-            <span aria-hidden="true">←</span><span class="nav-back-txt"> Volver a la presentación</span>
+          <button
+            type="button"
+            class="nav-back"
+            id="navBack"
+            aria-label="Volver a la presentación"
+            title="Volver a la presentación"
+          >
+            <span aria-hidden="true">←</span
+            ><span class="nav-back-txt"> Volver a la presentación</span>
           </button>
         </nav>
       </div>
@@ -816,11 +854,17 @@
         todo(document.body);
         var pend = [];
         new MutationObserver(function (muts) {
-          if (!pend.length) requestAnimationFrame(function () {
-            var l = pend; pend = [];
-            l.forEach(todo);
+          if (!pend.length)
+            requestAnimationFrame(function () {
+              var l = pend;
+              pend = [];
+              l.forEach(todo);
+            });
+          muts.forEach(function (m) {
+            m.addedNodes.forEach(function (n) {
+              if (n.nodeType === 1) pend.push(n);
+            });
           });
-          muts.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) pend.push(n); }); });
         }).observe(document.body, { childList: true, subtree: true });
       })();
     </script>
