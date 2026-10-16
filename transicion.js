@@ -22,10 +22,10 @@
   // Cambiá acá el nombre de cada archivo (carpeta "sonidos/") y su volumen (0 a 1).
   // Conviene que cada uno pese poco (menos de 200 KB).
   const SONIDOS = {
-    carga: { src: 'sonidos/carga.mp3', vol: 0.5 }, // en la intro, cuando aparece el título principal
-    modulo: { src: 'sonidos/modulo.mp3', vol: 0.5 }, // al cambiar de módulo
-    pestana: { src: 'sonidos/pestana.mp3', vol: 0.4 }, // al cambiar de pestaña
-    final: { src: 'sonidos/final.mp3', vol: 0.6 }, // al tocar "una última cosa"
+    carga: { src: 'sonidos/carga.MP3', vol: 0.5 }, // en la intro, cuando aparece el título principal
+    modulo: { src: 'sonidos/modulo.MP3', vol: 0.5 }, // al cambiar de módulo
+    pestana: { src: 'sonidos/pestana.MP3', vol: 0.4 }, // al cambiar de pestaña
+    final: { src: 'sonidos/final.MP3', vol: 0.6 }, // al tocar "una última cosa"
   };
   const audios = {};
   let silenciado = false;
@@ -38,7 +38,9 @@
     const a = (nombre === 'carga' && window.__sfxCarga) || new Audio(SONIDOS[nombre].src);
     a.preload = 'auto';
     a.volume = SONIDOS[nombre].vol;
-    a.addEventListener('error', () => console.warn('No se pudo cargar el sonido:', SONIDOS[nombre].src));
+    a.addEventListener('error', () =>
+      console.warn('No se pudo cargar el sonido:', SONIDOS[nombre].src),
+    );
     audios[nombre] = a;
   });
 
@@ -69,7 +71,8 @@
         reproducir('modulo');
       };
       if (tocado >= 0) decidir(tocado);
-      else setTimeout(() => decidir(itemsBarra().findIndex((i) => i.classList.contains('active'))), 0);
+      else
+        setTimeout(() => decidir(itemsBarra().findIndex((i) => i.classList.contains('active'))), 0);
       return;
     }
     reproducir(nombre);
@@ -88,7 +91,10 @@
   function pintarSilencio() {
     if (!btnSfx) return;
     btnSfx.setAttribute('aria-pressed', silenciado ? 'true' : 'false');
-    btnSfx.setAttribute('aria-label', silenciado ? 'Activar efectos de sonido' : 'Silenciar efectos de sonido');
+    btnSfx.setAttribute(
+      'aria-label',
+      silenciado ? 'Activar efectos de sonido' : 'Silenciar efectos de sonido',
+    );
   }
   if (btnSfx) {
     btnSfx.addEventListener('click', () => {
@@ -112,7 +118,10 @@
     (e) => {
       const pestana = e.target.closest('.em-tab, .br-tab-btn, .ui-tab, [role="tab"]');
       if (pestana) {
-        if (!pestana.classList.contains('active') && pestana.getAttribute('aria-selected') !== 'true') {
+        if (
+          !pestana.classList.contains('active') &&
+          pestana.getAttribute('aria-selected') !== 'true'
+        ) {
           sfx('pestana');
         }
         return;
@@ -191,7 +200,10 @@
   function zonaTarjeta(capitulo, W, H, barH) {
     const tarjeta = capitulo.querySelector('.ui-panel');
     const r = tarjeta ? tarjeta.getBoundingClientRect() : null;
-    let x = 0, y = 0, w = 0, h = 0;
+    let x = 0,
+      y = 0,
+      w = 0,
+      h = 0;
     if (r) {
       x = Math.max(r.left, 0);
       y = Math.max(r.top, 0);
@@ -400,15 +412,19 @@
       const ps = origenes.map((o, k) => {
         const r = Math.random();
         return {
-          sx: o[0], sy: o[1], // dónde está dentro del número
-          cx: destinos[k][0], cy: destinos[k][1], // llega a un elemento de la tarjeta
+          sx: o[0],
+          sy: o[1], // dónde está dentro del número
+          cx: destinos[k][0],
+          cy: destinos[k][1], // llega a un elemento de la tarjeta
           m: Math.random() * MORPH_DEMORA, // demora al viajar
-          jx: Math.random() - 0.5, jy: Math.random() - 0.5,
+          jx: Math.random() - 0.5,
+          jy: Math.random() - 0.5,
           col: r < 0.8 ? ROSA_FUERTE : r < 0.93 ? ROSA : 'rgba(255,255,255,.55)',
         };
       });
 
-      let headerOn = false, tarjetaOn = false;
+      let headerOn = false,
+        tarjetaOn = false;
       document.addEventListener('pointerdown', terminar, true); // tocar la pantalla saltea
       document.addEventListener('keydown', alTeclado, true);
       window.addEventListener('resize', terminar);
@@ -490,7 +506,8 @@
     }
 
     const listo = () => timers.push(setTimeout(arrancar, retraso || 0));
-    if (document.fonts && document.fonts.load) document.fonts.load('400 120px "DM Serif Display"').then(listo, listo);
+    if (document.fonts && document.fonts.load)
+      document.fonts.load('400 120px "DM Serif Display"').then(listo, listo);
     else listo();
   }
 
