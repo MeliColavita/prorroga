@@ -268,6 +268,25 @@
     let provYear = YEAR_PROV_MAX; // año que se está mostrando
     let activeProvData = null; // provincia que está mostrando el gráfico ahora
 
+    // ---------- Vista "Porcentaje": cada provincia pintada según su % ----------
+    // Escala fija (12% a 26%) para todos los años: así, al mover el slider,
+    // un cambio de color es un cambio real y no un re-escalado.
+    let mapMode = 'cantidad';
+    const PCT_MIN = 12;
+    const PCT_MAX = 26;
+    const COLOR_LOW = [74, 46, 72]; // #4a2e48 (mismo tono que --br-land-border)
+    const COLOR_HIGH = [255, 111, 156]; // #ff6f9c (--br-rose-strong)
+    function pctColor(pct) {
+      const t = Math.max(0, Math.min(1, (pct - PCT_MIN) / (PCT_MAX - PCT_MIN)));
+      const c = COLOR_LOW.map((lo, i) => Math.round(lo + (COLOR_HIGH[i] - lo) * t));
+      return `rgb(${c.join(',')})`;
+    }
+    // Guarda el color de cada provincia en --br-fill (CABA usa el de Buenos Aires).
+    // El CSS lo aplica solo cuando el mapa está en "Porcentaje" (.br-mode-pct).
+    function paintChoropleth() {
+      pathEls.forEach((o) => o.el.style.setProperty('--br-fill', pctColor(dataFor(o.data).pct)));
+    }
+
     const dotsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     dotsGroup.setAttribute('class', 'br-dots');
     svg.appendChild(dotsGroup);
@@ -318,6 +337,7 @@
         }
       });
       drawDots();
+      paintChoropleth();
     }
     applyProvYear(YEAR_PROV_MAX);
 
@@ -367,7 +387,15 @@
       ttName.textContent = p.name;
       ttPct.style.display = soloNombre ? 'none' : ''; // oculta la línea de datos
       if (!soloNombre) {
-        ttPct.innerHTML = `<b>${p.cancer.toLocaleString('es-AR')}</b> muertes por cáncer de mama en ${provYear}`;
+        if (mapMode === 'pct') {
+          const pct = p.pct.toLocaleString('es-AR', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          });
+          ttPct.innerHTML = `<b>${pct}%</b> de las muertes por cáncer en ${provYear} fueron de mama`;
+        } else {
+          ttPct.innerHTML = `<b>${p.cancer.toLocaleString('es-AR')}</b> muertes por cáncer de mama en ${provYear}`;
+        }
       }
       tooltip.classList.add('visible');
       positionTooltip(e);
@@ -564,6 +592,36 @@
       if (activeProvData) updateProvinceChart(activeProvData);
       tooltip.classList.remove('visible');
     });
+
+    // ---------- Botón Cantidad / Porcentaje ----------
+    // Cambia la vista del mapa (clase .br-mode-pct en el <svg>) y muestra u
+    // oculta la referencia de colores.
+    const modeBtns = document.querySelectorAll('.br-mode-btn');
+    const pctLegend = document.getElementById('brPctLegend');
+    modeBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        mapMode = btn.dataset.mode;
+        modeBtns.forEach((b) => {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        svg.classList.toggle('br-mode-pct', mapMode === 'pct');
+        if (pctLegend) pctLegend.classList.toggle('br-hidden', mapMode !== 'pct');
+        tooltip.classList.remove('visible');
+      });
+    });
+
+    // ---------- La pista vuelve, más chica, al salir del mapa ----------
+    // Solo con mouse: en el celular "pointerleave" se dispara al levantar el
+    // dedo, y la pista volvería en el mismo toque.
+    if (promptProv) {
+      svg.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        if (!promptProv.classList.contains('br-prompt-gone')) return;
+        promptProv.classList.add('br-prompt-chica');
+        promptProv.classList.remove('br-prompt-gone');
+      });
+    }
   })();
 
   // ============================================================
@@ -612,13 +670,20 @@
         url: 'https://www.argentina.gob.ar/sites/default/files/serie5numero64_web.pdf',
       },
     ];
-    const SRC_PROV = [FUENTE_DEIS];
+    const SRC_PROV = [
+      FUENTE_DEIS,
+      {
+        autor: 'Instituto Geográfico Nacional (s.f.)',
+        etiqueta: 'Mapa Argentino',
+        url: 'https://www.ign.gob.ar/NuestrasActividades/InformacionGeoespacial/CapasSIG',
+      },
+    ];
     const srcRow = document.querySelector('.br-src-row');
 
     const SUB_ANIO = 'Muertes por cáncer de mama cada 100.000 mujeres. Argentina, 2005–2024.';
     const SUB_PROV =
-      'Muertes por cáncer de mama por provincia y por año, 2005–2024. Cada punto equivale a 20 muertes. ' +
-      'Las provincias más pobladas tienen más puntos: no indica mayor riesgo.';
+           'Muertes por cáncer de mama por provincia, 2005–2024. Cada punto equivale a 20 muertes y no marca su ubicación real. ' +
+      'Más puntos indica más población, no mayor riesgo.';
     const srcSub = document.getElementById('brSrcSub');
 
     // ---------- Notas que se abren al pasar el cursor por ciertos años ----------
@@ -713,6 +778,7 @@
       const promptProvEl = document.getElementById('brProvPrompt');
       if (promptProvEl) {
         promptProvEl.classList.remove('br-prompt-gone');
+        promptProvEl.classList.remove('br-prompt-chica'); // vuelve a su tamaño normal
         promptProvEl.classList.remove('br-hidden'); // <-- NUEVA: la muestra
       }
       srcSub.textContent = SUB_PROV;
@@ -1501,9 +1567,12 @@
         capituloEstabaActivo = false;
         return;
       }
+      // Solo al ENTRAR al capítulo: transicion.js cambia otras clases del <section> durante la
+      // animación de entrada, y eso volvía a mostrar la pista aunque ya se hubiera tocado el gráfico.
+      if (capituloEstabaActivo) return;
       if (promptAnio) promptAnio.classList.remove('br-prompt-gone');
-      if (promptProv) promptProv.classList.remove('br-prompt-gone');
-      if (!capituloEstabaActivo) resetAnio(); // recién entró al capítulo
+      if (promptProv) promptProv.classList.remove('br-prompt-gone', 'br-prompt-chica');
+      resetAnio(); // recién entró al capítulo
       capituloEstabaActivo = true;
     }).observe(chapter2, { attributes: true, attributeFilter: ['class'] });
   })();
