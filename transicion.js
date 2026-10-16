@@ -523,5 +523,12 @@
     return true;
   }
 
-  window.Transicion = { entrar: entrar, sfx: sfx, pintarBarra: pintarBarra };
+  window.Transicion = {
+    entrar: entrar,
+    sfx: sfx,
+    pintarBarra: pintarBarra,
+    audio: function (nombre) {
+      return audios[nombre];
+    },
+  };
 })();

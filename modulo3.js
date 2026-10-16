@@ -17,39 +17,71 @@
   // Cierre: la tarjeta se desvanece y aparece la frase final (misma animación que el título de la intro)
   const card = bFinal.closest('.me-card');
   const cierre = document.getElementById('me-cierre');
+  const creditos = document.getElementById('me-creditos');
+  const frase = document.getElementById('me-cierre-frase');
+  const audioFinal =
+    window.Transicion && window.Transicion.audio ? window.Transicion.audio('final') : null;
+
+  // Créditos: van debajo de la frase, sin moverla
+  function posicionarCreditos() {
+    if (!creditos || !frase) return;
+    const padre = creditos.offsetParent || document.body;
+    const pr = padre.getBoundingClientRect();
+    const fr = frase.getBoundingClientRect();
+    creditos.style.top = fr.bottom - pr.top + 18 + 'px'; // 18 px debajo de la frase
+    creditos.style.left = fr.left + fr.width / 2 - pr.left + 'px'; // centrado con la frase
+  }
+  function mostrarCreditos() {
+    if (!creditos) return;
+    creditos.hidden = false;
+    posicionarCreditos();
+    void creditos.offsetWidth; // para que la transición arranque
+    creditos.classList.add('on');
+  }
+  function ocultarCreditos() {
+    if (!creditos) return;
+    creditos.classList.remove('on');
+    creditos.hidden = true;
+  }
+  window.addEventListener('resize', () => {
+    if (creditos && !creditos.hidden) posicionarCreditos();
+  });
+
   const partes = card
     ? card.querySelectorAll(
         ':scope > .ui-card-title, :scope > .ui-sub, :scope > .me-prompt-donde, :scope > .me-body, :scope > .me-final, :scope > .ui-src',
       )
     : [];
 
-  // Pantalla final: aparece la frase y se va el título del capítulo ("Capítulo 3 /
-  // El futuro"). A los 4 segundos de la frase aparece, discreto y abajo, el botón
-  // "Volver a comenzar": al tocarlo todo se desvanece y se vuelve al inicio
-  // (recarga la página: vuelve a la intro sin tocar script.js).
-  const BOTON_MS = 3000; // 0,8 s de espera de la frase + 4 s con la frase en pantalla
+  const BOTON_MS = 3000;
   const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const navBack = document.getElementById('navBack'); // botón fijo "Volver a la presentación"
+  const navBack = document.getElementById('navBack');
   const capitulo = card ? card.closest('.chapter') : null;
   let tBoton = null;
 
   function mostrarCierre() {
     if (!card || !cierre) return;
     clearTimeout(tBoton);
+    ocultarCreditos(); // si se vuelve a tocar "Final", los créditos esperan de nuevo
     card.classList.add('me-cierre-on');
-    if (capitulo) capitulo.classList.add('me-cierre-on'); // oculta "Capítulo 3 / El futuro"
+    if (capitulo) capitulo.classList.add('me-cierre-on');
     partes.forEach((el) => {
-      el.inert = true; // sin foco ni lectores de pantalla en lo que se ocultó
+      el.inert = true;
     });
     cierre.hidden = false;
-    void cierre.offsetWidth; // para que la transición arranque
+    void cierre.offsetWidth;
     cierre.classList.add('on');
-    if (navBack) navBack.classList.add('nav-back--glow'); // enciende "Volver a la presentación" junto con la frase
+    if (navBack) navBack.classList.add('nav-back--glow');
   }
 
   function ocultarCierre() {
     if (!card || !cierre) return;
     clearTimeout(tBoton);
+    ocultarCreditos();
+    if (audioFinal) {
+      audioFinal.pause();
+      audioFinal.currentTime = 0;
+    }
     cierre.classList.remove('on');
     cierre.hidden = true;
     card.classList.remove('me-cierre-on');
@@ -68,6 +100,15 @@
     video4.play().catch((err) => console.warn('No se pudo reproducir 04_FINAL:', err));
     mostrarCierre();
   };
+
+  // Los créditos aparecen cuando termina final.MP3
+  if (audioFinal) audioFinal.addEventListener('ended', mostrarCreditos);
+  // Respaldo: si el audio no suena (efectos silenciados o archivo faltante),
+  // aparecen cuando termina el video
+  video4.addEventListener('ended', () => {
+    if (!audioFinal || audioFinal.paused) mostrarCreditos();
+  });
+
   // Al cambiar de capítulo, script.js oculta el video 4: se restaura la tarjeta
   new MutationObserver(() => {
     if (!video4.classList.contains('active')) ocultarCierre();
