@@ -12,7 +12,7 @@
         try {
           silencio = sessionStorage.getItem('sfxSilencio') === '1';
         } catch (e) {}
-        var a = new Audio('sonidos/carga.mp3');
+        var a = new Audio('sonidos/carga.MP3');
         a.preload = 'auto';
         a.volume = 0.5; // igual que SONIDOS.carga.vol en transicion.js
         window.__sfxCarga = a;
