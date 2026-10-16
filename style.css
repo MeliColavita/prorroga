@@ -160,7 +160,11 @@ body {
   margin: 0;
 }
 .intro-note {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 400;
   font-size: 0.95rem;
+  line-height: 1.5;
   color: var(--text-dim);
   text-align: center;
   margin-top: 0.6rem;
@@ -321,6 +325,16 @@ body {
 #intro.ended .intro-head {
   top: 4vh;
   transform: none;
+}
+.intro-desc {
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s ease;
+}
+#intro.started .intro-desc,
+#intro.ended .intro-desc {
+  opacity: 0;
+  visibility: hidden;
 }
 .intro-head .intro-title {
   margin: 0 0 0.4rem;
@@ -632,12 +646,21 @@ body {
   font-weight: 500;
   font-size: clamp(2.2rem, 4.5vw, 3.4rem);
   margin: 0 0 4px;
-  background: linear-gradient(110deg, var(--text) 40%, var(--rose) 47%, var(--rose-strong) 50%, var(--rose) 53%, var(--text) 60%) 100% 0 / 250% 100%;
+  background: linear-gradient(
+      110deg,
+      var(--text) 40%,
+      var(--rose) 47%,
+      var(--rose-strong) 50%,
+      var(--rose) 53%,
+      var(--text) 60%
+    )
+    100% 0 / 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: tituloBrillo 6s var(--ease-in-out) infinite;}
-  @keyframes tituloBrillo {
+  animation: tituloBrillo 6s var(--ease-in-out) infinite;
+}
+@keyframes tituloBrillo {
   0% {
     background-position: 100% 0;
   }
