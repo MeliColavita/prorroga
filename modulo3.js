@@ -19,33 +19,21 @@
   const cierre = document.getElementById('me-cierre');
   const creditos = document.getElementById('me-creditos');
   const frase = document.getElementById('me-cierre-frase');
+  const gracias = document.getElementById('me-gracias');
+  const linea = creditos ? creditos.querySelector('.me-creditos-linea') : null;
+  const gOn = creditos ? creditos.querySelector('.me-gracias-on') : null;
+  const gOff = creditos ? creditos.querySelector('.me-gracias-off') : null;
+  const TEXTO_GRACIAS = gracias ? gracias.dataset.texto || '' : '';
   const audioFinal =
     window.Transicion && window.Transicion.audio ? window.Transicion.audio('final') : null;
 
-  // Créditos: van debajo de la frase, sin moverla
-  function posicionarCreditos() {
-    if (!creditos || !frase) return;
-    const padre = creditos.offsetParent || document.body;
-    const pr = padre.getBoundingClientRect();
-    const fr = frase.getBoundingClientRect();
-    creditos.style.top = fr.bottom - pr.top + 18 + 'px'; // 18 px debajo de la frase
-    creditos.style.left = fr.left + fr.width / 2 - pr.left + 'px'; // centrado con la frase
-  }
-  function mostrarCreditos() {
-    if (!creditos) return;
-    creditos.hidden = false;
-    posicionarCreditos();
-    void creditos.offsetWidth; // para que la transición arranque
-    creditos.classList.add('on');
-  }
-  function ocultarCreditos() {
-    if (!creditos) return;
-    creditos.classList.remove('on');
-    creditos.hidden = true;
-  }
-  window.addEventListener('resize', () => {
-    if (creditos && !creditos.hidden) posicionarCreditos();
-  });
+  const SIN_SONIDO_MS = 3000; // sin sonido, los créditos aparecen a los 3 s de tocar "una última cosa"
+  const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const navBack = document.getElementById('navBack');
+  const capitulo = card ? card.closest('.chapter') : null;
+  let tBoton = null;
+  let tEspera = null;
+  let tTipeo = null;
 
   const partes = card
     ? card.querySelectorAll(
@@ -53,11 +41,58 @@
       )
     : [];
 
-  const BOTON_MS = 3000;
-  const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const navBack = document.getElementById('navBack');
-  const capitulo = card ? card.closest('.chapter') : null;
-  let tBoton = null;
+  // "¡Muchas gracias!" se va escribiendo letra por letra. El resto del texto
+  // queda invisible pero ocupa su lugar, así lo escrito no se corre mientras aparece.
+  function escribirGracias() {
+    clearTimeout(tEspera);
+    clearInterval(tTipeo);
+    if (!gOn || !gOff) return;
+    if (REDUCIDO) {
+      gOn.textContent = TEXTO_GRACIAS;
+      gOff.textContent = '';
+      return;
+    }
+    let i = 0;
+    gOn.textContent = '';
+    gOff.textContent = TEXTO_GRACIAS;
+    tEspera = setTimeout(() => {
+      tTipeo = setInterval(() => {
+        i++;
+        gOn.textContent = TEXTO_GRACIAS.slice(0, i);
+        gOff.textContent = TEXTO_GRACIAS.slice(i);
+        if (i >= TEXTO_GRACIAS.length) clearInterval(tTipeo);
+      }, 95);
+    }, 500);
+  }
+
+  // "¡Muchas gracias!" queda centrado entre la frase final y la línea de abajo
+  function posicionarCreditos() {
+    if (!creditos || !frase || !linea || !gracias) return;
+    const cr = creditos.getBoundingClientRect();
+    const fr = frase.getBoundingClientRect();
+    const lr = linea.getBoundingClientRect();
+    gracias.style.top = (fr.bottom + lr.top) / 2 - cr.top + 'px';
+  }
+  function mostrarCreditos() {
+    if (!creditos || creditos.classList.contains('on')) return; // ya se están mostrando
+    creditos.hidden = false;
+    posicionarCreditos();
+    void creditos.offsetWidth; // para que la transición arranque
+    creditos.classList.add('on');
+    escribirGracias();
+  }
+  function ocultarCreditos() {
+    clearTimeout(tEspera);
+    clearInterval(tTipeo);
+    if (!creditos) return;
+    creditos.classList.remove('on');
+    creditos.hidden = true;
+    if (gOn) gOn.textContent = '';
+    if (gOff) gOff.textContent = '';
+  }
+  window.addEventListener('resize', () => {
+    if (creditos && !creditos.hidden) posicionarCreditos();
+  });
 
   function mostrarCierre() {
     if (!card || !cierre) return;
@@ -99,15 +134,15 @@
     video4.currentTime = 0;
     video4.play().catch((err) => console.warn('No se pudo reproducir 04_FINAL:', err));
     mostrarCierre();
+    // Si final.MP3 no está sonando (efectos silenciados, archivo faltante o bloqueado
+    // por el navegador), los créditos aparecen a los 3 segundos.
+    tBoton = setTimeout(() => {
+      if (!audioFinal || audioFinal.paused) mostrarCreditos();
+    }, SIN_SONIDO_MS);
   };
 
-  // Los créditos aparecen cuando termina final.MP3
+  // Con sonido: los créditos aparecen cuando termina final.MP3
   if (audioFinal) audioFinal.addEventListener('ended', mostrarCreditos);
-  // Respaldo: si el audio no suena (efectos silenciados o archivo faltante),
-  // aparecen cuando termina el video
-  video4.addEventListener('ended', () => {
-    if (!audioFinal || audioFinal.paused) mostrarCreditos();
-  });
 
   // Al cambiar de capítulo, script.js oculta el video 4: se restaura la tarjeta
   new MutationObserver(() => {

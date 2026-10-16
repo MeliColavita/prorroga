@@ -1075,48 +1075,74 @@
     z-index: 1;
   }
 }
-/* ===== Créditos: debajo de la frase final, sin moverla ===== */
+/* ===== Créditos: "¡Muchas gracias!" al medio y una sola línea abajo de todo ===== */
 .me-creditos {
-  position: absolute; /* fuera del flujo: la frase queda donde estaba */
-  width: min(90%, 420px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
+  position: absolute;
+  inset: 0; /* ocupa la tarjeta (el padre .me-cierre ya es absolute + inset 0) */
+  pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, 10px);
-  transition:
-    opacity 1.2s ease,
-    transform 1.2s ease;
+  transition: opacity 1.2s ease;
 }
 .me-creditos[hidden] {
   display: none;
 }
 .me-creditos.on {
   opacity: 1;
-  transform: translate(-50%, 0);
 }
+
+/* "¡Muchas gracias!": cursiva, se escribe con JS; su "top" lo calcula modulo3.js */
 .me-creditos-gracias {
+  position: absolute;
+  left: 50%;
+  top: 70%; /* valor de respaldo; JS lo reemplaza */
+  transform: translate(-50%, -50%);
   margin: 0;
+  width: max-content;
+  max-width: 90%;
+  text-align: center;
   font-family: var(--serif);
-  font-size: clamp(1.1rem, 3.2cqw, 1.5rem);
+  font-style: italic;
+  font-size: clamp(1.4rem, 5cqw, 2.4rem);
+  line-height: 1.2;
   color: var(--rose-strong);
+  text-shadow: 0 0 22px rgba(255, 111, 156, 0.45);
 }
-.me-creditos-nombres {
-  list-style: none;
+.me-gracias-off {
+  visibility: hidden; /* lo que todavía no se escribió: ocupa lugar pero no se ve */
+}
+.me-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Nombres + "CONTAR CON DATOS 2026" en una sola línea, pegados al pie de la tarjeta */
+.me-creditos-linea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
   margin: 0;
-  padding: 0;
+  padding: 0 24px;
+  list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 0.9rem;
+  flex-wrap: wrap; /* en pantallas angostas puede partirse en 2 líneas */
+  justify-content: center;
+  gap: 4px 0;
+  font-size: 0.8rem;
   color: var(--text);
 }
+.me-creditos-linea li + li::before {
+  content: '·';
+  margin: 0 12px;
+  color: var(--text-dim);
+}
 .me-creditos-marca {
-  margin: 4px 0 0;
   font-size: 0.7rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   color: var(--text-dim);
 }
 @media (prefers-reduced-motion: reduce) {
