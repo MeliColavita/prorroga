@@ -452,6 +452,121 @@
   opacity: 1;
 }
 
+/* ============ VISTA "PORCENTAJE" (mapa coloreado) ============
+   Cada provincia toma su color de --br-fill (lo pone modulo2.js) y se ocultan los puntitos.
+   La activa lleva borde blanco, porque ahora el rosa es el dato. */
+.br-widget svg.br-mode-pct path.br-province,
+.br-widget svg.br-mode-pct path.br-province:hover,
+.br-widget svg.br-mode-pct path.br-province.active,
+.br-widget svg.has-selection.br-mode-pct path.br-province:hover:not(.active) {
+  fill: var(--br-fill, var(--br-land));
+}
+.br-widget svg.br-mode-pct path.br-province:hover,
+.br-widget svg.br-mode-pct path.br-province.active {
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+.br-widget svg.has-selection.br-mode-pct path.br-province:hover:not(.active) {
+  stroke: var(--br-land-border);
+  stroke-width: 1;
+}
+.br-widget svg.br-mode-pct g.br-dots {
+  display: none;
+}
+
+/* Botón Cantidad / Porcentaje: arriba a la derecha de la columna del mapa */
+.br-map-mode {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.br-mode-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--br-panel-border);
+  color: var(--br-text-dim);
+  font-family: var(--br-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.br-mode-btn:hover {
+  color: var(--br-text);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.br-mode-btn.active {
+  background: rgba(255, 111, 156, 0.16);
+  color: var(--br-rose);
+  border-color: var(--br-rose-strong);
+}
+
+/* Referencia de colores: abajo a la derecha, solo en "Porcentaje" */
+.br-pct-legend {
+  position: absolute;
+  right: 0;
+  bottom: var(--br-map-drop, 0px);
+  width: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--br-text-dim);
+}
+.br-pct-legend-title {
+  margin-bottom: 4px;
+}
+.br-pct-legend-bar {
+  width: 12px;
+  height: 110px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #ff6f9c, #4a2e48);
+}
+
+/* Pantalla angosta: el botón y la referencia van debajo del mapa, en horizontal,
+   para no taparlo. */
+@media (max-width: 880px) {
+  .br-map-mode {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .br-pct-legend {
+    position: static;
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .br-pct-legend-title {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .br-pct-lo {
+    order: 1;
+  }
+  .br-pct-legend-bar {
+    order: 2;
+    width: 140px;
+    height: 10px;
+    background: linear-gradient(to right, #4a2e48, #ff6f9c);
+  }
+  .br-pct-hi {
+    order: 3;
+  }
+}
+
 /* Aclaración debajo del mapa: ahora es un texto de 2-3 líneas, centrado. */
 .br-legend {
   width: 100%;
@@ -563,7 +678,8 @@
    .em-prompt en modulo1.css; acá solo se ajusta el margen para que la
    tarjeta mida lo mismo que antes (el .br-sub que reemplaza tenía 4px). */
 #brPanelAnio .br-panel .em-prompt {
-  margin-bottom: 4px;
+    margin-bottom: 4px;
+  font-size: 0.95rem; /* mismo tamaño que la pista de "Por provincia" */
 }
 
 /* Cuando el usuario interactúa, la pista se desvanece, pero SIGUE
@@ -759,10 +875,17 @@
   margin: 0 0 0 8px;
   position: static; /* por si modulo1.css lo posiciona */
   white-space: nowrap;
+  font-size: 0.95rem; /* un punto menos: así la pista entra al lado de las pestañas */
 }
 .br-widget .br-tabs .em-prompt.br-prompt-gone {
   opacity: 0;
   visibility: hidden;
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s;
+}
+/* Pista que vuelve al salir del mapa (ver modulo2.js): mismo tamaño que la de "Por año", con fundido. */
+.br-widget .br-tabs .em-prompt.br-prompt-chica {
   transition:
     opacity 0.4s ease,
     visibility 0.4s;
