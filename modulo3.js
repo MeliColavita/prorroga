@@ -19,7 +19,7 @@
   const audioFinal =
     window.Transicion && window.Transicion.audio ? window.Transicion.audio('final') : null;
 
-  const SIN_SONIDO_MS = 3000; // con la música apagada, los créditos salen a los 3 s de tocar "una última cosa"
+  const SIN_SONIDO_MS = 3000; // con los efectos silenciados, los créditos salen a los 3 s de tocar "una última cosa"
   const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const navBack = document.getElementById('navBack');
   const capitulo = card ? card.closest('.chapter') : null;
@@ -140,16 +140,13 @@
     video4.currentTime = 0;
     video4.play().catch((err) => console.warn('No se pudo reproducir 04_FINAL:', err));
     mostrarCierre();
-    // Con la música apagada (o si el sonido final no suena), los créditos salen a los 3 s
+    // Con los efectos silenciados (no hay locutor), los créditos salen a los 3 s
     tBoton = setTimeout(() => {
-      if (!musicaActiva() || !audioFinal || audioFinal.paused) mostrarCreditos();
+      if (!audioFinal || audioFinal.paused) mostrarCreditos();
     }, SIN_SONIDO_MS);
   };
 
-  // Con la música activada, los créditos salen cuando termina el sonido final
-  function musicaActiva() {
-    return !window.Transicion || !window.Transicion.musicaActiva || window.Transicion.musicaActiva();
-  }
+  // Con los efectos activados, los créditos salen cuando el locutor termina (final.MP3)
   if (audioFinal) audioFinal.addEventListener('ended', mostrarCreditos);
 
   // Al cambiar de capítulo, script.js oculta el video 4: se restaura la tarjeta

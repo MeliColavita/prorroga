@@ -25,6 +25,7 @@ function startIntroVideo() {
   if (introVideoStarted) return; // que arranque una sola vez
   if (intro.classList.contains('hidden')) return; // si ya saltó la intro, no lo arrancamos
   introVideoStarted = true;
+  intro.classList.add('con-vela'); // los subtítulos bajan para no tapar la vela
   introVideo.currentTime = 0;
   introVideo.play().catch((err) => console.warn('No se pudo reproducir el video de intro:', err));
   introVideo.classList.add('visible');
@@ -33,6 +34,7 @@ function startIntroVideo() {
 // Devuelve el video de la intro a su estado inicial (oculto, en el frame 0) cuando el audio vuelve antes de los 22 s.
 function resetIntroVideo() {
   introVideoStarted = false;
+  intro.classList.remove('con-vela'); // los subtítulos vuelven al centro
   introVideo.classList.remove('visible'); // se desvanece (el fade dura 1,6 s)
   setTimeout(() => {
     if (introVideoStarted) return; // si ya se volvió a disparar, no tocarlo
@@ -135,20 +137,46 @@ audioBtn.addEventListener('click', (e) => {
 });
 
 // ---------- Barra de reproducción de la intro ----------
-// Subtítulos del audio: start/end en segundos. Si la lista queda vacía, el botón CC se oculta.
-
+// Subtítulos animados: start/end en segundos; ella: true = voz de Mariana (cursiva). Marcas en el texto:
+// {g:palabra} grande · {c:palabra} chica · {a:palabra} se adelanta · {s:palabra} enorme y lenta · {t:palabra} tiembla.
 const CAPTIONS = [
-  { start: 2.14, end: 4.0, text: 'Hola, doctor.' },
+  { start: 2.14, end: 4.0, ella: true, text: '{c:Hola, doctor.}' },
   { start: 5.2, end: 6.0, text: 'Hola, Mariana.' },
-  { start: 6.1, end: 7.5, text: 'Tomá asiento.' },
-  { start: 8.2, end: 12.3, text: 'Bueno, Mari, llegaron los resultados de la biopsia.' },
-  { start: 12.25, end: 15.2, text: 'En la muestra que tomamos de la mama,' },
-  { start: 15.1, end: 18.05, text: 'aparecieron células anormales.' },
-  { start: 18.3, end: 20.12, text: '¿Tengo cáncer?' },
-  { start: 20.5, end: 22.0, text: 'Sí.' },
-  { start: 23.5, end: 25.28, text: 'Sé que es muy difícil escuchar esto,' },
-  { start: 26.3, end: 29.9, text: 'pero lo encontramos a tiempo y tiene tratamiento.' },
+  { start: 6.1, end: 7.5, text: '{c:Tomá asiento.}' },
+  { start: 8.2, end: 12.3, text: 'Bueno, Mari, llegaron los resultados de la {g:biopsia}.' },
+  { start: 12.25, end: 15.2, text: 'En la muestra que tomamos de la {g:mama},' },
+  { start: 15.1, end: 18.05, text: 'aparecieron células {t:anormales}.' },
+  { start: 18.3, end: 20.12, ella: true, text: '¿Tengo {a:cáncer}?' },
+  { start: 20.5, end: 22.0, text: '{s:Sí.}' },
+  { start: 23.5, end: 25.28, text: 'Sé que es muy {c:difícil} escuchar esto,' },
+  { start: 26.3, end: 29.9, text: 'pero lo encontramos {a:a tiempo} y tiene {g:tratamiento}.' },
 ];
+
+// Arma las palabras de un subtítulo como <span>, cada una con su retraso (--d) y su estilo
+function armarSubtitulo(cue) {
+  const partes = [];
+  cue.text.replace(/\{([gcast]):([^}]+)\}|([^{]+)/g, (m, tipo, marcado, suelto) => {
+    (marcado || suelto).split(/\s+/).forEach((p) => {
+      if (!p) return;
+      if (/^[.,;:!?…]+$/.test(p) && partes.length) partes[partes.length - 1].p += p; // el signo va pegado a su palabra
+      else partes.push({ p: p, tipo: tipo || '' });
+    });
+  });
+  const ritmo = Math.max(0.6, (cue.end - cue.start) * 0.7); // las palabras entran durante el 70% del subtítulo
+  const normales = partes.filter((x) => x.tipo !== 'a');
+  introCaption.textContent = '';
+  introCaption.classList.toggle('cc-ella', !!cue.ella);
+  partes.forEach((x, i) => {
+    const w = document.createElement('span');
+    w.className = 'cc-w' + (x.tipo ? ' cc-' + x.tipo : '');
+    const orden = normales.indexOf(x);
+    const d = x.tipo === 'a' ? 0 : 0.15 + (ritmo * orden) / Math.max(1, normales.length);
+    w.style.setProperty('--d', d.toFixed(2) + 's');
+    w.textContent = x.p;
+    introCaption.appendChild(w);
+    if (i < partes.length - 1) introCaption.appendChild(document.createTextNode(' '));
+  });
+}
 
 const pFill = document.getElementById('pFill');
 const pTrack = document.getElementById('pTrack');
@@ -166,17 +194,19 @@ function fmtTime(s) {
   return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
 }
 
+let cueActual = null;
 function updateCaption(t) {
   const cue =
     captionsOn && !audio.ended && !intro.classList.contains('ended')
       ? CAPTIONS.find((c) => t >= c.start && t < c.end)
       : null;
   if (cue) {
-    if (introCaption.textContent !== cue.text) introCaption.textContent = cue.text;
+    if (cue !== cueActual) armarSubtitulo(cue);
     introCaption.hidden = false;
   } else {
     introCaption.hidden = true;
   }
+  cueActual = cue;
 }
 
 // Avance (relleno de la barra), tiempo "0:12 / 1:05" y subtítulo actual
@@ -193,6 +223,7 @@ function updatePlayer() {
 
 function updatePlayState() {
   pPlay.dataset.state = audio.paused ? 'paused' : 'playing';
+  introCaption.classList.toggle('cc-pausa', audio.paused); // con el audio en pausa, la animación también
   pPlay.setAttribute('aria-label', audio.paused ? 'Reproducir' : 'Pausar');
 }
 audio.addEventListener('play', updatePlayState);
