@@ -567,7 +567,7 @@
     else listo();
   }
 
-  // ---------- API: entrar() anima la entrada; sfx() suena un efecto; musica() arranca la música; musicaActiva() dice si está prendida ----------
+  // ---------- API: entrar() anima la entrada; sfx() suena un efecto; musica() arranca la música ----------
   function entrar(capitulo, item, retraso) {
     pintarBarra();
     if (!capitulo || !item || vistos.has(capitulo.id)) return false;
@@ -581,9 +581,6 @@
     entrar: entrar,
     sfx: sfx,
     musica: arrancarMusica,
-    musicaActiva: function () {
-      return !musicaOff;
-    },
     pintarBarra: pintarBarra,
     audio: function (nombre) {
       return audios[nombre];

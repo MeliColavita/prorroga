@@ -19,7 +19,7 @@
   const audioFinal =
     window.Transicion && window.Transicion.audio ? window.Transicion.audio('final') : null;
 
-  const SIN_SONIDO_MS = 3000; // con la música apagada, los créditos salen a los 3 s de tocar "una última cosa"
+  const SIN_SONIDO_MS = 3000; // con los efectos silenciados, los créditos salen a los 3 s de tocar "una última cosa"
   const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const navBack = document.getElementById('navBack');
   const capitulo = card ? card.closest('.chapter') : null;
@@ -140,16 +140,13 @@
     video4.currentTime = 0;
     video4.play().catch((err) => console.warn('No se pudo reproducir 04_FINAL:', err));
     mostrarCierre();
-    // Con la música apagada (o si el sonido final no suena), los créditos salen a los 3 s
+    // Con los efectos silenciados (no hay locutor), los créditos salen a los 3 s
     tBoton = setTimeout(() => {
-      if (!musicaActiva() || !audioFinal || audioFinal.paused) mostrarCreditos();
+      if (!audioFinal || audioFinal.paused) mostrarCreditos();
     }, SIN_SONIDO_MS);
   };
 
-  // Con la música activada, los créditos salen cuando termina el sonido final
-  function musicaActiva() {
-    return !window.Transicion || !window.Transicion.musicaActiva || window.Transicion.musicaActiva();
-  }
+  // Con los efectos activados, los créditos salen cuando el locutor termina (final.MP3)
   if (audioFinal) audioFinal.addEventListener('ended', mostrarCreditos);
 
   // Al cambiar de capítulo, script.js oculta el video 4: se restaura la tarjeta
@@ -511,7 +508,9 @@
       ...opcionesEsri,
       attribution: 'Mapa &copy; <a href="https://www.esri.com">Esri</a>, HERE, OpenStreetMap',
     }).addTo(mapa);
-    L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', opcionesEsri).addTo(mapa);
+    L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', opcionesEsri).addTo(
+      mapa,
+    );
     capa = L.layerGroup().addTo(mapa);
   }
   const BORDE_PUNTO = 'rgb(' + leerColor('--bg', [7, 5, 10]).join(',') + ')';
@@ -1309,6 +1308,11 @@
   if (!src) return;
   const FUENTES_ME = [
     {
+      autor: 'Georef AR API (s.f.)',
+      etiqueta: 'Ubicación de las direcciones',
+      url: 'https://datosgobar.github.io/georef-ar-api/',
+    },
+    {
       autor: 'INDEC (2022)',
       etiqueta: 'Localidades censales',
       url: 'https://datos.gob.ar/dataset/codigos-geograficos-del-indec-2022',
@@ -1317,11 +1321,6 @@
       autor: 'Surcos y Fundación Instituto Natura (2026)',
       etiqueta: 'Mapa mamográfico',
       url: 'https://surcos.org/web/mira/',
-    },
-    {
-      autor: 'Georef AR API (s.f.)',
-      etiqueta: 'Ubicación de las direcciones',
-      url: 'https://datosgobar.github.io/georef-ar-api/',
     },
   ];
   uiFuente(src, FUENTES_ME);

@@ -216,7 +216,9 @@
     // Los puntos de una provincia que está en rosa (hover/seleccionada) pasan a
     // oscuro para que se vean: les agrega/saca la clase "on-rose" (ver modulo2.css).
     function syncDotsOnRose() {
-      const activas = new Set(pathEls.filter((o) => o.el.classList.contains('active')).map((o) => o.data.name));
+      const activas = new Set(
+        pathEls.filter((o) => o.el.classList.contains('active')).map((o) => o.data.name),
+      );
       dotsGroup.querySelectorAll('circle').forEach((c) => {
         c.classList.toggle('on-rose', activas.has(c.getAttribute('data-prov')));
       });
@@ -443,6 +445,14 @@
     //   redibuja solo cuando cambia el tamaño de su <canvas> (el alto
     //   lo fija un estilo inline en el HTML, el ancho lo da la
     //   columna -- ver .br-grid-layout en modulo2.css).
+    // Leyenda: en gráficos bajos (pantallas bajas) se achica para que los 2 ítems entren uno debajo del otro
+    function ajustarLeyenda(leyenda, alto) {
+      const bajo = alto < 190;
+      leyenda.labels.font.size = bajo ? 12 : 14;
+      leyenda.labels.padding = bajo ? 6 : 12;
+      leyenda.labels.boxWidth = bajo ? 11 : 14;
+      leyenda.title.padding.top = bajo ? 0 : 16;
+    }
     const provinceChart = new Chart(chartCtx, {
       type: 'bar',
       data: {
@@ -469,6 +479,7 @@
         events: [],
         responsive: true,
         maintainAspectRatio: false,
+        onResize: (chart, size) => ajustarLeyenda(chart.options.plugins.legend, size.height),
         layout: { padding: { top: 24 } },
         plugins: {
           legend: {
@@ -509,6 +520,8 @@
         },
       },
     });
+    ajustarLeyenda(provinceChart.options.plugins.legend, provinceChart.height);
+    provinceChart.update('none');
 
     function updateProvinceChart(p) {
       activeProvData = p; // la recordamos para poder redibujar al mover el slider
@@ -655,6 +668,11 @@
     const SRC_ANIO = [
       FUENTE_DEIS,
       {
+        autor: 'DEIS (2022)',
+        etiqueta: 'Estadísticas vitales 2020',
+        url: 'https://www.argentina.gob.ar/sites/default/files/serie5numero64_web.pdf',
+      },
+      {
         autor: 'INDEC (2004)',
         etiqueta: 'Estimación de población femenina 2005-2009',
         url: 'https://biblioteca.indec.gob.ar/bases/minde/4si20_30.pdf',
@@ -663,11 +681,6 @@
         autor: 'INDEC (2013)',
         etiqueta: 'Estimación de población femenina 2010-2024',
         url: 'https://www.indec.gob.ar/ftp/cuadros/publicaciones/proyeccionesyestimaciones_nac_2010_2040.pdf',
-      },
-      {
-        autor: 'DEIS (2022)',
-        etiqueta: 'Estadísticas vitales 2020',
-        url: 'https://www.argentina.gob.ar/sites/default/files/serie5numero64_web.pdf',
       },
     ];
     const SRC_PROV = [
@@ -682,7 +695,7 @@
 
     const SUB_ANIO = 'Muertes por cáncer de mama cada 100.000 mujeres. Argentina, 2005–2024.';
     const SUB_PROV =
-           'Muertes por cáncer de mama por provincia, 2005–2024. Cada punto equivale a 20 muertes y no marca su ubicación real. ' +
+      'Muertes por cáncer de mama por provincia, 2005–2024. Cada punto equivale a 20 muertes y no marca su ubicación real. ' +
       'Más puntos indica más población, no mayor riesgo.';
     const srcSub = document.getElementById('brSrcSub');
 
