@@ -52,7 +52,8 @@
       const p = Math.min(1, (t - t0) / 900);
       const e = 1 - Math.pow(1 - p, 3);
       el.textContent =
-        (fin * e).toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+        (fin * e).toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) +
+        '%';
       if (p < 1) requestAnimationFrame(tick);
     })(t0);
   }
@@ -1159,6 +1160,9 @@
       },
     ],
   };
+  const NOTAS_FUENTE = {
+    casosPorEdad: 'Carga sujeta a demora.',
+  };
 
   const TITULOS = {
     casosPorTipo: '¿Cuántos casos de cáncer de mama hay por año?',
@@ -1187,7 +1191,7 @@
       panel1.parentElement.appendChild(emSrc);
     }
     if (cardTitle && TITULOS[activeKey]) cardTitle.textContent = TITULOS[activeKey];
-    if (FUENTES[activeKey]) uiFuente(emSrc, FUENTES[activeKey]);
+    if (FUENTES[activeKey]) uiFuente(emSrc, FUENTES[activeKey], NOTAS_FUENTE[activeKey]);
     const renderFn = chartRenderers[activeKey];
     if (renderFn) renderFn(panel1);
   }

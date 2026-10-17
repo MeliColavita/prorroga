@@ -537,7 +537,9 @@
       ...opcionesEsri,
       attribution: 'Mapa &copy; <a href="https://www.esri.com">Esri</a>, HERE, OpenStreetMap',
     }).addTo(mapa);
-    L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', opcionesEsri).addTo(mapa);
+    L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', opcionesEsri).addTo(
+      mapa,
+    );
     capa = L.layerGroup().addTo(mapa);
   }
   function mostrarMapa(l) {
@@ -1346,6 +1348,11 @@
   if (!src) return;
   const FUENTES_ME = [
     {
+      autor: 'Georef AR API (s.f.)',
+      etiqueta: 'Ubicación de las direcciones',
+      url: 'https://datosgobar.github.io/georef-ar-api/',
+    },
+    {
       autor: 'INDEC (2022)',
       etiqueta: 'Localidades censales',
       url: 'https://datos.gob.ar/dataset/codigos-geograficos-del-indec-2022',
@@ -1354,11 +1361,6 @@
       autor: 'Surcos y Fundación Instituto Natura (2026)',
       etiqueta: 'Mapa mamográfico',
       url: 'https://surcos.org/web/mira/',
-    },
-    {
-      autor: 'Georef AR API (s.f.)',
-      etiqueta: 'Ubicación de las direcciones',
-      url: 'https://datosgobar.github.io/georef-ar-api/',
     },
   ];
   uiFuente(src, FUENTES_ME);

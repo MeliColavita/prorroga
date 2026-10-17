@@ -216,7 +216,9 @@
     // Los puntos de una provincia que está en rosa (hover/seleccionada) pasan a
     // oscuro para que se vean: les agrega/saca la clase "on-rose" (ver modulo2.css).
     function syncDotsOnRose() {
-      const activas = new Set(pathEls.filter((o) => o.el.classList.contains('active')).map((o) => o.data.name));
+      const activas = new Set(
+        pathEls.filter((o) => o.el.classList.contains('active')).map((o) => o.data.name),
+      );
       dotsGroup.querySelectorAll('circle').forEach((c) => {
         c.classList.toggle('on-rose', activas.has(c.getAttribute('data-prov')));
       });
@@ -655,6 +657,11 @@
     const SRC_ANIO = [
       FUENTE_DEIS,
       {
+        autor: 'DEIS (2022)',
+        etiqueta: 'Estadísticas vitales 2020',
+        url: 'https://www.argentina.gob.ar/sites/default/files/serie5numero64_web.pdf',
+      },
+      {
         autor: 'INDEC (2004)',
         etiqueta: 'Estimación de población femenina 2005-2009',
         url: 'https://biblioteca.indec.gob.ar/bases/minde/4si20_30.pdf',
@@ -663,11 +670,6 @@
         autor: 'INDEC (2013)',
         etiqueta: 'Estimación de población femenina 2010-2024',
         url: 'https://www.indec.gob.ar/ftp/cuadros/publicaciones/proyeccionesyestimaciones_nac_2010_2040.pdf',
-      },
-      {
-        autor: 'DEIS (2022)',
-        etiqueta: 'Estadísticas vitales 2020',
-        url: 'https://www.argentina.gob.ar/sites/default/files/serie5numero64_web.pdf',
       },
     ];
     const SRC_PROV = [
@@ -682,7 +684,7 @@
 
     const SUB_ANIO = 'Muertes por cáncer de mama cada 100.000 mujeres. Argentina, 2005–2024.';
     const SUB_PROV =
-           'Muertes por cáncer de mama por provincia, 2005–2024. Cada punto equivale a 20 muertes y no marca su ubicación real. ' +
+      'Muertes por cáncer de mama por provincia, 2005–2024. Cada punto equivale a 20 muertes y no marca su ubicación real. ' +
       'Más puntos indica más población, no mayor riesgo.';
     const srcSub = document.getElementById('brSrcSub');
 
