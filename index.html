@@ -2,10 +2,8 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <!-- Sonido "carga" de la intro: va PRIMERO en el <head>, antes de los CSS y las fuentes
-         (que bloquean los scripts que vienen después), para que empiece a bajar y a sonar
-         lo antes posible. transicion.js reutiliza este mismo audio (window.__sfxCarga).
-         Los navegadores bloquean el sonido hasta el primer toque: si pasa, espera ese toque. -->
+    <!-- Sonido "carga" de la intro: va primero en el <head> para que baje y suene cuanto antes (transicion.js lo reutiliza).
+         Si el navegador bloquea el sonido, espera el primer toque. -->
     <script>
       (function () {
         var silencio = false;
@@ -73,9 +71,8 @@
     <link rel="stylesheet" href="modulo1.css" />
     <link rel="stylesheet" href="modulo2.css" />
     <link rel="stylesheet" href="modulo3.css" />
-    <!-- Tipografía de todo el sitio: DM Serif Display (títulos y números) + DM Sans (textos).
-         Pisa las variables --serif / --sans de style.css (por eso va después de todos los CSS).
-         DM Serif Display solo existe en peso normal: font-synthesis evita el "negrita falsa". -->
+    <!-- Tipografía: DM Serif Display (títulos y números) + DM Sans (textos). Va después de los CSS para pisar --serif / --sans;
+         font-synthesis evita la negrita falsa. -->
     <style>
       :root,
       body {
@@ -101,11 +98,7 @@
     <!-- Pantalla de bienvenida a pantalla completa. Se oculta (clase "hidden")
      cuando termina el audio y el usuario toca "deslizá para comenzar". -->
     <div id="intro">
-      <!-- Video de fondo de la intro (la vela). Arranca oculto (opacity:0 en
-       CSS, ver #intro .bg-video) y SIN reproducirse (sin "autoplay"):
-       script.js lo pone en el frame 0 y recién ahí lo hace play() a los
-       10s, junto con el fade-in, para que arranque siempre desde el
-       principio en el mismo momento en que se hace visible. -->
+      <!-- Video de fondo de la intro (la vela): arranca oculto y quieto; script.js lo reproduce desde el frame 0 a los 10 s, con el fade-in. -->
       <video id="introVideo" class="bg-video" muted playsinline>
         <source src="00_INTRO_FINAL.mp4" type="video/mp4" />
       </video>
@@ -116,22 +109,12 @@
         <source src="AUDIO_FINAL.MP3" type="audio/mpeg" />
       </audio>
 
-      <!-- Botón "Saltear intro": aparece (abajo a la derecha) una vez que
-       terminaron de aparecer el título y los 2 subtítulos. Entra directo a
-       la experiencia sin esperar al audio (ver script.js). -->
+      <!-- Botón "Saltear intro": aparece después de los textos y entra directo a la experiencia (script.js). -->
       <button class="skip-btn" id="skipBtn" type="button">Saltear intro ⏭</button>
 
-      <!-- Mensaje central: aparece después de la animación de los textos.
-       "Apretá acá para comenzar" arranca el audio y el mensaje se oculta
-       (clase "started" en #intro). Cuando el audio termina (evento 'ended'),
-       script.js vuelve a mostrar ESTE MISMO botón con el texto
-       "Tocá para comenzar ↓" para entrar a la experiencia. -->
+      <!-- Mensaje central: "Apretá acá para comenzar" arranca el audio; al terminar, el mismo botón sirve para entrar a la experiencia. -->
       <div class="intro-start" id="introStart">
-        <!-- Al apretar "Apretá acá para comenzar", este mismo botón se
-         convierte en una barra de reproducción: el relleno translúcido
-         (#pFill) va avanzando con el audio y aparecen los controles
-         (play/pausa, reiniciar, silenciar, tiempo y subtítulos).
-         Toda la lógica está en script.js. -->
+        <!-- Al arrancar el audio, el botón se convierte en barra de reproducción (avance, play/pausa, reiniciar, silenciar, subtítulos). Lógica en script.js. -->
         <div class="player-wrap">
           <p class="intro-volume">Subí el volumen</p>
           <!-- Solo se ve cuando terminó el audio: permite volver a escucharlo -->
@@ -280,10 +263,7 @@
       <div class="layout">
         <div class="main-col">
           <!-- CAPÍTULO 1 -->
-          <!-- El video de este capítulo (801.mp4) ya NO va acá adentro:
-           ahora vive en la columna .chapter-media, junto a los videos
-           de los otros 2 capítulos (ver más abajo, antes de .side-nav).
-           script.js decide cuál de los 3 se ve según el capítulo activo. -->
+          <!-- El video de cada capítulo está en .chapter-media (más abajo); script.js muestra el del capítulo activo. -->
           <section
             class="chapter active"
             id="chapter-1"
@@ -292,9 +272,7 @@
             <div class="chapter-header">
               <h2 class="chapter-title">
                 Argentina hoy
-                <!-- Puntitos rosa animados alrededor del título.
-                 aria-hidden="true" porque son puramente decorativos,
-                 no deben ser leídos por lectores de pantalla. -->
+                <!-- Puntitos rosa decorativos alrededor del título. -->
                 <span class="title-dots" aria-hidden="true">
                   <span class="dot"></span>
                   <span class="dot"></span>
@@ -306,34 +284,11 @@
               </h2>
             </div>
 
-            <!-- ============================================================
-             Módulo "Argentina hoy": tarjeta con 2 gráficos (pestañas
-             propias .em-tab, look píldora) sobre la dimensión del
-             cáncer de mama en el país.
-
-             Estructura:
-               .ui-wrap.em-wrap   -> ocupa el ancho de .main-col
-                 .em-card         -> tarjeta (80% de ancho, fondo
-                                     semitransparente + blur, igual
-                                     criterio que .ui-panel)
-                   .ui-card-title -> pregunta fija arriba (clase compartida)
-                   .em-tabs       -> 2 botones para elegir qué gráfico ver
-                   #em-chart-panel -> contenedor vacío donde modulo1.js
-                                     dibuja el gráfico activo (barras)
-                   .ui-src        -> "Fuente" (componente compartido,
-                                     mismo que usa el módulo 3)
-
-             "Fuente" reutiliza el acordeón compartido .ui-src de
-             style.css en vez de un componente propio: es exactamente
-             el mismo patrón (resumen + popover + triangulito). -->
+            <!-- ============ MÓDULO 1 "Argentina hoy" — Emi (prefijo em-) ============
+                 Tarjeta con pestañas propias (.em-tabs); modulo1.js dibuja el gráfico activo en #em-chart-panel. "Fuente" usa el .ui-src compartido. -->
             <div class="ui-wrap em-wrap">
               <div class="ui-panel em-card">
-                <!-- Título pedido tal cual, con tilde y "¿...?" agregados
-                     para que mantenga el mismo estilo de pregunta que
-                     usan .ui-card-title de módulo 2 y 3. Pestañas
-                     acortadas a "Por tipo"/"Por edad":
-                     el data-chart (lo que usa modulo1.js para saber qué
-                     gráfico dibujar) no cambió, solo el texto visible. -->
+                <!-- Pregunta fija de la tarjeta; data-chart es lo que usa modulo1.js para saber qué gráfico dibujar. -->
                 <h3 class="ui-card-title">¿Cuántos casos de cáncer de mama hay por año?</h3>
                 <div class="em-tabs" role="tablist">
                   <button
@@ -385,11 +340,8 @@
               </h2>
             </div>
 
-            <!-- ============ MÓDULO 2 — Brenda (prefijo br-) ============
-             Todo el contenido de este capítulo va dentro de este div.
-             Estilos en modulo2.css, lógica en modulo2.js.
-             Usá las clases compartidas ui-* (ui-panel, ui-tabs, ui-seg,
-             ui-big, ui-lab, ui-src...): mirá el módulo 3 como ejemplo. -->
+            <!-- ============ MÓDULO 2 "El tiempo" — Brenda (prefijo br-) ============
+                 Estilos en modulo2.css, lógica en modulo2.js. -->
             <div class="ui-wrap br-wrap">
               <div class="br-frame" id="brFrame">
                 <div class="br-stage" id="brStage">
@@ -414,13 +366,7 @@
 
                     <div id="brPanelProvincia" class="br-hidden">
                       <div class="br-grid-layout">
-                        <!-- Columna 1: el gráfico interactivo + su bajada de
-                             texto (antes el texto iba arriba de las 2
-                             columnas; ahora queda junto al gráfico, ver
-                             .br-chart-col en modulo2.css). El título de
-                             arriba (h1 "¿Está bajando la mortalidad por cáncer de mama?") NO está
-                             acá adentro: sigue siendo uno solo, compartido
-                             arriba de las 2 columnas. -->
+                        <!-- Columna 1: el gráfico interactivo con su bajada (el título de la tarjeta es uno solo, arriba de las 2 columnas). -->
                         <div class="br-chart-col">
                           <!-- Pista rosa: modulo2.js le agrega/saca "br-prompt-gone" -->
 
@@ -501,19 +447,7 @@
 
                     <div id="brPanelAnio">
                       <div class="br-grid-layout">
-                        <!-- El mapa "plano" (#brMapAnio) y su texto grande
-                             (.br-map-overlay, año/%) siguen ACÁ, sin tocar --
-                             solo se ocultan por CSS (ver "#brPanelAnio
-                             .br-map-card" en modulo2.css). No se borran del
-                             HTML porque selectYear(), en modulo2.js, escribe
-                             en #brOverlayYear/#brOverlayPct cada vez que se
-                             pasa el mouse por el gráfico; si estos elementos
-                             no existieran, esa función cortaría ahí (error de
-                             "null") y nunca llegaría a la parte de abajo que
-                             mueve el puntito resaltado en el gráfico -- se
-                             rompería el hover. Ocultarlo en vez de borrarlo
-                             evita tocar esa lógica (que es frágil) por
-                             completo. -->
+                        <!-- Mapa "plano" y su texto grande: ocultos por CSS pero no borrados, porque selectYear() (modulo2.js) los usa en el hover. -->
                         <div class="br-map-card">
                           <svg
                             class="br-map"
@@ -529,12 +463,7 @@
                             </div>
                           </div>
                         </div>
-                        <!-- Con el mapa oculto, este panel pasa a ocupar
-                             TODA la tarjeta (ver "#brPanelAnio
-                             .br-grid-layout" en modulo2.css): por eso ya no
-                             lleva el "max-width:520px; justify-self:start"
-                             que antes lo achicaba para convivir con el mapa
-                             al lado. -->
+                        <!-- Con el mapa oculto, este panel ocupa toda la tarjeta. -->
                         <div class="br-panel">
                           <h2 id="brAnioTitulo">
                             La tasa de mortalidad por cáncer de mama bajó un 10,5 % entre 2005 y
@@ -564,9 +493,7 @@
                               <p id="brAxisNoteText"></p>
                             </div>
                           </div>
-                          <!-- Dos columnas de datos:
-                               izquierda = valores que CAMBIAN con el año (población y muertes)
-                               derecha   = valor FIJO (promedio de muertes por día, 2005–2024) -->
+                          <!-- Dos columnas de datos: izquierda = valores del año (cambian con el cursor) · derecha = promedio fijo de muertes por día. -->
                           <div class="br-stats">
                             <div class="br-stats-left">
                               <div class="br-stat-item">
@@ -627,50 +554,8 @@
               </h2>
             </div>
 
-            <!-- ============================================================
-             Módulo "El futuro": visualización de puntos que representan
-             mujeres, con IA activable. Datos del estudio AIMS (Reino
-             Unido, 115.973 mamografías) — Kelly et al., Nature Cancer
-             2026.
-
-             Estructura -- ahora calcada de la tarjeta del módulo 1
-             (mismo molde, para que las dos se vean parejas):
-               .ui-wrap              -> ocupa el ancho de .main-col
-                 .ui-panel.me-card   -> LA tarjeta (una sola, fondo con
-                                        blur) envuelve todo lo de abajo
-                   .ui-card-title    -> pregunta fija arriba (clase
-                                        compartida con el módulo 1),
-                                        es la ÚNICA bajada que se
-                                        comparte entre las 2 pestañas
-                   .ui-tabs          -> 2 botones para elegir qué tabla ver
-                   .ui-panels        -> "grid stack": los 2 .ui-tabpanel
-                                        comparten la misma celda del grid,
-                                        así el rectángulo siempre mide el
-                                        alto del panel más alto de los 2
-                                        (no cambia de tamaño al cambiar de
-                                        pestaña). Solo el que tiene .active
-                                        se ve (opacity, no display:none).
-                     .ui-tabpanel (x2) -> una por cada visualización. Ya
-                                        NO tiene su propio fondo/borde
-                                        (se lo saca el CSS, ver
-                                        modulo3.css): la única tarjeta
-                                        visible es la de afuera.
-                       .me-dotgrid#me-g1/g2 -> los puntos, dibujados por
-                                        JS (ver modulo3.js) como <div>
-                                        dentro de un grid CSS -- MISMA
-                                        técnica que el waffle del
-                                        Capítulo 1.
-
-             ".ui-sub" SÍ es una por pestaña (adentro de cada
-             .ui-tabpanel), con un texto distinto (contenido definitivo
-             pedido por Meli), por eso ya no hay un ".ui-sub" único
-             arriba de las pestañas como en una versión anterior de
-             este módulo. "Fuente", en cambio, es UNA sola, compartida
-             (va al final de la tarjeta, afuera de .ui-panels, después
-             de "Límites" -- ver ahí abajo): el texto que cita ya es
-             idéntico en las 2 pestañas, así que no hacía falta
-             duplicarla.
-             ============================================================ -->
+            <!-- ============ MÓDULO 3 "El futuro" — Meli (prefijo me-) ============
+                 Buscador de mamógrafos con lazo de puntos, botón "… una última cosa" y cierre con créditos. Estilos en modulo3.css, lógica en modulo3.js. -->
             <div class="ui-wrap">
               <div class="ui-panel me-card">
                 <h3 class="ui-card-title">¿Cómo podemos seguir salvando vidas?</h3>
@@ -693,6 +578,7 @@
                         type="text"
                         placeholder="Escribí aquí"
                         autocomplete="off"
+                        spellcheck="false"
                         role="combobox"
                         aria-autocomplete="list"
                         aria-expanded="false"
@@ -772,25 +658,8 @@
           </section>
         </div>
 
-        <!-- ================= CHAPTER MEDIA (columna 3 de 4) =================
-         Antes cada <video> vivía DENTRO de su .chapter, como fondo a pantalla
-         completa detrás del texto. Ahora es su propia columna, angosta, al
-         lado del contenido: por eso los 3 videos están acá juntos, uno por
-         capítulo, y JS le pone/saca la clase "active" al que corresponde
-         (ver script.js) para mostrar solo el del capítulo que se está viendo.
-         data-chapter coincide con el número final de cada id="chapter-X".
-         Los 3 videos ya NO tienen "autoplay": script.js es el único que
-         decide cuándo arranca cada uno (recién al entrar a ese módulo),
-         para que no se vean ya reproduciéndose al cargar o al navegar.
-
-         Tampoco tienen "loop": sin ese atributo, al llegar al final cada
-         video se detiene solo y se queda mostrando su ÚLTIMO frame (en
-         vez de volver al frame 0 y arrancar de nuevo en bucle) -- eso es
-         justamente lo que se pidió: que el video "se congele" ahí
-         mientras el usuario se queda en ese módulo. Esto no choca con el
-         reinicio al CAMBIAR de módulo: ese reinicio ya lo hace script.js
-         a mano (currentTime=0 + play(), ver ahí "video.currentTime = 0"),
-         sin depender de este atributo. -->
+        <!-- ============ VIDEOS DE CADA CAPÍTULO ============
+             script.js muestra y reproduce el del capítulo activo (data-chapter = número del capítulo); sin loop, se quedan en el último frame. -->
         <div class="chapter-media" aria-hidden="true">
           <video class="chapter-video active" data-chapter="1" muted playsinline>
             <source src="01_MODULO.mp4" type="video/mp4" />
@@ -815,37 +684,60 @@
           </video>
         </div>
 
-        <!-- SIDE NAV (columna 4 de 4): menú lateral para saltar directamente a
-         cada capítulo. data-target coincide con el número al final de cada
-         id="chapter-X" -->
+        <!-- Barra de capítulos: data-target = número del capítulo al que lleva cada botón. -->
         <nav class="side-nav" aria-label="Capítulos">
-          <!-- Barra de abajo: círculos numerados unidos por un hilo de bolitas.
-           transicion.js marca cuál está activo (.active), cuáles ya se vieron
-           (.done) y cuál sigue (.next), y prende el hilo (.full). -->
-          <button
-            type="button"
-            class="nav-sfx"
-            id="navSfx"
-            aria-pressed="false"
-            aria-label="Silenciar efectos de sonido"
-          >
-            <svg class="i-on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"
-              />
-            </svg>
-            <svg class="i-off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z" />
-              <path
-                d="M16 9.5l5 5m0-5l-5 5"
-                stroke="currentColor"
-                stroke-width="2"
-                fill="none"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
+          <!-- transicion.js marca el capítulo activo (.active), los vistos (.done), el que sigue (.next) y prende el hilo de bolitas. -->
+          <!-- Sonido: música de fondo (nota) y efectos (megáfono). transicion.js los maneja;
+           data-tip es el cartelito que aparece al pasar el mouse. -->
+          <div class="nav-sonido">
+            <button
+              type="button"
+              class="nav-sfx"
+              id="navMusica"
+              aria-pressed="false"
+              aria-label="Silenciar música de fondo"
+              data-tip="Música de fondo"
+            >
+              <svg class="i-on" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 17.5V5.5l11-2.5v12" />
+                  <circle cx="6.5" cy="17.5" r="2.5" />
+                  <circle cx="17.5" cy="15" r="2.5" />
+                </g>
+              </svg>
+              <svg class="i-off" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 17.5V5.5l11-2.5v12" />
+                  <circle cx="6.5" cy="17.5" r="2.5" />
+                  <circle cx="17.5" cy="15" r="2.5" />
+                  <path d="M3 3l18 18" />
+                </g>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="nav-sfx"
+              id="navSfx"
+              aria-pressed="false"
+              aria-label="Silenciar efectos de sonido"
+              data-tip="Efectos de sonido"
+            >
+              <svg class="i-on" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3.5 10v4h3l8.5 4.5v-13L6.5 10z" />
+                  <path d="M7.5 14.5l1.2 4.5h2.4l-1-4" />
+                  <path d="M18.5 9.5a3.5 3.5 0 0 1 0 5" />
+                </g>
+              </svg>
+              <svg class="i-off" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3.5 10v4h3l8.5 4.5v-13L6.5 10z" />
+                  <path d="M7.5 14.5l1.2 4.5h2.4l-1-4" />
+                  <path d="M3 3l18 18" />
+                </g>
+              </svg>
+            </button>
+          </div>
           <button type="button" class="nav-item active" data-target="1">
             <span class="num">1</span><span class="label">Argentina hoy</span>
           </button>
@@ -880,9 +772,7 @@
     <canvas id="trCanvas" aria-hidden="true"></canvas>
     <div id="trPuente" class="tr-puente" aria-hidden="true"></div>
 
-    <!-- Tipografía: si style.css todavía nombra "Fraunces" o "Inter" directamente (en vez de usar
-         --serif / --sans), este script las cambia por DM Serif Display / DM Sans en todo el sitio,
-         incluso en lo que dibujan los módulos después. Cuando style.css use las variables, se puede borrar. -->
+    <!-- Respaldo de tipografía: cambia "Fraunces"/"Inter" por DM Serif Display / DM Sans donde style.css no use las variables. -->
     <script>
       (function () {
         var SERIF = '"DM Serif Display", Georgia, serif';

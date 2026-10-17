@@ -424,11 +424,11 @@
   background: var(--panel);
   font-family: inherit;
 }
-/* El mapa base es gris oscuro: se lo tiñe hacia el violeta del sitio */
+/* El mapa base se tiñe hacia el violeta del sitio y se oscurece para que resalten los puntos */
 .me-mapa .leaflet-tile-pane {
-  filter: sepia(0.35) hue-rotate(250deg) saturate(1.6) brightness(0.85);
+  filter: sepia(0.35) hue-rotate(250deg) saturate(1.4) brightness(0.55);
 }
-/* Puntos: mismos colores que el lienzo (rosa = público, gris = privado); el público brilla */
+/* Puntos: rosa = público, gris = privado (como la leyenda), con contorno oscuro; el público brilla */
 .me-mapa .me-mapa-punto {
   filter: drop-shadow(0 0 5px var(--rose-glow));
   transition: filter 0.2s;
@@ -968,7 +968,7 @@
   opacity: 1;
 }
 
-/* "¡Muchas gracias!": cursiva, se escribe con JS; su "top" lo calcula modulo3.js */
+/* "¡Muchas gracias!": modulo3.js calcula su "top" y lo escribe letra por letra en un SVG encima del texto invisible */
 .me-creditos-gracias {
   position: absolute;
   left: 50%;
@@ -980,13 +980,54 @@
   text-align: center;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(1.4rem, 5cqw, 2.4rem);
+  font-size: clamp(1.25rem, 4cqw, 2rem); /* tamaño del texto */
   line-height: 1.2;
-  color: var(--rose-strong);
-  text-shadow: 0 0 22px rgba(255, 111, 156, 0.45);
+  --gracias-color: var(--text-dim); /* color de las letras (el mismo gris que los nombres): cambialo acá */
 }
 .me-gracias-off {
-  visibility: hidden; /* lo que todavía no se escribió: ocupa lugar pero no se ve */
+  visibility: hidden; /* ocupa el lugar del texto; lo que se ve es el SVG */
+}
+.me-gracias-trazo {
+  position: absolute;
+  left: -0.2em;
+  top: 50%;
+  width: calc(100% + 0.4em);
+  transform: translateY(-50%);
+  overflow: visible;
+  font: inherit;
+}
+/* Cada letra: primero la dibuja un trazo fino y después se rellena con --gracias-color */
+.me-letra {
+  fill: transparent;
+  stroke: var(--gracias-color);
+  stroke-width: 0.9;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--l);
+  stroke-dashoffset: var(--l);
+}
+.revela .me-letra {
+  animation:
+    meTrazo 0.9s cubic-bezier(0.45, 0.05, 0.35, 1) calc(var(--i) * 0.16s) forwards,
+    meRelleno 0.8s ease calc(var(--i) * 0.16s + 0.6s) forwards;
+}
+@keyframes meTrazo {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes meRelleno {
+  to {
+    fill: var(--gracias-color);
+    stroke: transparent; /* el trazo se apaga: queda la letra con su peso normal */
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .me-letra,
+  .revela .me-letra {
+    animation: none;
+    fill: var(--gracias-color);
+    stroke: none;
+  }
 }
 .me-sr {
   position: absolute;
@@ -1011,17 +1052,15 @@
   justify-content: center;
   gap: 4px 0;
   font-size: 0.8rem;
-  color: var(--text);
+  color: var(--text-dim); /* nombres, separadores y concurso en el mismo gris */
 }
 .me-creditos-linea li + li::before {
   content: '·';
   margin: 0 12px;
-  color: var(--text-dim);
 }
 .me-creditos-marca {
   font-size: 0.7rem;
   letter-spacing: 0.2em;
-  color: var(--text-dim);
 }
 @media (prefers-reduced-motion: reduce) {
   .me-creditos {

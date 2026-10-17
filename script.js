@@ -1,9 +1,5 @@
-// ============================================================
-// SCRIPT.JS — ARCHIVO GENERAL (compartido). Cada módulo tiene su JS:
-// modulo1.js (Emi), modulo2.js (Brenda), modulo3.js (Meli).
-// Lógica de: intro, audio, navegación entre capítulos
-// y reinicio de la animación de los puntitos al cambiar de módulo
-// ============================================================
+// ============ SCRIPT.JS — ARCHIVO GENERAL (compartido) ============
+// Intro, audio, entrada a la experiencia (arranca video, sonido y música), navegación entre capítulos y componentes ui-*.
 
 // ---------- Referencias a elementos del DOM ----------
 const intro = document.getElementById('intro');
@@ -15,12 +11,7 @@ const navItems = document.querySelectorAll('.nav-item');
 const chapters = document.querySelectorAll('.chapter');
 const chapterVideos = document.querySelectorAll('.chapter-video'); // los 3 videos de la columna de velas
 
-// Los 3 <video> tienen "autoplay", así que sin esto los 3 arrancan
-// a reproducirse apenas carga la página. Pausamos LOS TRES (incluido
-// el del capítulo 1, que es el que queda .active de entrada) y los
-// dejamos en el frame 0: ninguno arranca hasta que el usuario entre
-// a ese módulo específico (ver más abajo el click de audioBtn para el
-// capítulo 1, y el click de navItems para los capítulos 2 y 3).
+// Todos los videos arrancan quietos en el frame 0: cada uno se reproduce recién al entrar a su módulo.
 chapterVideos.forEach((v) => {
   v.pause();
   v.currentTime = 0;
@@ -39,9 +30,7 @@ function startIntroVideo() {
   introVideo.classList.add('visible');
 }
 
-// Devuelve el video a su estado inicial: oculto, quieto en el frame 0 y listo
-// para dispararse de nuevo a los 22 s. Pasa cuando el audio se reinicia o se
-// lleva hacia atrás (antes del segundo 22).
+// Devuelve el video de la intro a su estado inicial (oculto, en el frame 0) cuando el audio vuelve antes de los 22 s.
 function resetIntroVideo() {
   introVideoStarted = false;
   introVideo.classList.remove('visible'); // se desvanece (el fade dura 1,6 s)
@@ -58,34 +47,21 @@ audio.addEventListener('timeupdate', () => {
   else if (introVideoStarted) resetIntroVideo(); // el audio volvió antes del seg. 22
 });
 
-// ---------- Audio + botón con doble rol ----------
-// El mismo botón (#audioBtn) cumple dos roles, uno después del otro:
-//   1) Mientras el audio no terminó: activa/pausa el audio (como antes).
-//   2) Apenas el audio termina (evento 'ended', más abajo): pasa a decir
-//      "Tocá para comenzar ↓" y, a partir de ahí, un click más oculta el
-//      intro (#intro.hidden) y entra a la experiencia. audioHasEnded es
-//      lo que distingue en qué rol está el botón en cada click.
-// e.stopPropagation() evita que el click se propague y dispare, sin
-// querer, algún handler del contenedor padre.
-// Entra a la experiencia (lo usa el botón del audio ya terminado).
+// ---------- Entrar a la experiencia ----------
+// Cierra la intro y arranca el video del capítulo activo, el sonido de módulo, la música de fondo y la animación de entrada.
 function enterExperience() {
   clearInterval(fadeId); // corta el fade-in de volumen si seguía en curso
   audio.pause();
   audio.currentTime = 0;
   introVideo.pause();
-  // Importante: sacar "started"/"ended". Con "started", el CSS deja
-  // .player-controls en visibility:visible y los .pbtn tienen
-  // pointer-events:auto, así que seguían recibiendo clicks por encima de
-  // los módulos aunque #intro estuviera .hidden.
+  // Sacar "started"/"ended": si no, los controles de la intro siguen recibiendo clicks por encima de los módulos.
   intro.classList.remove('started', 'ended', 'failed');
   intro.classList.add('hidden');
   intro.setAttribute('inert', ''); // nada del intro recibe clicks ni foco
   intro.setAttribute('aria-hidden', 'true');
   introCaption.hidden = true;
 
-  // Recién ahora arranca el video del módulo activo (capítulo 1 al
-  // entrar por primera vez). Los capítulos 2 y 3 arrancan solos al
-  // navegar a ellos (ver handler de navItems más abajo).
+  // Arranca el video del capítulo activo (los otros arrancan al navegar a ellos).
   const activeVideo = document.querySelector('.chapter-video.active');
   if (activeVideo) {
     activeVideo.currentTime = 0;
@@ -94,11 +70,10 @@ function enterExperience() {
       .catch((err) => console.warn('No se pudo reproducir el video del capítulo activo:', err));
   }
 
-  // Sonido "modulo" (el mismo de los módulos 2 y 3) y animación de entrada del módulo 1.
-  // La animación espera 700 ms a que termine el fundido de la intro (1,1 s) para que se
-  // vea de verdad. (El sonido "carga" suena en la intro cuando aparece el título.)
+  // Sonido de módulo, música de fondo (transicion.js) y animación de entrada; la animación espera 700 ms al fundido de la intro.
   if (window.Transicion) {
     window.Transicion.sfx('modulo');
+    if (window.Transicion.musica) window.Transicion.musica();
     window.Transicion.entrar(
       document.querySelector('.chapter.active'),
       document.querySelector('.nav-item.active'),
@@ -132,10 +107,7 @@ skipBtn.addEventListener('click', (e) => {
   enterExperience();
 });
 
-// Botón central "Apretá acá para comenzar": arranca el audio y, si salió
-// bien, se convierte en la barra de reproducción (clase "started" en
-// #intro; el CSS hace la transformación). Cuando el audio termina, vuelve
-// a ser un botón: "Continuar →", con un botón al lado para volver a escuchar.
+// Botón "Apretá acá para comenzar": arranca el audio y se convierte en la barra de reproducción; al terminar pasa a "Continuar →".
 audioBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   if (introClosed()) return;
@@ -163,9 +135,7 @@ audioBtn.addEventListener('click', (e) => {
 });
 
 // ---------- Barra de reproducción de la intro ----------
-// SUBTÍTULOS del audio (AUDIO_FINAL.mp3). start/end = segundos del audio
-// en los que se muestra cada frase. Si la lista queda vacía, el botón CC
-// se oculta solo.
+// Subtítulos del audio: start/end en segundos. Si la lista queda vacía, el botón CC se oculta.
 
 const CAPTIONS = [
   { start: 2.14, end: 4.0, text: 'Hola, doctor.' },
@@ -271,10 +241,7 @@ pTrack.addEventListener('click', (e) => {
   audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
 });
 
-// Cuando el audio termina (el <audio> NO tiene "loop", así que este evento
-// sí se dispara): el botón cambia de texto y, desde acá en adelante, el
-// click de arriba lo trata como "entrar a la experiencia" en vez de
-// activar/pausar audio.
+// Al terminar el audio, el botón pasa a "entrar a la experiencia".
 audio.addEventListener('ended', () => {
   if (introClosed()) return;
   audioHasEnded = true;
@@ -299,9 +266,8 @@ function fadeVolume(target, ms = 1500) {
   }, ms / steps);
 }
 
-// ---------- Chapter navigation ----------
-// navItems: los 3 botones del menú lateral
-// chapters: las 3 secciones .chapter (cada una con su video de fondo y título)
+// ---------- Navegación entre capítulos ----------
+// Cada botón de la barra activa su capítulo y su video (data-target = número del capítulo).
 navItems.forEach((item) => {
   item.addEventListener('click', () => {
     // Efecto de sonido de cambio de módulo (solo si se toca un capítulo distinto del actual)
@@ -314,9 +280,7 @@ navItems.forEach((item) => {
       chapters.forEach((c) => c.classList.remove('active'));
       chapterVideos.forEach((v) => v.classList.remove('active'));
 
-      // ...y activa solo el nav-item clickeado, el capítulo correspondiente,
-      // y el video de esa misma vela, usando data-target (1, 2 o 3) para
-      // armar el id "chapter-X" (capítulo) y para matchear data-chapter (video)
+      // Activa el botón, el capítulo y el video que corresponden a data-target.
       item.classList.add('active');
       const target = item.dataset.target;
       const chapter = document.getElementById('chapter-' + target);
@@ -331,17 +295,12 @@ navItems.forEach((item) => {
           .catch((err) => console.warn('No se pudo reproducir el video del capítulo:', err)); // arranca recién ahora, al entrar al módulo
       }
 
-      // Pausa los videos que quedaron ocultos (ahorra CPU/batería;
-      // sin esto, los 3 videos quedan reproduciéndose todo el tiempo aunque
-      // no se vean, que es justo lo que hacía que no arrancaran de cero).
+      // Pausa los videos ocultos (ahorra CPU y batería).
       chapterVideos.forEach((v) => {
         if (v !== video) v.pause();
       });
 
-      // Reinicia la animación de los puntitos rosa alrededor del título.
-      // Sin este truco, la animación CSS (dotPop) solo correría la primera vez:
-      // al volver a agregar la clase .active, el navegador no la "re-dispara"
-      // porque, para el motor de CSS, la animación ya había corrido antes.
+      // Reinicia la animación de los puntitos del título (sin esto solo correría la primera vez).
       const dots = chapter.querySelectorAll('.dot');
       dots.forEach((dot) => {
         dot.style.animation = 'none'; // saca la animación
@@ -356,11 +315,8 @@ navItems.forEach((item) => {
   });
 });
 
-// ============================================================
-// HELPERS Y COMPONENTES COMPARTIDOS (los usan todos los módulos)
-// ============================================================
-// UI.NS: namespace SVG. UI.el(tag, attrs): crea un elemento SVG.
-// UI.rng(seed): números "aleatorios" reproducibles. UI.fmt(n): 1234 -> "1.234".
+// ============ HELPERS Y COMPONENTES COMPARTIDOS ============
+// UI.el(tag, attrs): crea un elemento SVG · UI.rng(seed): aleatorio reproducible · UI.fmt(n): 1234 -> "1.234".
 const UI = {
   NS: 'http://www.w3.org/2000/svg',
   rng: function (seed) {
@@ -379,9 +335,7 @@ const UI = {
   },
 };
 
-// Pestañas (.ui-tab / .ui-tabpanel): funcionan solas en cualquier módulo.
-// Cada botón tiene aria-controls="id-del-panel"; solo afecta a las pestañas
-// de su propio .ui-wrap, así los módulos no se pisan entre sí.
+// Pestañas .ui-tab / .ui-tabpanel: cada botón muestra el panel de su aria-controls, solo dentro de su .ui-wrap.
 document.querySelectorAll('.ui-tab').forEach(function (btn) {
   btn.addEventListener('click', function () {
     let wrap = btn.closest('.ui-wrap');
@@ -396,9 +350,7 @@ document.querySelectorAll('.ui-tab').forEach(function (btn) {
   });
 });
 
-// ---------- Volver a la presentación ----------
-// Mismo criterio que "Volver a comenzar" del módulo 3: recargar la página
-// deja la intro, el audio y los videos como al inicio.
+// ---------- Volver a la presentación: recarga la página (intro, audio y videos como al inicio) ----------
 const navBack = document.getElementById('navBack');
 if (navBack) navBack.addEventListener('click', () => location.reload());
 
@@ -428,10 +380,8 @@ function uiFuente(details, fuentes, nota) {
   details.removeAttribute('open'); // al cambiar de pestaña se cierra
 }
 
-// ---------- Salida de la Fuente (compartido) ---------- la usan los tres modulos
-// Hace desaparecer una o varias etiquetas "Fuente" (un elemento o una lista)
-// y, cuando termina, ejecuta alAcabar (cambiar de pestaña, de módulo...).
-// Con "reducir movimiento" ejecuta alAcabar directo, sin esperar.
+// ---------- Salida de "Fuente" (compartida por los 3 módulos) ----------
+// Desvanece una o varias etiquetas y después ejecuta alAcabar; con "reducir movimiento", directo.
 function uiFuenteSalir(fuentes, alAcabar) {
   const lista = fuentes && fuentes.nodeType ? [fuentes] : Array.from(fuentes || []);
   // Si el desplegable estaba abierto, se cierra enseguida (también con teclado).
@@ -453,10 +403,7 @@ function uiFuenteSalir(fuentes, alAcabar) {
   }, 350);
 }
 
-// ---------- "Fuente" abierta: se cierra al tocar otra cosa (compartido) ----------
-// Si el desplegable está abierto y el usuario toca cualquier otro lugar (otra
-// pestaña, el gráfico, el mapa, el menú de módulos...) o aprieta Escape, se cierra.
-// Tocar la propia etiqueta o el texto abierto no lo cierra.
+// ---------- "Fuente" abierta: se cierra al tocar cualquier otro lugar o con Escape ----------
 document.addEventListener('pointerdown', function (e) {
   document.querySelectorAll('.ui-src[open]').forEach(function (d) {
     if (!d.contains(e.target)) d.removeAttribute('open');

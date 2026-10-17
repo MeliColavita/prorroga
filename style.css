@@ -1639,11 +1639,17 @@ body {
 }
 
 /* Silencio de efectos (izquierda) y "Volver a la presentación" (derecha) */
-.nav-sfx {
+/* Botones de sonido (música y efectos), a la izquierda de la barra */
+.nav-sonido {
   position: absolute;
   left: max(12px, env(safe-area-inset-left));
   top: calc(var(--bar-h) / 2);
   transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+}
+.nav-sfx {
+  position: relative;
   width: 34px;
   height: 34px;
   display: grid;
@@ -1673,6 +1679,40 @@ body {
 .nav-sfx[aria-pressed='true'] .i-off {
   display: block;
 }
+.nav-sfx[aria-pressed='true'] {
+  opacity: 0.6;
+}
+/* Cartelito al pasar el mouse (o al llegar con Tab): dice qué es cada botón */
+.nav-sfx::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  padding: 5px 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-fast) ease;
+}
+.nav-sfx:hover::after,
+.nav-sfx:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (hover: none) {
+  .nav-sfx:hover::after {
+    opacity: 0; /* en pantallas táctiles no queda pegado después del toque */
+  }
+}
 .nav-back {
   position: absolute;
   right: max(12px, env(safe-area-inset-right));
@@ -1689,8 +1729,15 @@ body {
 }
 @media (max-width: 700px) {
   .side-nav {
-    padding-left: 56px;
-    padding-right: 56px;
+    padding-left: 84px; /* lugar para los 2 botones de sonido */
+    padding-right: 52px;
+  }
+  .nav-sonido {
+    gap: 4px;
+  }
+  .nav-sfx {
+    width: 30px;
+    height: 30px;
   }
   .nav-item .label {
     display: none; /* en pantallas angostas solo el capítulo actual muestra su nombre */
@@ -1699,8 +1746,8 @@ body {
     display: block;
   }
   .nav-trail {
-    min-width: 20px;
-    margin: 0 6px;
+    min-width: 12px;
+    margin: 0 4px;
   }
 }
 
