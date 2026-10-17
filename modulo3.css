@@ -583,6 +583,80 @@
   display: none;
 }
 
+/* ---- Mapa real (Leaflet): tapa el lienzo cuando se elige una localidad con coordenadas ---- */
+.me-mapa {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s;
+}
+.me-mapa.on {
+  opacity: 1;
+  visibility: visible;
+}
+.me-mapa.leaflet-container {
+  background: var(--panel);
+  font-family: inherit;
+}
+/* El mapa base es gris oscuro: se lo tiñe hacia el violeta del sitio */
+.me-mapa .leaflet-tile-pane {
+  filter: sepia(0.35) hue-rotate(250deg) saturate(1.6) brightness(0.85);
+}
+/* Puntos: mismos colores que el lienzo (rosa = público, gris = privado); el público brilla */
+.me-mapa .me-mapa-punto {
+  filter: drop-shadow(0 0 5px var(--rose-glow));
+  transition: filter 0.2s;
+}
+.me-mapa .me-mapa-privado {
+  filter: none;
+}
+/* Etiqueta con el nombre del establecimiento (mismo look que .me-tip) */
+.leaflet-tooltip.me-mapa-tip {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  color: var(--text);
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+.leaflet-tooltip-top.me-mapa-tip::before {
+  border-top-color: var(--panel-border);
+}
+/* Botones de zoom y créditos del mapa, en la paleta del sitio */
+.me-mapa .leaflet-bar {
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+}
+.me-mapa .leaflet-bar a {
+  background: var(--panel);
+  color: var(--text);
+  border-bottom-color: var(--panel-border);
+}
+.me-mapa .leaflet-bar a:hover {
+  background: var(--rose-strong);
+  color: #1a0510;
+}
+.me-mapa .leaflet-control-attribution {
+  background: rgba(14, 10, 19, 0.7);
+  color: var(--text-dim);
+  font-size: 9px;
+}
+.me-mapa .leaflet-control-attribution a {
+  color: var(--rose);
+}
+/* Con el mapa, cada tarjeta de la lista lleva el mapa hasta su mamógrafo */
+.me-con-mapa .me-result-item {
+  cursor: pointer;
+}
+
 .me-side {
   flex: 1 1 45%;
   min-width: 0;
