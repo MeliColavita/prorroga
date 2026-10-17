@@ -407,8 +407,8 @@
                       </button>
 
                       <div class="em-prompt em-prompt-tipo br-hidden" id="brProvPrompt">
-                        <span class="em-prompt-dot" aria-hidden="true"></span>Presioná el botón Cantidad o
-                        Porcentaje y tocá una provincia para ver sus datos.
+                        <span class="em-prompt-dot" aria-hidden="true"></span>Presioná el botón
+                        Cantidad o Porcentaje y tocá una provincia para ver sus datos.
                       </div>
                     </div>
 
@@ -468,16 +468,28 @@
                             </div>
                             <!-- Qué muestra el mapa: "Cantidad" = puntitos; "Porcentaje" = provincias pintadas. -->
                             <div class="br-map-mode" role="group" aria-label="Qué muestra el mapa">
-                              <button class="br-mode-btn active" type="button" data-mode="cantidad" aria-pressed="true">
+                              <button
+                                class="br-mode-btn active"
+                                type="button"
+                                data-mode="cantidad"
+                                aria-pressed="true"
+                              >
                                 Cantidad
                               </button>
-                              <button class="br-mode-btn" type="button" data-mode="pct" aria-pressed="false">
+                              <button
+                                class="br-mode-btn"
+                                type="button"
+                                data-mode="pct"
+                                aria-pressed="false"
+                              >
                                 Porcentaje
                               </button>
                             </div>
                             <!-- Referencia de colores: solo se ve en "Porcentaje" -->
                             <div class="br-pct-legend br-hidden" id="brPctLegend">
-                              <span class="br-pct-legend-title">% de las muertes por cáncer que fueron de mama</span>
+                              <span class="br-pct-legend-title"
+                                >% de las muertes por cáncer que fueron de mama</span
+                              >
                               <span class="br-pct-hi">26% o más</span>
                               <span class="br-pct-legend-bar" aria-hidden="true"></span>
                               <span class="br-pct-lo">12% o menos</span>
@@ -735,6 +747,20 @@
                       ><span class="dot"></span><span class="dot"></span><span class="dot"></span
                     ></span>
                   </p>
+                  <div id="me-creditos" class="me-creditos" hidden>
+                    <p id="me-gracias" class="me-creditos-gracias" data-texto="¡Muchas gracias!">
+                      <span class="me-sr">¡Muchas gracias!</span>
+                      <span aria-hidden="true"
+                        ><span class="me-gracias-on"></span><span class="me-gracias-off"></span
+                      ></span>
+                    </p>
+                    <ul class="me-creditos-linea">
+                      <li>Abatedaga, Brenda</li>
+                      <li>Colavita, Melisa</li>
+                      <li>Wampl, Emiliano</li>
+                      <li class="me-creditos-marca">CONTAR CON DATOS 2026</li>
+                    </ul>
+                  </div>
                 </div>
                 <details class="ui-src">
                   <summary>Fuente</summary>
