@@ -1,46 +1,8 @@
-/* ============================================================
-   MODULO3.CSS — Capítulo 3 "El futuro" — Meli — prefijo: me-
-   ============================================================
-   QUÉ HACE ESTE ARCHIVO: los estilos propios de la tarjeta del
-   Capítulo 3 y de sus puntos/grillas. Igual que en modulo1.css, todo
-   lo que empieza con "me-" es propio de este módulo; todo lo que
-   empieza con "ui-" es un componente COMPARTIDO (style.css) que se
-   reutiliza tal cual -- acá eso incluye hasta la tarjeta y las
-   pestañas (.ui-panel, .ui-tabs, .ui-tab, .ui-tabpanel, .ui-seg,
-   .ui-visual, .ui-src...), porque el HTML del módulo 3 está armado
-   para aprovecharlos directamente, en vez de reinventarlos con otro
-   nombre como hace el módulo 1 con sus pestañas en píldora.
+/* ============ MODULO3.CSS — Capítulo 3 "El futuro" — Meli — prefijo me- ============
+   me-* es propio del módulo; ui-* son componentes compartidos de style.css. */
 
-   Convención de nombres de este archivo:
-     .me-card      -> la tarjeta completa (ver index.html: lleva las
-                      clases "ui-panel me-card" juntas)
-     .me-prompt    -> la pista de interacción con el punto que pulsa
-                      ("Cambiá entre..."), antes de cada .ui-seg
-     .me-dotgrid   -> el contenedor CSS Grid de cada grilla de puntos
-     .me-dot       -> cada punto individual (y sus variantes .me-lit /
-                      .me-new, según qué representa)
-     .me-btn       -> botón de acción suelto (panel 2: "Ver qué marca
-                      la IA" / "Volver a ocultar")
-     .me-answer    -> la "respuesta" en rosa que se revela al tocar
-                      (ambos paneles)
-   ============================================================ */
-
-/* .me-prompt/.me-prompt-dot: MISMA idea visual que .em-prompt-tipo/
-   .em-prompt-pct del módulo 1 (punto rosa que pulsa + texto más grande
-   y CENTRADO, no la variante chica/izquierda de .em-prompt a secas) --
-   pedido explícito de Meli: "idéntico al módulo 1". Se duplica acá en
-   vez de compartirla en style.css a propósito: la de módulo 1 tiene
-   lógica propia (se oculta con [hidden] al revelar la respuesta de
-   "Casos por tipo") ya probada y en producción; tocarla para volverla
-   genérica corría el riesgo de romper algo ahí sin necesidad, cuando
-   acá alcanza con repetir el mismo puñado de reglas. A diferencia de
-   antes, el prompt del panel 2 SÍ se oculta (modulo3.js le pone
-   [hidden] apenas se toca el botón "Ver qué marca la IA" -- una vez
-   revelado el resultado, "Tocá el botón..." deja de tener sentido),
-   por eso hace falta el mismo override que módulo1.css ya tiene para
-   ".em-prompt[hidden]" (ver más abajo): .me-prompt también define su
-   propio "display", que empata en especificidad contra el [hidden]
-   del navegador y le gana si no se fuerza acá. */
+/* Pista con punto que pulsa, igual a .em-prompt del módulo 1 (duplicada a propósito para no tocar esa).
+   [hidden] forzado porque .me-prompt define su propio display. */
 .me-prompt {
   display: flex;
   align-items: center;
@@ -78,15 +40,7 @@
   }
 }
 
-/* .me-btn: botón de acción único del panel 2 ("Ver qué marca la IA" /
-   "Volver a ocultar"). Antes vivía adentro de un .ui-seg (la píldora
-   de selector compartida) solo para heredarle el aspecto -- pero esa
-   barra ancha con borde alrededor es visualmente "el resto" del
-   selector de 2 botones de la OTRA pestaña; acá, con un solo botón
-   suelto, se leía como un contenedor vacío. .me-btn es la MISMA idea
-   visual que .em-btn del módulo 1 (botón-contorno, no relleno, pensado
-   para una sola acción en vez de un grupo de opciones) -- se duplica
-   acá en vez de compartirla, mismo criterio que .me-prompt arriba. */
+/* Botón-contorno de una sola acción (panel 2), igual a .em-btn del módulo 1. */
 .me-btn {
   font-family: var(--sans);
   font-size: 0.85rem;
@@ -101,15 +55,7 @@
     background 0.2s,
     color 0.2s;
   margin-bottom: 16px;
-  /* .ui-panel es flex-column: por default, un <button> como hijo
-     directo se ESTIRA al ancho completo (align-self:stretch, el
-     comportamiento de fábrica de flex) -- se veía como una barra
-     ancha, no como un botón chico. align-self:center lo saca de ese
-     estiramiento Y lo centra horizontalmente (pedido de Meli). width
-     fijo (no "ajustado al texto") para que los 2 estados del botón
-     ("Ver qué marca la IA" / "Volver a ocultar", textos de distinto
-     largo) midan siempre lo mismo -- pidió Meli que no "salte" de
-     tamaño al cambiar de texto. */
+  /* Centrado y con ancho fijo, para que no cambie de tamaño al cambiar el texto. */
   align-self: center;
   width: 230px;
   max-width: 100%;
@@ -126,35 +72,17 @@
   border-color: var(--rose-strong);
 }
 
-/* Botones activos de .ui-seg (selector "Un radiólogo"/"IA sola" del
-   panel 1, y el botón único "Ver qué marca la IA" del panel 2): la
-   clase compartida (ver style.css) ya usa el mismo color de fondo que
-   .em-tab.active de módulo 1 (var(--rose-strong) + texto oscuro) -- lo
-   único que le faltaba para ser IDÉNTICA es el resplandor (box-shadow)
-   que sí tiene .em-tab.active. Se agrega acá, scopeado a .me-card, en
-   vez de tocar la regla compartida .ui-seg en style.css -- así no se
-   le agrega un brillo que nadie pidió a otros usos futuros de .ui-seg. */
+/* Agrega el resplandor de .em-tab.active a los botones activos de .ui-seg, solo en este módulo. */
 .me-card .ui-seg button[aria-pressed='true'] {
   box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
 }
 
-/* Más separación de "Fuente" que el valor de base de .ui-note (10px,
-   ver style.css) -- scopeado a este módulo nomás, para no afectar la
-   de módulo 1. */
+/* Más separación de "Fuente", solo en este módulo. */
 .me-card .ui-note {
   margin-top: 22px;
 }
 
-/* .me-answer: la "Respuesta" en rosa que solo se ve al revelar el
-   resultado -- en el panel 1 ("Sí: casi 2 cánceres más...") y en el
-   panel 2 ("La IA habría marcado alrededor de 25 de cada 100."). Es
-   un <p>, así que sin esto tomaría el margen por defecto del
-   navegador (1em arriba y abajo) -- se lo resetea a un valor chico.
-   Antes el panel 2 usaba .ui-big (el número grande, pensado para
-   cifras cortas tipo "7,5") para toda la oración completa: en la
-   columna angosta de .ui-stats se partía en muchas líneas y quedaba
-   casi ilegible -- .me-answer es texto normal en negrita, no "número
-   grande", así que envuelve bien en cualquier ancho. */
+/* Respuesta en rosa que aparece al revelar el resultado; texto en negrita que envuelve bien en cualquier ancho. */
 .me-answer {
   font-size: 0.85rem;
   font-weight: 600;
@@ -162,43 +90,19 @@
   margin: 2px 0 0;
 }
 
-/* El ajuste de espaciado título->tarjeta que antes vivía acá, SOLO
-   para el capítulo 3 (porque tenía más contenido y necesitaba ganar
-   altura), ahora es el valor COMPARTIDO por los 3 capítulos -- ver
-   .chapter-title/.chapter-header/.chapter-eyebrow en style.css. Se
-   sacó el override de acá porque ya no hace falta: el valor general
-   es el mismo que este capítulo necesitaba. */
+/* (El espaciado título → tarjeta es el compartido de style.css.) */
 
 /* ============ TARJETA PRINCIPAL ============
-     La tarjeta visible es la de AFUERA: en el HTML lleva las clases
-     "ui-panel me-card" juntas (mismo molde que .em-card del módulo
-     1 -- ver modulo1.css), así las dos tarjetas miden exactamente lo
-     mismo (ancho, padding, fondo con blur) sin que cada módulo tenga
-     que definir su propio tamaño. .me-card solo agrega el margen
-     inferior puntual de este módulo. */
+   Lleva "ui-panel me-card": el tamaño y el fondo salen de .ui-panel; acá solo el margen inferior. */
 .me-card {
   margin-bottom: 8px;
 }
-/* La descripción debajo del título ("El futuro también se construye
-   con prevención...") -- +1px respecto del tamaño de .ui-sub
-   compartida (0.84rem, style.css), pedido de Emi. El espacio entre el
-   título y esta descripción lo da .ui-card-title con la variable
-   compartida --ui-gap-titulo (style.css), igual que en los módulos 1
-   y 2. */
+/* Descripción debajo del título: 1px más que .ui-sub (pedido de Emi). */
 .me-card > .ui-sub {
   font-size: calc(0.84rem + 1px);
 }
 
-/* Las 2 pestañas (.ui-tabpanel, "1.000 mujeres en control" / "Las
-     que se escapaban") YA NO tienen su propia tarjeta adentro: antes
-     cada una envolvía su contenido en un .ui-panel con fondo + borde
-     + blur PROPIOS -- lo que se veía como "una tarjeta adentro de
-     otra tarjeta" ahora que .me-card ya puso ese fondo una sola vez,
-     afuera de las dos. Esta regla les saca el fondo/borde/padding a
-     esos paneles internos, pero NO les toca position/display/height
-     (que .ui-panel sigue aportando, y que la pestaña 2 -- ver más
-     abajo -- todavía necesita para poder centrar su contenido
-     verticalmente dentro del espacio disponible). */
+/* Los paneles internos no tienen fondo ni borde propio (la tarjeta es la de afuera); conservan position/display/height. */
 .me-card .ui-tabpanel > .ui-panel {
   background: none;
   border: none;
@@ -206,56 +110,19 @@
   padding: 0;
 }
 
-/* .ui-tabpanel (la pestaña compartida, definida en style.css) pasa
-     de una pestaña a otra con un FUNDIDO de 0,35 segundos
-     (transition:opacity): mientras una se apaga, la otra se prende,
-     y por un instante las dos se ven parcialmente superpuestas.
-
-     Eso se veía bien ANTES, cuando cada pestaña tenía su propio
-     fondo/borde (ver la regla de arriba) que las separaba
-     visualmente incluso durante el cruce. Pero ahora que esa tarjeta
-     propia se sacó -- la única tarjeta visible es la de afuera --
-     durante esos 0,35s se ve el CONTENIDO de las 2 pestañas mezclado
-     sin nada que las separe (las 2 grillas de puntos superpuestas, 2
-     botones "Fuente" uno encima del otro): se lee como si el sitio
-     estuviera roto, aunque dure solo un instante.
-
-     Por eso, acá anulamos esa transición: el cambio de pestaña queda
-     INSTANTÁNEO (sin cruce/fundido) en este módulo. */
+/* Cambio de pestaña instantáneo: sin fondo propio, el fundido mezclaba el contenido de las dos. */
 .me-card .ui-tabpanel {
   transition: none;
 }
 
-/* ============================================================
-     GRILLA DE PUNTOS (.me-dotgrid) -- paneles 1 y 2
-     Cada punto es un <div class="me-dot"> dentro de un contenedor
-     CSS Grid, la misma técnica que usa el waffle del Capítulo 1
-     (ver .em-waffle-grid en modulo1.css) -- en una versión anterior
-     de este módulo, los puntos se dibujaban con <svg>/<circle>; se
-     cambió a <div> para que los 2 capítulos compartan un solo
-     enfoque de "grilla que se pinta según datos", más simple.
-     El NÚMERO DE COLUMNAS de cada grilla se fija "inline" en el
-     atributo style del HTML (style="grid-template-columns:
-     repeat(40,1fr)" para el panel 1, repeat(20,1fr) para el panel 2),
-     porque depende de cuántos puntos tiene cada visualización
-     (1.000 vs. 100) -- no tendría sentido fijarlo acá en el CSS.
-     ============================================================ */
+/* ============ GRILLA DE PUNTOS (.me-dotgrid) ============
+   Cada punto es un div en CSS Grid; las columnas se fijan inline en el HTML según la cantidad de puntos. */
 .me-dotgrid {
   display: grid;
   gap: 3px;
   width: 100%;
 }
-/* Cada punto individual arranca "apagado": usa la variable
-     compartida --dot-off (definida en :root, style.css) -- un blanco
-     bien translúcido, el mismo que usaría cualquier otro módulo para
-     representar "sin dato todavía".
-       aspect-ratio:1   -> mantiene cada punto cuadrado (y con
-                           border-radius:50%, circular) sin importar
-                           cuántas columnas tenga la grilla ni el
-                           ancho real en pantalla
-       transition:background -> cuando el JS le cambia la clase (a
-                           .me-lit o .me-new), el color cambia de a
-                           poco en vez de saltar de golpe */
+/* Punto apagado (--dot-off): cuadrado/circular con aspect-ratio y cambio de color suave. */
 .me-dot {
   width: 100%;
   aspect-ratio: 1;
@@ -263,82 +130,41 @@
   background: var(--dot-off);
   transition: background 0.5s ease;
 }
-/* "Cáncer detectado" (la tasa BASE, sin IA): color ámbar
-     (--flame, variable compartida), con un resplandor sutil del
-     mismo color alrededor (box-shadow) -- reemplaza al círculo
-     ".me-glow" aparte que existía en la versión anterior con SVG;
-     acá, al ser más simple la técnica (div en vez de 2 círculos
-     superpuestos), el brillo es directamente un box-shadow en el
-     punto mismo. */
+/* Cáncer detectado (tasa base): ámbar con resplandor. */
 .me-dot.me-lit {
   background: var(--flame);
   box-shadow: 0 0 6px rgba(255, 179, 92, 0.7);
 }
-/* "Detectado gracias a la IA" (la diferencia que suma el apoyo de
-     IA por encima de la tasa base): rosa fuerte (--dot-pink), mismo
-     resplandor pero en rosa. Esta MISMA clase se usa en los 2
-     paneles: tanto para los puntos "nuevos" del panel 1 (los que se
-     encienden solo con IA activada) como para los cánceres de
-     intervalo "recuperados" del panel 2 -- en los dos casos
-     representan lo mismo conceptualmente: "esto lo encontró la IA". */
+/* Detectado gracias a la IA: rosa con resplandor (se usa en los 2 paneles). */
 .me-dot.me-new {
   background: var(--dot-pink);
   box-shadow: 0 0 7px rgba(255, 111, 156, 0.8);
 }
 
-/* ============================================================
-     PANEL 2 ("Los que no se detectan"): ajustes puntuales de layout
-     Este panel tiene MENOS contenido que el panel 1, pero la tarjeta
-     -- al ser un "grid-stack" (ver .ui-panels en style.css) --
-     siempre mide el alto del panel MÁS alto de los dos. Sin este
-     ajuste, el panel 2 quedaría con todo su contenido pegado arriba
-     y un hueco vacío grande abajo.
-     ("Fuente" ya no vive adentro de los paneles -- ver index.html,
-     ahora es una sola, compartida, después de "Límites" al final de
-     toda la tarjeta -- así que acá no hace falta sacarla del flujo
-     ni nada parecido, solo centrar .ui-visual.) */
-/* margin-top/bottom:auto en .ui-visual (que es hijo directo de
-     .ui-panel, el cual es flex-column) hace que ese elemento absorba
-     TODO el espacio libre sobrante, repartido mitad arriba/mitad
-     abajo suyo -- empujándolo al CENTRO vertical del espacio
-     disponible dentro del panel. El texto de arriba (.ui-sub/botón)
-     no se mueve (queda pegado arriba, como siempre). */
+/* ============ PANEL 2: ajustes de layout ============
+   La tarjeta mide lo del panel más alto; acá se centra .ui-visual para no dejar hueco abajo. */
+/* margin auto: centra .ui-visual en vertical dentro del panel. */
 #me-tabpanel-2 .ui-visual {
   margin-top: auto;
   margin-bottom: auto;
 }
 
 @media (min-width: 680px) {
-  /* 65% en vez del 42% que usa la grilla del panel 1 (ver
-       .ui-visual .ui-field en style.css): como en este panel 2 no hay
-       .ui-stats compitiendo por texto largo al lado (son apenas 2
-       líneas de resultado), la grilla puede ocupar bastante más
-       ancho disponible -> cada punto individual sale más grande y
-       se ve mejor. */
+  /* La grilla ocupa más ancho que en el panel 1 (no tiene texto largo al lado). */
   #me-tabpanel-2 .ui-visual .ui-field {
     flex: 0 0 65%;
   }
 }
 
-/* Respeta la preferencia de accesibilidad "reducir movimiento" del
-     sistema operativo: si está activada, el cambio de color de los
-     puntos (apagado -> encendido) pasa a ser instantáneo, sin la
-     transición suave de .5s que tiene por defecto. */
+/* Reducir movimiento: el cambio de color de los puntos es instantáneo. */
 @media (prefers-reduced-motion: reduce) {
   .me-dot {
     transition: none;
   }
 }
 
-/* ============ PANTALLAS BAJAS (alto chico) ============
-   Mismo criterio que style.css/modulo1.css (ver ahí la explicación
-   general): este módulo nunca había necesitado su propio ajuste acá
-   (antes la tarjeta era más baja que las de módulo 1/2, le sobraba
-   margen) -- pero al agrandarla para emparejar su altura con las
-   otras 2 (.me-prompt y .me-card .ui-note, más arriba), ese margen
-   nuevo también había que achicarlo en pantallas bajas, o volvía a
-   aparecer la barra de scroll (probado contra los 601px reales de
-   Brenda). */
+/* ============ PANTALLAS BAJAS (≤760px de alto) ============
+   Achica los márgenes de este módulo para que no aparezca scroll. */
 @media (max-height: 760px) {
   .me-prompt {
     margin-bottom: 3px;
@@ -389,14 +215,8 @@
   filter: brightness(1.1);
 }
 
-/* ============================================================
-   BUSCADOR DE MAMÓGRAFOS (pestaña 3) — lazo de puntos animado
-   ============================================================
-   Se agregó al final de modulo3.css. Todo con prefijo me-.
-   Estructura (ver index.html, #me-tabpanel-3):
-     .me-search   -> caja de búsqueda + sugerencias
-     .me-finder   -> fila: .me-stage (canvas con los puntos) + .me-side (lista)
-   ============================================================ */
+/* ============ BUSCADOR DE MAMÓGRAFOS (pestaña 3) — lazo de puntos animado ============
+   .me-search: búsqueda + sugerencias · .me-finder: canvas (.me-stage) + lista (.me-side). */
 
 .me-search {
   position: relative;
@@ -543,7 +363,7 @@
 
 /* ---- Fila: lazo de puntos (izquierda) + resultados (derecha) ---- */
 .me-finder {
-  --me-h: clamp(200px, 38vh, 300px); /* alto compartido por el canvas y la lista */
+  --me-h: clamp(200px, calc(100dvh - 550px), 300px); /* alto del canvas y la lista: sale del alto de la ventana */
   display: flex;
   gap: 18px;
   align-items: stretch;
@@ -1009,10 +829,7 @@
   animation-delay: calc(var(--d) + 0.4s);
 }
 /* ===== Pantalla final: se va el título del capítulo + botón discreto =====
-   Con la frase en pantalla (.me-cierre-on, la pone modulo3.js en el capítulo)
-   se desvanece "Capítulo 3 / El futuro". El botón "Volver a comenzar"
-   aparece abajo, tenue, a los 4 s; al tocarlo, un velo oscuro (.me-velo) tapa
-   todo antes de volver al inicio. */
+   Con .me-cierre-on se desvanece el título; "Volver a comenzar" aparece a los 4 s y .me-velo tapa todo al tocarlo. */
 .chapter.me-cierre-on .chapter-header {
   opacity: 0;
   pointer-events: none;
@@ -1093,15 +910,7 @@
 }
 
 /* ============ ESPACIO VERTICAL PAREJO (igual que módulos 1 y 2) ============
-   Descripción → "¿Dónde vivís?" → buscador ("Escribí tu localidad")
-   → gráfico: los 3 saltos usan el mismo espacio que título →
-   descripción (variable compartida --ui-gap-titulo, ver "MEDIDAS
-   COMPARTIDAS" en style.css: 20px, 14px en pantallas bajas).
-   Antes eran 12px / 12px / 10px, repartidos entre márgenes de
-   arriba y de abajo de varias reglas (algunas repetidas más arriba en
-   este archivo, otras pisadas en el @media de pantallas bajas). Este
-   bloque va AL FINAL a propósito: así les gana a todas esas reglas
-   sin tener que ir a tocarlas una por una. */
+   Todos los saltos usan --ui-gap-titulo; va al final para ganarle a las reglas de arriba. */
 .me-card > .ui-sub {
   margin-bottom: var(--ui-gap-titulo);
 }
@@ -1122,10 +931,7 @@
 .me-card > .ui-src {
   margin-top: var(--ui-gap-titulo);
 }
-/* Con los espacios parejos de arriba, en pantallas bajas (601px, la
-   compu de Bren) la tarjeta se pasaba 5px y volvía la barra de
-   scroll: el gráfico de puntos cede esos px (antes 36vh en este
-   escalón, ver el @media max-height:760px de más arriba). */
+/* En pantallas bajas el gráfico de puntos cede unos px para que la tarjeta no pase la barra. */
 @media (max-height: 760px) {
   .me-finder {
     --me-h: clamp(160px, 34vh, 250px);
@@ -1133,9 +939,7 @@
 }
 
 /* ---- "Una última cosa" a la altura de "Fuente" ----
-   El botón sale de la fila propia que ocupaba: queda centrado en la misma línea que
-   "Fuente" (modulo3.js lo alinea en vertical), así la tarjeta es más baja y el lazo
-   de puntos vuelve a su tamaño de antes. En celular vuelve a ir en su propia fila. */
+   Centrado en la misma línea que "Fuente" (modulo3.js lo alinea); en celular vuelve a su propia fila. */
 .me-body {
   min-height: 0;
 }

@@ -1,11 +1,5 @@
-/* ============================================================
-   STYLE.CSS — ARCHIVO GENERAL (lo comparten los 3 módulos)
-   Acá viven: variables de color/tipografía, intro, layout, menú,
-   títulos de capítulo y los COMPONENTES COMPARTIDOS "ui-*" (al final).
-   Cada módulo tiene su propio CSS: modulo1.css (Emi, em-),
-   modulo2.css (Brenda, br-) y modulo3.css (Meli, me-).
-   Si cambiás algo de acá, se nota en todos los módulos: avisá al equipo.
-   ============================================================ */
+/* ============ STYLE.CSS — ARCHIVO GENERAL (lo comparten los 3 módulos) ============
+   Variables, intro, layout, barra de capítulos y componentes ui-*. Si cambiás algo acá, avisá al equipo. */
 
 /* ============ VARIABLES DE COLOR Y TIPOGRAFÍA ============ */
 :root {
@@ -27,17 +21,7 @@
 }
 
 /* ============ MEDIDAS COMPARTIDAS POR LOS 3 MÓDULOS ============
-   Se definen UNA sola vez acá y cada módulo las usa con var(...):
-   si se quiere cambiar el valor, se cambia en este bloque y se
-   actualizan los 3 módulos juntos.
-     --ui-gap-titulo -> espacio entre el título de la tarjeta y lo que
-                        viene abajo (pestañas en módulos 1 y 2,
-                        descripción en módulo 3)
-     --ui-fs-pie     -> tamaño de la descripción del pie de la tarjeta
-                        (al lado de "Fuente") -- 0.9rem = 14,4px, el
-                        que ya tenía "Por tipo" en el módulo 1
-   En pantallas bajas el espacio del título se achica (ver el @media
-   de abajo) para no sumar barra de scroll. */
+   --ui-gap-titulo: espacio debajo del título de la tarjeta · --ui-fs-pie: texto del pie (al lado de "Fuente"). */
 :root {
   --ui-gap-titulo: 20px; /* antes 14px: Emi pidió más separación */
   --ui-fs-pie: 0.9rem;
@@ -76,17 +60,10 @@ body {
   height: 100%;
   left: 0;
   top: 0;
-  /* Centra la VELA (no el cuadro del video) en la pantalla, sea cual sea la
-     proporción de la ventana. La vela está al 46,25% del ancho del video; con
-     object-fit:cover el video se dibuja con un ancho de max(100vw, 177,78vh),
-     así que la corrimos a la derecha 0,0375 de ese ancho (x1,12 por el
-     zoom). El scale(1.16) tapa los bordes que deja el corrimiento, y los
-     8vh hacia abajo la alejan del título, que ahora queda arriba. */
+  /* Centra la vela (no el cuadro del video) en cualquier proporción de ventana;
+     scale(1.16) tapa los bordes del corrimiento y los 8vh la alejan del título. */
   transform: translate(calc(0.0435 * max(100vw, 177.78vh)), 26vh) scale(1.06);
-  /* Arranca invisible: la intro empieza mostrando solo el botón de audio.
-     El video ya se está reproduciendo de fondo (autoplay+muted), pero
-     JS recién le agrega ".visible" a los 10s (ver script.js), momento
-     en el que aparece con este fade. */
+  /* Arranca invisible: script.js le agrega .visible a los 10s y aparece con este fade. */
   opacity: 0;
   transition: opacity 1.6s ease;
 }
@@ -171,9 +148,7 @@ body {
 }
 
 /* ---------- Animación de entrada de la intro ----------
-   Título y subtítulos aparecen rápido, uno tras otro (cada uno dura
-   0,5s y entran con 0,6s de diferencia), con los puntitos rosa (dotPop)
-   alrededor, como los títulos de los módulos. --d = cuándo arranca cada uno. */
+   Título y subtítulos entran uno tras otro con los puntitos rosa; --d = cuándo arranca cada uno. */
 .intro-text {
   position: relative;
   display: inline-block;
@@ -227,8 +202,7 @@ body {
 }
 
 /* ---------- Mensaje central + botón "Saltear intro" ----------
-   Los dos aparecen cuando terminaron los 3 textos (1,4s + 0,5s = 1,9s;
-   por eso el delay de 2s). */
+   Aparecen cuando terminaron los 3 textos (por eso el delay de 2s). */
 #intro .intro-start {
   position: absolute;
   inset: 0;
@@ -289,10 +263,7 @@ body {
 }
 
 /* ---------- Botón de inicio que se convierte en barra de reproducción ----------
-   Estado inicial: una "píldora" con el texto "Apretá acá para comenzar".
-   Con la clase "started" (la pone script.js al arrancar el audio) se
-   ensancha, el texto se va y aparecen los controles. El relleno
-   translúcido (.player-fill) es el avance del audio. */
+   Con .started (script.js) se ensancha y muestra los controles; .player-fill es el avance del audio. */
 .player-wrap {
   position: relative;
   display: flex;
@@ -301,9 +272,7 @@ body {
   pointer-events: auto;
   transition: transform 0.9s ease;
 }
-/* Al arrancar el audio (y al terminar) la barra baja a donde estaban los
-   títulos: 47vh hacia abajo desde el centro, menos media barra (23px), así
-   la barra apoya a 3vh del borde, igual que "Saltear intro". */
+/* Al arrancar el audio la barra baja hasta 3vh del borde, a la altura de "Saltear intro". */
 #intro.started .player-wrap,
 #intro.ended .player-wrap {
   transform: translateY(calc(47vh - 23px));
@@ -581,14 +550,8 @@ body {
   background: var(--bg);
 }
 
-/* Grid de 4 columnas:
-     - col 1 y 2 (1fr 1fr): contenido de texto/gráficos -> .main-col
-       ocupa las dos juntas (grid-column:1/3), o sea 2/4 = la mitad del
-       ancho flexible total.
-     - col 3 (1fr): la vela del capítulo activo -> .chapter-media
-     - col 4 (200px, fija): menú lateral de navegación -> .side-nav
-     Antes era solo "1fr 200px" (contenido + nav), con el video como
-     fondo absoluto de cada .chapter en vez de columna propia. */
+/* Grid: .main-col ocupa las columnas 1-2, la vela (.chapter-media) la 3.
+   (La columna 4 del menú lateral la pisa la barra de abajo, al final del archivo.) */
 .layout {
   position: relative;
   z-index: 1;
@@ -608,21 +571,8 @@ body {
   min-width: 0;
 }
 
-/* Espaciado COMPACTO (antes: header 8px, eyebrow 4px, title 28px --
-     esos valores "grandes" solo los tenía el capítulo 3, con un
-     override propio en modulo3.css, porque ese capítulo tiene más
-     contenido y necesitaba ganar altura para entrar en una pantalla.
-     Los capítulos 1 y 2 se quedaron sin ese ajuste y por eso su
-     tarjeta arrancaba mucho más lejos del título que la del 3. Unificado
-     ahora: los 3 capítulos usan este mismo espaciado chico -- el
-     override de #chapter-3 en modulo3.css ya no hace falta, se sacó.) */
-/* margin-bottom subido de 2px a 20px: los puntitos rosa del título
-     (.title-dots, ver más abajo) se extienden 14px por debajo del
-     borde inferior del texto -- con solo 2px de margen acá (+ los 4px
-     de .chapter-title y los 2px de .ui-wrap, ver más abajo) quedaban
-     apenas 8px de aire real, así que los puntos de abajo (nth-child 5
-     y 6) terminaban superpuestos sobre la tarjeta. 20px deja los 14px
-     de los puntos con margen de sobra. */
+/* Espaciado compacto, igual para los 3 capítulos. */
+/* 20px de margen para que los puntitos del título (.title-dots) no pisen la tarjeta. */
 .chapter-header {
   position: relative;
   z-index: 1;
@@ -636,9 +586,7 @@ body {
   margin: 0 0 2px;
 }
 
-/* Título de cada capítulo. position:relative + display:inline-block son
-     necesarios para que .title-dots (los puntitos) se puedan posicionar
-     "alrededor" del texto usando position:absolute con inset negativo. */
+/* position:relative + inline-block: para ubicar los puntitos (.title-dots) alrededor del texto. */
 .chapter-title {
   position: relative;
   display: inline-block;
@@ -764,23 +712,8 @@ body {
   animation-delay: 0.4s;
 }
 
-/* ============ COLUMNA DE VIDEOS (3ra de 4) ============
-     Los 3 videos (uno por capítulo) están juntos acá, apilados uno
-     sobre el otro dentro de esta caja; solo se ve el que tiene
-     .active (JS decide cuál, según el capítulo abierto). El fade
-     entre uno y otro es con opacity+transition, no con display:none,
-     para que el cambio sea suave en vez de un salto brusco.
-
-     aspect-ratio:9/16 -- los videos son verticales (720x1280, mismo
-     ratio 9:16). Antes esta caja usaba min-height:420px y quedaba
-     SIN una proporción fija: el grid la estiraba para igualar el
-     alto de .main-col (el contenido del capítulo al lado), así que
-     terminaba con un alto distinto según cuánto contenido tuviera
-     cada capítulo -- nunca calzaba con la forma real del video.
-     Con aspect-ratio, la caja toma la proporción del video según el
-     ancho que le toque en cada pantalla, sin depender del contenido
-     vecino (para que el grid no la vuelva a estirar, ver
-     align-self:start más abajo). */
+/* ============ COLUMNA DE VIDEOS ============
+   Los videos están apilados acá; solo se ve el .active (lo elige script.js) con un fade de opacidad. */
 .chapter-media {
   grid-column: 3 / 4;
   position: relative;
@@ -789,11 +722,7 @@ body {
   align-self: start;
   background: var(--bg-soft); /* se ve un instante mientras carga el 1er video */
 
-  /* CAMBIO: antes la caja se definía por aspect-ratio 9/16, y al topar con
-       un alto máximo se ANGOSTABA (quedaba con hueco a la derecha).
-       Ahora ocupa SIEMPRE todo el ancho de su columna, y el alto sale del
-       alto de la ventana (menos el padding de .layout). El video se ajusta
-       con object-fit:cover. */
+  /* Ocupa todo el ancho de su columna; el alto sale del alto de la ventana y el video se ajusta con cover. */
   width: 100%;
   height: 100vh; /* respaldo para navegadores viejos */
   height: clamp(300px, calc(100dvh - 44px), 760px);
@@ -834,9 +763,7 @@ body {
     );
   mask-composite: intersect;
 }
-/* object-fit:cover queda como resguardo (por si algún video no es
-     EXACTAMENTE 9:16) -- con .chapter-media ya en esa misma
-     proporción, no debería tener que recortar casi nada. */
+/* object-fit:cover: llena la caja recortando lo que sobre del video. */
 .chapter-video {
   position: absolute;
   inset: 0;
@@ -846,11 +773,7 @@ body {
   opacity: 0;
   transition: opacity 0.6s ease;
 
-  /* NUEVO: agranda el video por dentro de la caja. La caja tiene
-        overflow:hidden, así que lo que se pasa del borde se recorta.
-        Es lo que hace que la vela se vea más grande y no tan perdida
-        en el negro. transform-origin 50% 45% = el zoom se centra un
-        poco por encima de la mitad, donde está la llama. */
+  /* Zoom del video dentro de la caja (se recorta lo que sobra); centrado cerca de la llama. */
   transform: scale(var(--video-zoom, 1.3));
   transform-origin: 50% 45%;
   filter: brightness(1.3); /* brillo de los videos: 1 = original, más alto = más claro */
@@ -1012,19 +935,11 @@ body {
     grid-template-columns: 1fr;
     padding: 28px 18px;
   }
-  /* En 1 sola columna, "grid-column" ya no aplica: volvemos todo a
-       flujo normal (auto) y usamos "order" para que la vela quede
-       arriba del texto, aunque en el HTML esté después del .main-col. */
+  /* En 1 columna: flujo normal, y order pone la vela arriba del texto. */
   .main-col {
     grid-column: auto;
   }
-  /* Acá .chapter-media pasa a ocupar el ANCHO COMPLETO de la
-       pantalla (ya no comparte fila con .main-col) -- si mantuviera
-       el aspect-ratio:9/16 de arriba, a ese ancho completo saldría
-       altísima (media pantalla de celular, o más). max-height la
-       frena: sigue siendo 9:16 hasta ese techo, y a partir de ahí se
-       la recorta con object-fit:cover (ver .chapter-video) en vez de
-       seguir creciendo. */
+  /* A ancho completo la vela saldría altísima: max-height la frena y el resto se recorta con cover. */
   .chapter-media {
     grid-column: auto;
     order: -1;
@@ -1055,27 +970,12 @@ body {
   }
 }
 
-/* ============================================================
-     COMPONENTES COMPARTIDOS (ui-*) — tarjeta, pestañas, botones
-     Sin/Con, números grandes, "Fuente", leyenda, grilla+estadísticas.
-     Usalos en tu módulo para que todo se vea parejo.
-     ============================================================ */
-/* ============================================================
-     MÓDULO "EL FUTURO" — visualización IA (capítulo 3)
-     Todo prefijado con me- para no chocar con .dot, section, h2, etc.
-     que ya usa el resto del sitio.
+/* ============ COMPONENTES COMPARTIDOS (ui-*) ============
+   Tarjeta, pestañas, botones, números grandes, "Fuente", leyenda. Usalos para que todo se vea parejo. */
+/* ============ MÓDULO "EL FUTURO" — visualización IA (capítulo 3) ============
+   Prefijo me-. Objetivo: que entre en una pantalla y que la vela se vea detrás del panel semitransparente. */
 
-     Objetivo de este bloque: que el capítulo 3 entre completo en
-     una sola pantalla (sin que el usuario tenga que scrollear la
-     página), y que el video de fondo (la vela) se siga viendo
-     detrás, porque el panel usa fondo semitransparente + blur en
-     vez de un fondo sólido.
-     ============================================================ */
-
-/* Antes: max-width:460px + margin-right:auto, para dejar libre la mitad
-     derecha de la columna (ahí vivía el video de fondo del capítulo).
-     Ahora el video tiene su propia columna en el grid (.chapter-media),
-     así que este módulo puede ocupar el ancho completo de .main-col. */
+/* El módulo ocupa el ancho completo de .main-col (el video tiene su propia columna). */
 .ui-wrap {
   position: relative;
   z-index: 1;
@@ -1093,13 +993,7 @@ body {
   line-height: 1.28;
 }
 
-/* Nota chica al pie de una tarjeta/pestaña -- más chica y más tenue
-   que .ui-lede/.ui-sub, para que se lea como aclaración secundaria
-   (ej. "Son cantidades de casos, no riesgo..." en módulo 1, o la
-   aclaración de módulo 3 sobre el estudio del Reino Unido). Antes
-   era ".em-note", propia de módulo 1 (modulo1.css) -- se subió acá
-   porque módulo 3 también la necesita: mismo criterio visual, dos
-   módulos. */
+/* Nota chica al pie de una tarjeta: más tenue que .ui-lede/.ui-sub (la usan los módulos 1 y 3). */
 .ui-note {
   font-size: 0.7rem;
   color: var(--text-dim);
@@ -1109,10 +1003,7 @@ body {
 }
 
 /* ---- Pestañas para elegir qué visualización ver ----
-     En vez de mostrar las dos tablas una al lado de la otra (lo que
-     hacía la página altísima), ahora solo se muestra una a la vez:
-     estos botones cambian cuál .ui-tabpanel tiene la clase .active
-     (ver la lógica en script.js). */
+   Muestran un .ui-tabpanel a la vez (lógica en script.js). */
 .ui-tabs {
   display: flex;
   gap: 6px;
@@ -1146,24 +1037,8 @@ body {
   font-weight: 600;
 }
 
-/* ============================================================
-     NUEVO: .ui-panels envuelve los 2 .ui-tabpanel (ver index.html).
-
-     Antes, cada .ui-tabpanel tenía display:none / display:block, así
-     que en cualquier momento solo UNO de los dos "existía" para el
-     cálculo de alto del layout -> el rectángulo se agrandaba o
-     achicaba según la pestaña, porque panel 1 y panel 2 tienen
-     contenido de distinta altura.
-
-     Solución ("grid stack"): .ui-panels es un grid de una sola celda,
-     y los 2 .ui-tabpanel comparten esa misma celda (grid-area:1/1).
-     Como ninguno usa display:none, LOS DOS cuentan al mismo tiempo
-     para medir el alto de la celda -> el grid siempre usa el alto
-     del más alto de los dos, sin importar cuál esté visible. El panel
-     inactivo se tapa con opacity:0 + visibility:hidden (en vez de
-     display:none), así sigue "ocupando lugar" para la medición pero
-     no se ve ni se puede clickear.
-     ============================================================ */
+/* ============ .ui-panels: "grid stack" ============
+   Los 2 paneles comparten la misma celda, así la tarjeta siempre mide lo del más alto y no salta al cambiar de pestaña. */
 .ui-panels {
   display: grid;
 }
@@ -1180,10 +1055,7 @@ body {
   pointer-events: auto;
 }
 
-/* Tarjeta con fondo semitransparente + blur (backdrop-filter):
-     esto es clave para que la vela del video de fondo del capítulo
-     siga viéndose "a través" del panel en vez de quedar tapada por
-     un fondo sólido. */
+/* Fondo semitransparente + blur, para que la vela se siga viendo a través del panel. */
 .ui-panel {
   position: relative; /* contexto para que el popover de "Fuente" se ubique bien */
   background: rgba(22, 15, 27, 0.66);
@@ -1191,20 +1063,12 @@ body {
   border-radius: 16px;
   padding: 14px 20px; /* achicado de nuevo para ganar más alto */
   backdrop-filter: blur(6px);
-  /* height:100%: dentro de la celda del grid (que ahora tiene un alto
-       fijo, igual al panel más alto de los dos), esta tarjeta se estira
-       para llenar ese alto en vez de quedar más baja con hueco vacío
-       debajo. */
+  /* height:100%: llena el alto de la celda del grid, sin hueco abajo. */
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-/* Título DENTRO de la tarjeta (ej. "¿Cuál es la dimensión del cáncer
-     de mama en Argentina?" del módulo 1, o "¿Cuánto cambia el
-     diagnóstico con una segunda lectura?" del módulo 3). Cada módulo
-     escribe su propio texto, pero el tamaño/tipografía sale de acá,
-     de un solo lugar, para que no haya 2 módulos con letras de
-     distinto tamaño. */
+/* Título dentro de la tarjeta: cada módulo pone su texto, el tamaño sale de acá para que sea igual en todos. */
 .ui-card-title {
   font-family: var(--serif);
   font-weight: 500;
@@ -1245,11 +1109,7 @@ body {
   color: #1a0510;
 }
 
-/* .ui-field envuelve el <svg>. El svg no tiene un tamaño fijo en
-     píxeles: usa viewBox + width:100% para escalar solo, así que
-     angostar el ancho asignado a esta columna (ver flex:0 0 42% más
-     abajo) alcanza para bajarle también el alto, porque escala en
-     proporción al ancho. */
+/* El svg escala con viewBox + width:100%: achicar el ancho de la columna también le baja el alto. */
 .ui-field {
   position: relative;
   border-radius: 12px;
@@ -1261,13 +1121,7 @@ body {
   height: auto;
 }
 
-/* .ui-visual agrupa la grilla de puntos (.ui-field) con la leyenda y
-     los números (.ui-stats). Por defecto van apilados (mobile / panel
-     angosto). Desde 680px de ancho de panel, se acomodan en fila: la
-     grilla queda como elemento protagonista a la izquierda y .ui-stats
-     como una columna angosta de lectura a la derecha, vertical-centrada
-     contra la grilla -- así el ancho extra se usa como una separación
-     "ver / leer" en vez de agrandar todo por igual. */
+/* Grilla + números: apilados por defecto; desde 680px van en fila (grilla a la izquierda, números a la derecha). */
 .ui-visual {
   display: flex;
   flex-direction: column;
@@ -1282,7 +1136,7 @@ body {
 .ui-stats .ui-readout,
 .ui-stats .ui-note {
   margin-top: 0;
-} /* el gap del flex ya separa, no hace falta el margin-top original -- .ui-note se agregó para el texto chico de la grilla del módulo 3 */
+} /* el gap del flex ya separa */
 
 @media (min-width: 680px) {
   .ui-visual {
@@ -1322,22 +1176,14 @@ body {
   font-size: 0.8rem;
 }
 
-/* .ui-src ahora es un <details>: por defecto el navegador solo
-     muestra el <summary> ("Fuente"), así que ahorra todo el alto
-     que antes ocupaba el párrafo completo. text-align:right lo
-     pega a la esquina derecha, como una etiqueta discreta. */
-/* position:relative -> este es el punto de referencia para el
-     popover (el <p> de abajo) que se posiciona con position:absolute
-     "sobre" este elemento. margin-top más chico (4px, antes 8px) para
-     subir un poco la etiqueta y ganar los últimos pixeles de alto. */
+/* Es un <details>: solo se ve "Fuente" y el texto se despliega como popover. */
+/* position:relative: referencia para el popover de abajo. */
 .ui-src {
   position: relative;
   margin-top: 4px;
   text-align: right;
 }
-/* Salida compartida de la "Fuente": la etiqueta se aclara, sube y se
-   desenfoca (mismo efecto que usa el módulo 3 en .me-cierre-on). La
-   dispara uiFuenteSalir() en script.js. */
+/* Salida compartida de "Fuente" (se aclara, sube y se desenfoca); la dispara uiFuenteSalir() en script.js. */
 .ui-src {
   transition:
     opacity 0.35s ease,
@@ -1351,10 +1197,7 @@ body {
   pointer-events: none;
 }
 
-/* El <summary> es la "etiqueta" clickeable. Le sacamos la flechita
-     que pone el navegador por default (::marker / ::-webkit-details-marker)
-     y ponemos un ícono propio (▸) que rotamos 90° cuando el <details>
-     está abierto, para que se note que es desplegable. */
+/* Etiqueta clickeable: sin la flechita del navegador, con un ▸ propio que gira al abrir. */
 .ui-src summary {
   display: inline-flex;
   align-items: center;
@@ -1391,12 +1234,7 @@ body {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* El texto de la fuente ahora es un "popover" flotante:
-     position:absolute lo saca del flujo normal, así que aunque el
-     texto sea largo NO empuja nada hacia abajo ni agranda el panel
-     (por eso "no ocupa lugar"). bottom:100% lo apoya justo arriba de
-     la etiqueta (que es el elemento con position:relative, .ui-src),
-     y right:0 lo alinea con el borde derecho, donde está la etiqueta. */
+/* Popover flotante: position:absolute, no empuja nada; queda arriba y alineado a la derecha de la etiqueta. */
 .ui-src p {
   position: absolute;
   right: 0;
@@ -1520,12 +1358,7 @@ body {
     gap: 14px;
     padding-top: 16px;
   }
-  /* El min-height:170px que antes vivía acá ya no hace falta: con
-       .chapter-media en aspect-ratio:9/16 + max-height:340px (ver el
-       @media max-width:900px, más arriba), el alto mínimo real ronda
-       los ~191px (lo que da 340px de alto a 9:16) en cualquier
-       celular -- ese "piso" viejo, pensado para el min-height fijo de
-       antes, ya no aporta nada. */
+  /* Sin min-height: la vela ya tiene alto propio en celular. */
   .chapter {
     min-height: 0;
   }
@@ -1547,18 +1380,8 @@ body {
   }
 }
 
-/* ============ PANTALLAS BAJAS (alto chico) ============
-     Hasta acá todos los @media de este archivo reaccionan al ANCHO.
-     Este reacciona al ALTO: pensado para notebooks con poco alto
-     disponible -- ya sea porque la pantalla es chica (ej. 1366x768)
-     o porque el sistema operativo tiene activado un escalado (ej.
-     125%/150% en Windows, muy común), que reduce el alto útil en
-     píxeles CSS aunque la resolución nominal sea alta. En una Mac sin
-     ese escalado, 100vh da bastante más alto real -- por eso la
-     tarjeta puede entrar sin barra de scroll ahí y no en una notebook
-     Windows con la misma ventana maximizada.
-     760px de techo = aprox. lo que queda de alto útil en esos casos
-     comunes, descontando barra de tareas/navegador. */
+/* ============ PANTALLAS BAJAS (≤760px de alto) ============
+   Notebooks tipo 1366x768 o con escalado de Windows: menos aire para que no aparezca scroll. */
 @media (max-height: 760px) {
   .layout {
     padding-top: 14px;
@@ -1567,7 +1390,7 @@ body {
   }
   .chapter-header {
     margin-bottom: 12px;
-  } /* antes 0: volvía a juntar el título con la tarjeta y los puntitos (ver el margin-bottom:20px de arriba) quedaban otra vez superpuestos en pantallas bajas */
+  } /* nunca 0: si no, los puntitos del título pisan la tarjeta */
   .chapter-title {
     font-size: clamp(1.8rem, 4vw, 2.6rem);
   }
@@ -1582,41 +1405,8 @@ body {
   }
 }
 
-/* ============ PANTALLAS MUY BAJAS (segundo escalón) ============
-     El techo de 760px de arriba alcanza hasta las notebooks "comunes"
-     con escalado -- pero una compañera (Brenda) reportó barra de
-     scroll en TODOS los módulos con una ventana de apenas 601px de
-     alto útil, bastante por debajo de lo que se había probado. A esa
-     altura, el techo de 760px solo no alcanza: hace falta un segundo
-     achique, más agresivo, encima del primero (los dos @media se
-     acumulan: a 601px aplican los dos a la vez, no uno u otro).
-
-     La causa principal, nueva, que no existía en el primer escalón:
-     .chapter-media (la vela de fondo, columna 3) usa aspect-ratio:9/16
-     SIN ningún techo de alto -- en una ventana ancha pero baja, esa
-     proporción la hace calcular una altura enorme (una vela angosta de
-     300px de ancho pide 533px de alto), y esa altura termina fijando
-     el alto de TODA la fila del grid (.layout), aunque la tarjeta de
-     al lado sea mucho más baja. max-height:70vh la achica en
-     proporción al alto real de pantalla (el ancho se recalcula solo,
-     por el aspect-ratio, no hace falta tocarlo aparte).
-
-     El resto (layout/panel/título un poco más chicos todavía) es el
-     mismo criterio que el escalón de 760px, solo que llevado un poco
-     más lejos -- probado a mano contra 601px (el caso real de Brenda):
-     módulo 2, módulo 3 y "Porcentaje" de módulo 1 ya no desbordan.
-     "Casos por tipo" y "Casos por edad" (módulo 1) tenían su propio
-     problema aparte (sus gráficos no tenían ningún techo de alto) --
-     resuelto en modulo1.css, ver el @media (max-height:760px) y el
-     @media (max-height:660px) de ese archivo.
-
-     El corte de este escalón está en 660px, no en 620px: probando
-     alturas intermedias encontré que entre 621px y ~650px ninguno de
-     los 2 escalones achicaba lo suficiente (quedaba una "grieta" de
-     hasta 31px de desborde ahí, en CUALQUIER módulo, no solo en el
-     1) -- 620px se había elegido mirando nomás el caso de Brenda
-     (601px) y se quedaba corto apenas por encima. Subiendo el corte a
-     660px, el segundo escalón cubre toda esa franja floja. */
+/* ============ PANTALLAS MUY BAJAS (≤660px de alto, segundo escalón) ============
+   Se suma al de 760px: ej. 1366x768 con la barra del navegador (~600px útiles). */
 @media (max-height: 660px) {
   .layout {
     padding-top: 6px;
@@ -1638,15 +1428,8 @@ body {
   } /* pisa el 12px del escalón de 760px: todavía menos aire, pero nunca 0 -- misma razón que ahí */
 }
 
-/* ============================================================
-   BARRA DE CAPÍTULOS (abajo) + ANIMACIÓN DE ENTRADA (transicion.js)
-   Reemplaza el menú lateral de la columna 4. Va AL FINAL del archivo
-   a propósito: pisa las reglas viejas de .side-nav / .nav-item (que
-   quedan arriba sin usarse; se pueden borrar más adelante).
-   --bar-h es el alto de la barra: se lo suma al padding del .layout y se
-   lo resta a la vela (.chapter-media) y al capítulo 1, así el total sigue
-   siendo el alto de la ventana (sin scroll nuevo).
-   ============================================================ */
+/* ============ BARRA DE CAPÍTULOS (abajo) + ANIMACIÓN DE ENTRADA ============
+   Va al final para pisar el menú lateral viejo. --bar-h se suma al padding y se resta a la vela, así no hay scroll. */
 :root {
   --bar-h: 60px;
 }
@@ -1693,6 +1476,22 @@ body {
   }
 }
 
+
+/* La vela usa el margen real de cada escalón para llegar hasta la barra;
+   object-position evita que el recorte suba la llama en pantallas bajas. */
+@media (min-width: 901px) and (max-height: 760px) {
+  .chapter-media {
+    height: calc(100dvh - 28px - var(--bar-h));
+  }
+  .chapter-video {
+    object-position: 50% 20%;
+  }
+}
+@media (min-width: 901px) and (max-height: 660px) {
+  .chapter-media {
+    height: calc(100dvh - 12px - var(--bar-h));
+  }
+}
 /* La barra */
 .side-nav {
   position: fixed;
@@ -1952,12 +1751,8 @@ body {
   }
 }
 
-/* ============================================================
-   MOVIMIENTO COMPARTIDO (general)
-   Variables de ritmo para que los 3 módulos se sientan como un solo sitio,
-   y microinteracciones. Solo cambian color, sombra y transform: nunca el
-   tamaño de las tarjetas. Las animaciones de entrada con GSAP viven en animacion.js.
-   ============================================================ */
+/* ============ MOVIMIENTO COMPARTIDO ============
+   Ritmo común y microinteracciones: solo color, sombra y transform, nunca el tamaño. GSAP vive en animacion.js. */
 :root {
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* arranca rápido y frena suave: entradas */
   --ease-in-out: cubic-bezier(0.45, 0.05, 0.25, 1); /* cambios de estado */
