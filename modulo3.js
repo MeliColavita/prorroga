@@ -435,6 +435,124 @@
   let tCerca = 0; // cuándo se armó (para que la línea aparezca después de los puntos)
   const FUENTE = getComputedStyle(stage).fontFamily || 'system-ui, sans-serif';
 
+  // ---------- Mapa real (Leaflet) ----------
+  // Si los mamógrafos tienen lat/lon (ver geocodificar_mamografos.py), al elegir una
+  // localidad aparece un mapa con su ubicación real en vez de la constelación de puntos.
+  const HAY_LEAFLET = typeof L !== 'undefined';
+  const mapaDiv = document.createElement('div');
+  mapaDiv.className = 'me-mapa';
+  stage.appendChild(mapaDiv);
+  let mapa = null; // se crea la primera vez que se usa (Leaflet necesita el contenedor visible)
+  let capa = null; // grupo con los puntos de la localidad elegida
+  let marcas = []; // un punto por mamógrafo, en el mismo orden que la lista
+  let zonaMapa = null; // vista con todos los puntos (para volver después de acercarse a uno)
+  let enfocado = -1; // mamógrafo al que se acercó el mapa (-1 = vista general)
+
+  function tieneCoords(items) {
+    return items.some((m) => m.lat != null && m.lon != null); // con uno ya hay mapa
+  }
+  function crearMapa() {
+    mapa = L.map(mapaDiv, { zoomControl: true, attributionControl: true });
+    mapa.attributionControl.setPrefix(false);
+    // Mapa base oscuro de Esri (gratis, sin clave) + capa con los nombres; el CSS lo tiñe
+    const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+    const opcionesEsri = { maxZoom: 19, maxNativeZoom: 16 };
+    L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      ...opcionesEsri,
+      attribution: 'Mapa &copy; <a href="https://www.esri.com">Esri</a>, HERE, OpenStreetMap',
+    }).addTo(mapa);
+    L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', opcionesEsri).addTo(mapa);
+    capa = L.layerGroup().addTo(mapa);
+  }
+  function mostrarMapa(l) {
+    if (!mapa) crearMapa();
+    capa.clearLayers();
+    marcas = [];
+    const repetidos = {}; // misma dirección: se separan apenas para que se vean todos
+    l.items.forEach((m, k) => {
+      if (m.lat == null || m.lon == null) {
+        marcas.push(null); // sin coordenadas: queda en la lista pero no en el mapa
+        return;
+      }
+      let lat = m.lat,
+        lon = m.lon;
+      const n = (repetidos[lat + ',' + lon] = (repetidos[lat + ',' + lon] || 0) + 1);
+      if (n > 1) {
+        lat += Math.sin(n * 2.4) * 0.00018 * Math.sqrt(n);
+        lon += Math.cos(n * 2.4) * 0.00018 * Math.sqrt(n);
+      }
+      const privado = norm(m.tipo || '') === 'privado';
+      const col = 'rgb(' + (privado ? COL_PRIVADO : COL_PUBLICO).join(',') + ')';
+      const marca = L.circleMarker([lat, lon], {
+        radius: 7,
+        color: col,
+        weight: 2,
+        fillColor: col,
+        fillOpacity: 0.85,
+        className: 'me-mapa-punto' + (privado ? ' me-mapa-privado' : ''),
+      });
+      marca.bindTooltip(m.establecimiento + (m.aprox ? ' (ubicación aproximada)' : ''), {
+        direction: 'top',
+        offset: [0, -8],
+        className: 'me-mapa-tip',
+      });
+      marca.on('mouseover', () => setHover(k, true));
+      marca.on('click', () => {
+        setHover(k, true);
+        enfocar(k);
+      });
+      marca.on('mouseout', () => setHover(-1));
+      marca.addTo(capa);
+      marcas.push(marca);
+    });
+    mapaDiv.classList.add('on');
+    result.classList.add('me-con-mapa'); // las tarjetas pasan a ser clickeables (ver modulo3.css)
+    enfocado = -1;
+    mapa.invalidateSize();
+    const puestas = marcas.filter(Boolean);
+    const zona = L.latLngBounds(puestas.map((x) => x.getLatLng()));
+    zonaMapa = zona;
+    if (puestas.length === 1) mapa.setView(zona.getCenter(), 15, { animate: false });
+    else mapa.fitBounds(zona, { padding: [28, 28], maxZoom: 16, animate: false });
+    modo = 'mapa';
+  }
+  function ocultarMapa() {
+    mapaDiv.classList.remove('on');
+    result.classList.remove('me-con-mapa');
+  }
+  // Seleccionar un mamógrafo (tarjeta o punto): el mapa se acerca y se desplaza hasta él.
+  // Si se vuelve a seleccionar el mismo, el mapa vuelve a mostrar todos.
+  function enfocar(k) {
+    if (modo !== 'mapa' || !marcas[k]) return;
+    const opciones = { duration: 0.8, animate: !REDUCIDO };
+    if (enfocado === k) {
+      enfocado = -1;
+      const puestas = marcas.filter(Boolean);
+      if (puestas.length === 1) mapa.flyTo(zonaMapa.getCenter(), 15, opciones);
+      else mapa.flyToBounds(zonaMapa, { ...opciones, padding: [28, 28], maxZoom: 16 });
+    } else {
+      enfocado = k;
+      mapa.flyTo(marcas[k].getLatLng(), 17, opciones);
+    }
+  }
+  // Resalta en el mapa el punto k (y apaga un poco los demás); -1 = ninguno
+  function marcarEnMapa(k) {
+    marcas.forEach((marca, i) => {
+      if (!marca) return;
+      const on = i === k;
+      marca.setStyle({
+        radius: on ? 11 : 7,
+        weight: on ? 3 : 2,
+        opacity: k < 0 || on ? 1 : 0.4,
+        fillOpacity: k < 0 || on ? 0.85 : 0.35,
+      });
+      if (on) {
+        marca.bringToFront();
+        marca.openTooltip();
+      } else marca.closeTooltip();
+    });
+  }
+
   function despues(ms, fn) {
     plan.push({ at: performance.now() + ms, fn });
   }
@@ -632,6 +750,7 @@
   }
 
   function elegirSin(l) {
+    ocultarMapa();
     input.value = l.localidad;
     clear.hidden = false;
     cerrarLista();
@@ -664,6 +783,7 @@
   }
 
   function elegirConMamografo(l) {
+    ocultarMapa();
     input.value = l.localidad;
     clear.hidden = false;
     cerrarLista();
@@ -686,7 +806,14 @@
     if (W > 0) {
       dispersar();
       despues(REDUCIDO ? 0 : 420, () => armarLazo(1, true));
-      despues(REDUCIDO ? 0 : 1450, () => armarConstelacion(l.items));
+      // con coordenadas: el lazo se apaga y aparece el mapa; sin ellas, la constelación de siempre
+      const conMapa = HAY_LEAFLET && tieneCoords(l.items);
+      despues(REDUCIDO ? 0 : 1450, () => {
+        if (conMapa) {
+          armarConstelacion([]);
+          mostrarMapa(l);
+        } else armarConstelacion(l.items);
+      });
       if (REDUCIDO) {
         plan.forEach((a) => a.fn());
         plan = [];
@@ -696,6 +823,7 @@
   }
 
   function limpiar() {
+    ocultarMapa();
     input.value = '';
     clear.hidden = true;
     actual = null;
@@ -815,6 +943,13 @@
         });
 
       li.addEventListener('mouseenter', () => setHover(k, false));
+      li.addEventListener('click', () => enfocar(k));
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          enfocar(k);
+        }
+      });
       li.addEventListener('focus', () => setHover(k, false));
       li.addEventListener('mouseleave', () => setHover(-1));
       li.addEventListener('blur', () => setHover(-1));
@@ -835,11 +970,12 @@
     items.forEach((li) => li.classList.toggle('me-hl', +li.dataset.k === k));
     if (k >= 0 && desdeCanvas && items[k]) verEnLista(items[k].parentNode, items[k]);
     if (k < 0) tip.hidden = true;
-    else if (actual) {
+    else if (actual && modo !== 'mapa') {
       const m = actual.items[k];
       tip.textContent = m.establecimiento;
       tip.hidden = false;
     }
+    if (modo === 'mapa') marcarEnMapa(k);
     if (REDUCIDO) dibujar(performance.now());
   }
 
@@ -1052,6 +1188,8 @@
       });
     } else if (modo === 'cerca' && cerca) {
       armarCerca(cerca.l, true);
+    } else if (modo === 'mapa') {
+      if (mapa) mapa.invalidateSize();
     } else if (!primera) {
       armarLazo(0.6, false);
     }
@@ -1140,6 +1278,11 @@
       autor: 'Surcos y Fundación Instituto Natura (2026)',
       etiqueta: 'Mapa mamográfico',
       url: 'https://surcos.org/web/mira/',
+    },
+    {
+      autor: 'Georef AR API (s.f.)',
+      etiqueta: 'Ubicación de las direcciones',
+      url: 'https://datosgobar.github.io/georef-ar-api/',
     },
   ];
   uiFuente(src, FUENTES_ME);
