@@ -1,13 +1,5 @@
-// ============================================================
-// MODULO3.JS — "EL FUTURO" (Capítulo 3) — Meli — prefijo: me-
-// ============================================================
-// 1) Botón "Final": pausa el video 3, oculta su fundido y reproduce
-//    04_FINAL.mp4 desde el principio (si se vuelve a tocar, reinicia).
-//    Con la frase final se va el título del capítulo y, a los 4 s, aparece "Volver a comenzar".
-//    Al cambiar de capítulo con el menú, script.js pausa y oculta el video 4.
-// 2) Pestaña 3: buscador de mamógrafos con animación de puntos (más abajo).
-//    Necesita buscador-datos.js cargado ANTES que este archivo.
-// ============================================================
+// ============ MODULO3.JS — "El futuro" (capítulo 3) — Meli — prefijo me- ============
+// 1) Cierre: video final, frase y créditos ("¡Muchas gracias!" escrito por un trazo de luz). 2) Buscador de mamógrafos (necesita buscador-datos.js antes).
 (function () {
   const bFinal = document.getElementById('me-final');
   const video3 = document.querySelector('.chapter-video[data-chapter="3"]');
@@ -27,13 +19,11 @@
   const audioFinal =
     window.Transicion && window.Transicion.audio ? window.Transicion.audio('final') : null;
 
-  const SIN_SONIDO_MS = 3000; // sin sonido, los créditos aparecen a los 3 s de tocar "una última cosa"
+  const SIN_SONIDO_MS = 3000; // con la música apagada, los créditos salen a los 3 s de tocar "una última cosa"
   const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const navBack = document.getElementById('navBack');
   const capitulo = card ? card.closest('.chapter') : null;
   let tBoton = null;
-  let tEspera = null;
-  let tTipeo = null;
 
   const partes = card
     ? card.querySelectorAll(
@@ -41,28 +31,44 @@
       )
     : [];
 
-  // "¡Muchas gracias!" se va escribiendo letra por letra. El resto del texto
-  // queda invisible pero ocupa su lugar, así lo escrito no se corre mientras aparece.
+  // ---------- "¡Muchas gracias!" ----------
+  // Un trazo de luz escribe cada letra (SVG, una tras otra) y después la letra se rellena de rosa (CSS .me-letra).
+  const SVG_NS = 'http://www.w3.org/2000/svg';
   function escribirGracias() {
-    clearTimeout(tEspera);
-    clearInterval(tTipeo);
-    if (!gOn || !gOff) return;
-    if (REDUCIDO) {
-      gOn.textContent = TEXTO_GRACIAS;
-      gOff.textContent = '';
-      return;
-    }
-    let i = 0;
+    frenarGracias();
+    if (!gOn || !gOff || !gracias) return;
     gOn.textContent = '';
-    gOff.textContent = TEXTO_GRACIAS;
-    tEspera = setTimeout(() => {
-      tTipeo = setInterval(() => {
-        i++;
-        gOn.textContent = TEXTO_GRACIAS.slice(0, i);
-        gOff.textContent = TEXTO_GRACIAS.slice(i);
-        if (i >= TEXTO_GRACIAS.length) clearInterval(tTipeo);
-      }, 95);
-    }, 500);
+    gOff.textContent = TEXTO_GRACIAS; // invisible: le da al párrafo el tamaño exacto del texto
+    const cs = getComputedStyle(gracias);
+    const px = parseFloat(cs.fontSize);
+    const fuente = cs.fontStyle + ' ' + cs.fontWeight + ' ' + px + 'px ' + cs.fontFamily;
+    const med = document.createElement('canvas').getContext('2d');
+    med.font = fuente;
+    const ancho = med.measureText(TEXTO_GRACIAS).width;
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('class', 'me-gracias-trazo');
+    svg.setAttribute('viewBox', '0 0 ' + Math.ceil(ancho + px * 0.4) + ' ' + Math.ceil(px * 1.4));
+    let n = 0;
+    for (let i = 0; i < TEXTO_GRACIAS.length; i++) {
+      const letra = TEXTO_GRACIAS[i];
+      if (letra === ' ') continue;
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', (px * 0.2 + med.measureText(TEXTO_GRACIAS.slice(0, i)).width).toFixed(1));
+      t.setAttribute('y', (px * 1.02).toFixed(1));
+      t.setAttribute('class', 'me-letra');
+      t.style.setProperty('--i', n++);
+      t.style.setProperty('--l', Math.round(px * 6) + 'px'); // largo del trazo, alcanza para cualquier letra
+      t.textContent = letra;
+      svg.appendChild(t);
+    }
+    gOff.parentNode.appendChild(svg);
+    void svg.getBoundingClientRect(); // para que la animación arranque desde el principio
+    gracias.classList.add('revela');
+  }
+  function frenarGracias() {
+    if (!gracias) return;
+    gracias.classList.remove('revela');
+    gracias.querySelectorAll('.me-gracias-trazo').forEach((el) => el.remove());
   }
 
   // "¡Muchas gracias!" queda centrado entre la frase final y la línea de abajo
@@ -82,8 +88,7 @@
     escribirGracias();
   }
   function ocultarCreditos() {
-    clearTimeout(tEspera);
-    clearInterval(tTipeo);
+    frenarGracias();
     if (!creditos) return;
     creditos.classList.remove('on');
     creditos.hidden = true;
@@ -91,7 +96,8 @@
     if (gOff) gOff.textContent = '';
   }
   window.addEventListener('resize', () => {
-    if (creditos && !creditos.hidden) posicionarCreditos();
+    if (!creditos || creditos.hidden) return;
+    posicionarCreditos();
   });
 
   function mostrarCierre() {
@@ -134,14 +140,16 @@
     video4.currentTime = 0;
     video4.play().catch((err) => console.warn('No se pudo reproducir 04_FINAL:', err));
     mostrarCierre();
-    // Si final.MP3 no está sonando (efectos silenciados, archivo faltante o bloqueado
-    // por el navegador), los créditos aparecen a los 3 segundos.
+    // Con la música apagada (o si el sonido final no suena), los créditos salen a los 3 s
     tBoton = setTimeout(() => {
-      if (!audioFinal || audioFinal.paused) mostrarCreditos();
+      if (!musicaActiva() || !audioFinal || audioFinal.paused) mostrarCreditos();
     }, SIN_SONIDO_MS);
   };
 
-  // Con sonido: los créditos aparecen cuando termina final.MP3
+  // Con la música activada, los créditos salen cuando termina el sonido final
+  function musicaActiva() {
+    return !window.Transicion || !window.Transicion.musicaActiva || window.Transicion.musicaActiva();
+  }
   if (audioFinal) audioFinal.addEventListener('ended', mostrarCreditos);
 
   // Al cambiar de capítulo, script.js oculta el video 4: se restaura la tarjeta
@@ -150,34 +158,8 @@
   }).observe(video4, { attributes: true, attributeFilter: ['class'] });
 })();
 
-// ============================================================
-// BUSCADOR DE MAMÓGRAFOS (pestaña 3) — Meli — prefijo: me-
-// ============================================================
-// QUÉ HACE: el usuario escribe su localidad, elige una sugerencia y:
-//   1. los puntos del lazo rosa (símbolo de la lucha contra el cáncer de
-//      mama) se dispersan, vuelan y se vuelven a armar como lazo;
-//   2. el lazo se deshace: quedan encendidos tantos puntos como mamógrafos
-//      hay en esa localidad (el resto se desvanece hacia el centro);
-//   3. cada punto es un mamógrafo: al pasar el mouse / tocar un punto se
-//      resalta su tarjeta en la lista, y al revés (hover/foco en la tarjeta
-//      resalta el punto).
-//   Punto lleno = establecimiento Público · Anillo = Privado.
-//   Si la localidad NO tiene mamógrafo (buscador-sin-mamografo.js), el lazo
-//   se deshace en dos puntos —tu localidad y la más cercana con mamógrafo—,
-//   unidos por una línea con la distancia aproximada, y un botón lleva a
-//   los mamógrafos de esa localidad cercana.
-//
-// DATOS: MAMOGRAFOS (buscador-datos.js, generado por convertir_datos.py).
-//        Ese archivo tiene que cargarse ANTES que este (ver index.html).
-//        SIN_MAMOGRAFO (buscador-sin-mamografo.js, generado por
-//        convertir_sin_mamografo.py): este archivo lo carga solo, después;
-//        si no está, el buscador funciona igual, solo con las localidades de la base.
-// ACCESIBILIDAD: el canvas es decorativo; la lista de la derecha tiene todo
-//   el contenido (se navega con Tab) y se anuncia con aria-live. Con
-//   "reducir movimiento" activado no hay animación: los puntos aparecen
-//   directo en su lugar final.
-// Todo texto de la base se inserta con textContent (nunca innerHTML).
-// ============================================================
+// ============ BUSCADOR DE MAMÓGRAFOS (pestaña 3) ============
+// Al elegir una localidad, el lazo de puntos se rearma y queda un punto por mamógrafo (lleno = público, anillo = privado), enlazado con la lista; sin mamógrafo, muestra la localidad más cercana. Datos en buscador-datos.js y buscador-sin-mamografo.js; textos siempre con textContent.
 (function () {
   const input = document.getElementById('me-search-input');
   const stage = document.getElementById('me-stage');
@@ -194,10 +176,8 @@
   const REDUCIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const MAX_SUGERENCIAS = 8;
 
-  // ============================================================
-  // 1) BÚSQUEDA CON PREDICCIÓN (igual que el prototipo buscador.js)
-  // ============================================================
-  // "Córdoba" -> "cordoba": para comparar sin importar tildes ni mayúsculas
+  // ============ 1) BÚSQUEDA CON PREDICCIÓN ============
+  // "Córdoba" -> "cordoba": compara sin tildes ni mayúsculas.
   function norm(s) {
     return String(s)
       .normalize('NFD')
@@ -217,7 +197,12 @@
   function incorporarSin() {
     if (typeof SIN_MAMOGRAFO === 'undefined') return;
     const provs = SIN_MAMOGRAFO.provincias;
+    // Una localidad que ya tiene mamógrafos (igual o con "Capital", ej. Córdoba -> Córdoba Capital) no se suma como "sin"
+    const conMamografo = new Set(localidades.map((l) => norm(l.localidad) + '|' + norm(l.provincia)));
     SIN_MAMOGRAFO.filas.forEach((f) => {
+      const prov = norm(provs[f[2]]);
+      const loc = norm(f[0]);
+      if (conMamografo.has(loc + '|' + prov) || conMamografo.has(loc + ' capital|' + prov)) return;
       localidades.push({
         sin: true,
         localidad: f[0],
@@ -245,9 +230,7 @@
     document.head.appendChild(sc);
   }
 
-  // Hasta MAX_SUGERENCIAS localidades que coinciden. Orden: la que se escribió
-  // exacta, después las que EMPIEZAN con lo escrito, después las que lo contienen;
-  // en cada grupo, primero las que tienen mamógrafo, y por último alfabético.
+  // Hasta MAX_SUGERENCIAS: exactas, después las que empiezan igual y las que contienen; primero las que tienen mamógrafo, después alfabético.
   function buscar(texto) {
     const q = norm(texto);
     if (!q) return [];
@@ -348,13 +331,8 @@
     verEnLista(lista, opts[activo]);
   }
 
-  // ============================================================
-  // 2) LAZO DE PUNTOS: geometría
-  // ============================================================
-  // El lazo se define con curvas de Bézier en un espacio de ~100 x 118
-  // unidades. Cada trazo es una lista de curvas [p0, p1, p2, p3].
-  // Después se "siembran" puntos a lo largo de cada trazo, en 3 filas
-  // paralelas, para darle grosor.
+  // ============ 2) LAZO DE PUNTOS: geometría ============
+  // Curvas de Bézier en un espacio de ~100 x 118; los puntos se siembran en 3 filas paralelas para darle grosor.
   const LAZO_CX = 50; // centro del lazo en ese espacio (para centrarlo en el canvas)
   const LAZO_CY = 59;
   const LAZO_ALTO = 106; // alto real del dibujo (de y=6 a y=112)
@@ -448,10 +426,8 @@
     return out;
   }
 
-  // ============================================================
-  // 3) PARTÍCULAS
-  // ============================================================
-  // Colores: salen de las variables de :root (style.css); con respaldo.
+  // ============ 3) PARTÍCULAS ============
+  // Colores tomados de las variables de :root (style.css), con respaldo.
   function leerColor(variable, respaldo) {
     const v = getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
     let m = /^#([0-9a-f]{6})$/i.exec(v);
@@ -511,9 +487,7 @@
   let tCerca = 0; // cuándo se armó (para que la línea aparezca después de los puntos)
   const FUENTE = getComputedStyle(stage).fontFamily || 'system-ui, sans-serif';
 
-  // ---------- Mapa real (Leaflet) ----------
-  // Si los mamógrafos tienen lat/lon (ver geocodificar_mamografos.py), al elegir una
-  // localidad aparece un mapa con su ubicación real en vez de la constelación de puntos.
+  // ---------- Mapa real (Leaflet): si los mamógrafos tienen lat/lon, se muestra su ubicación en vez de la constelación ----------
   const HAY_LEAFLET = typeof L !== 'undefined';
   const mapaDiv = document.createElement('div');
   mapaDiv.className = 'me-mapa';
@@ -542,6 +516,7 @@
     );
     capa = L.layerGroup().addTo(mapa);
   }
+  const BORDE_PUNTO = 'rgb(' + leerColor('--bg', [7, 5, 10]).join(',') + ')';
   function mostrarMapa(l) {
     if (!mapa) crearMapa();
     capa.clearLayers();
@@ -563,10 +538,10 @@
       const col = 'rgb(' + (privado ? COL_PRIVADO : COL_PUBLICO).join(',') + ')';
       const marca = L.circleMarker([lat, lon], {
         radius: 7,
-        color: col,
-        weight: 2,
+        color: BORDE_PUNTO, // contorno oscuro: separa el punto del mapa
+        weight: 1.5,
         fillColor: col,
-        fillOpacity: 0.85,
+        fillOpacity: 1,
         className: 'me-mapa-punto' + (privado ? ' me-mapa-privado' : ''),
       });
       marca.bindTooltip(m.establecimiento + (m.aprox ? ' (ubicación aproximada)' : ''), {
@@ -620,9 +595,9 @@
       const on = i === k;
       marca.setStyle({
         radius: on ? 11 : 7,
-        weight: on ? 3 : 2,
+        weight: on ? 2 : 1.5,
         opacity: k < 0 || on ? 1 : 0.4,
-        fillOpacity: k < 0 || on ? 0.85 : 0.35,
+        fillOpacity: k < 0 || on ? 1 : 0.35,
       });
       if (on) {
         marca.bringToFront();
@@ -768,9 +743,7 @@
     modo = 'const';
   }
 
-  // d) cerca: la localidad NO tiene mamógrafo -> quedan 2 puntos: "tu localidad"
-  //    (anillo tenue) y "la más cercana con mamógrafo" (punto lleno). No están
-  //    a escala: la distancia real va escrita sobre la línea.
+  // d) cerca: sin mamógrafo, quedan 2 puntos (tu localidad y la más cercana) unidos por una línea con la distancia real escrita.
   function armarCerca(l, rapido) {
     const i1 = Math.floor(parts.length * 0.3),
       i2 = Math.floor(parts.length * 0.7);
@@ -809,9 +782,7 @@
     modo = 'cerca';
   }
 
-  // ============================================================
-  // 4) ELEGIR / LIMPIAR
-  // ============================================================
+  // ============ 4) ELEGIR / LIMPIAR ============
   function elegir(l) {
     if (l.sin) elegirSin(l);
     else elegirConMamografo(l);
@@ -1038,9 +1009,7 @@
     result.hidden = false;
   }
 
-  // ============================================================
-  // 5) INTERACCIÓN punto <-> tarjeta
-  // ============================================================
+  // ============ 5) INTERACCIÓN punto <-> tarjeta ============
   function setHover(k, desdeCanvas) {
     if (k === hoverK) return;
     hoverK = k;
@@ -1091,9 +1060,7 @@
     if (e.pointerType === 'mouse') setHover(-1);
   });
 
-  // ============================================================
-  // 6) ANIMACIÓN (resortes) Y DIBUJO
-  // ============================================================
+  // ============ 6) ANIMACIÓN (resortes) Y DIBUJO ============
   const K = 90; // rigidez del resorte
   const C = 14; // amortiguación
   let ultimo = performance.now();
@@ -1243,9 +1210,7 @@
     }
   }
 
-  // ============================================================
-  // 7) TAMAÑO DEL CANVAS
-  // ============================================================
+  // ============ 7) TAMAÑO DEL CANVAS ============
   function ajustar() {
     const w = stage.clientWidth,
       h = stage.clientHeight;
@@ -1312,9 +1277,7 @@
   requestAnimationFrame(tick);
   cargarSin();
 
-  // ============================================================
-  // 8) EVENTOS DEL BUSCADOR
-  // ============================================================
+  // ============ 8) EVENTOS DEL BUSCADOR ============
   input.addEventListener('input', () => {
     clear.hidden = !input.value;
     mostrarLista(input.value);
@@ -1366,12 +1329,8 @@
   uiFuente(src, FUENTES_ME);
 })();
 
-// ============================================================
-// "Una última cosa" a la altura de "Fuente": el botón queda en la misma línea que la
-// etiqueta "Fuente" (siempre centrado en la tarjeta).
-// El CSS lo saca de la fila (position:absolute, solo en pantallas > 680px) y acá se
-// calcula su altura. Se recalcula cuando la tarjeta cambia de tamaño.
-// ============================================================
+// ============ "Una última cosa" a la altura de "Fuente" ============
+// En pantallas > 680px el CSS lo saca de la fila y acá se calcula su altura (se recalcula si cambia la tarjeta).
 (function () {
   const b = document.getElementById('me-final');
   const card = b ? b.closest('.me-card') : null;

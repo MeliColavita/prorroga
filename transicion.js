@@ -1,26 +1,9 @@
-// ============================================================
-// TRANSICION.JS — ARCHIVO GENERAL (compartido)
-// Hace tres cosas:
-//   1) BARRA DE CAPÍTULOS (abajo): pinta cuál es el capítulo actual, los ya
-//      vistos (done), el que sigue (next) y el hilo de bolitas entre ellos.
-//   2) ANIMACIÓN DE ENTRADA, solo la PRIMERA vez que se entra a cada módulo:
-//      el número del círculo de la barra crece solo (sin fondo ni texto) sobre
-//      la tarjeta y se deshace en bolitas que viajan a todos
-//      los elementos de la tarjeta (títulos, pestañas, gráfico...) mientras el
-//      módulo real entra. Las siguientes veces el módulo entra directo (así no
-//      pesa). Tocar la pantalla o Escape la saltea.
-//   3) SONIDOS: 1 en la intro cuando aparece el título principal, el MISMO sonido "modulo" al entrar al 1 y al cambiar al 2 y 3,
-//      1 al cambiar de pestaña y 1 con el botón "una última cosa" (Final).
-// Lo llaman script.js (al entrar a la experiencia y al cambiar de módulo)
-// y, por delegación de clicks, las pestañas y el botón Final.
-// Si este archivo no carga, el sitio funciona igual (sin animación ni sonido).
-// ============================================================
+// ============ TRANSICION.JS — ARCHIVO GENERAL (compartido) ============
+// Barra de capítulos, animación de entrada de cada módulo (solo la 1ª vez), efectos de sonido y música de fondo con sus botones. Si no carga, el sitio funciona igual.
 (function () {
   'use strict';
 
-  // ---------- SONIDOS ----------
-  // Cambiá acá el nombre de cada archivo (carpeta "sonidos/") y su volumen (0 a 1).
-  // Conviene que cada uno pese poco (menos de 200 KB).
+  // ---------- EFECTOS DE SONIDO: archivo (carpeta sonidos/) y volumen de 0 a 1 de cada uno ----------
   const SONIDOS = {
     carga: { src: 'sonidos/carga.MP3', vol: 0.5 }, // en la intro, cuando aparece el título principal
     modulo: { src: 'sonidos/modulo.MP3', vol: 0.5 }, // al cambiar de módulo
@@ -44,11 +27,7 @@
     audios[nombre] = a;
   });
 
-  // El sonido "modulo" suena solo la PRIMERA vez que se entra a cada módulo; de la segunda
-  // en adelante se desactiva. Para saber a qué módulo se entra NO se espera a que la barra
-  // cambie de capítulo (a veces cambia tarde y se contaba el módulo anterior): se toma el
-  // círculo de la barra que se acaba de tocar; si el cambio no viene de ahí, se usa el
-  // capítulo activo un instante después.
+  // El sonido "modulo" suena solo la primera vez que se entra a cada módulo (se toma el círculo de la barra recién tocado, o el capítulo activo).
   const moduloSonado = new Set();
   const itemsBarra = () => Array.from(document.querySelectorAll('.side-nav .nav-item'));
   let destino = { idx: -1, t: 0 };
@@ -86,15 +65,17 @@
     a.play().catch(() => {}); // si el navegador lo bloquea o falta el archivo, no pasa nada
   }
 
-  // Botón de silencio de los efectos (en la barra, a la izquierda). No toca el audio de la intro.
+  // Botón de efectos (megáfono, en la barra): silencia o activa los efectos. No toca la música.
   const btnSfx = document.getElementById('navSfx');
+  // Actualiza ícono, texto para lectores de pantalla y cartelito (data-tip) de un botón de sonido
+  function pintarBoton(btn, apagado, nombre, tipOn, tipOff) {
+    if (!btn) return;
+    btn.setAttribute('aria-pressed', apagado ? 'true' : 'false');
+    btn.setAttribute('aria-label', (apagado ? 'Activar ' : 'Silenciar ') + nombre);
+    btn.dataset.tip = apagado ? tipOff : tipOn;
+  }
   function pintarSilencio() {
-    if (!btnSfx) return;
-    btnSfx.setAttribute('aria-pressed', silenciado ? 'true' : 'false');
-    btnSfx.setAttribute(
-      'aria-label',
-      silenciado ? 'Activar efectos de sonido' : 'Silenciar efectos de sonido',
-    );
+    pintarBoton(btnSfx, silenciado, 'efectos de sonido', 'Efectos de sonido: activados', 'Efectos de sonido: silenciados');
   }
   if (btnSfx) {
     btnSfx.addEventListener('click', () => {
@@ -102,11 +83,90 @@
       try {
         sessionStorage.setItem('sfxSilencio', silenciado ? '1' : '0');
       } catch (e) {}
-      if (silenciado) Object.keys(audios).forEach((n) => audios[n].pause());
+      if (silenciado) {
+        Object.keys(audios).forEach((n) => audios[n].pause());
+        subirMusica(); // si estaba bajada por el sonido final, vuelve a su volumen
+      }
       pintarSilencio();
     });
   }
   pintarSilencio();
+
+  // ---------- MÚSICA DE FONDO ----------
+  // Loop desde que se entra a la experiencia (script.js llama a Transicion.musica()); el botón de la nota la prende o apaga con fundido y se recuerda en la sesión.
+  const MUSICA = { src: 'sonidos/musica.mp3', vol: 0.25 }; // cambiá acá el archivo y el volumen (0 a 1)
+  const musica = new Audio(MUSICA.src);
+  musica.loop = true;
+  musica.preload = 'auto';
+  musica.volume = 0;
+  musica.addEventListener('error', () => console.warn('No se pudo cargar la música:', MUSICA.src));
+  const btnMusica = document.getElementById('navMusica');
+  let musicaOff = false;
+  try {
+    musicaOff = sessionStorage.getItem('musicaSilencio') === '1';
+  } catch (e) {}
+  let musicaLista = false; // true cuando ya se entró a la experiencia
+  let volMusica = MUSICA.vol; // volumen objetivo (baja mientras suena el sonido final)
+  let tFundido = null;
+
+  function fundirMusica(destino, ms, alTerminar) {
+    clearInterval(tFundido);
+    const desde = musica.volume;
+    const t0 = performance.now();
+    tFundido = setInterval(() => {
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      musica.volume = Math.max(0, Math.min(1, desde + (destino - desde) * k));
+      if (k >= 1) {
+        clearInterval(tFundido);
+        if (alTerminar) alTerminar();
+      }
+    }, 40);
+  }
+  function arrancarMusica() {
+    musicaLista = true;
+    if (musicaOff || document.hidden) return;
+    musica
+      .play()
+      .then(() => fundirMusica(volMusica, 2500))
+      .catch(() => {}); // si el navegador la bloquea o falta el archivo, el sitio sigue igual
+  }
+  function frenarMusica(ms) {
+    fundirMusica(0, ms, () => musica.pause());
+  }
+  function bajarMusica() {
+    volMusica = MUSICA.vol * 0.3;
+    if (!musica.paused) fundirMusica(volMusica, 800);
+  }
+  function subirMusica() {
+    volMusica = MUSICA.vol;
+    if (!musica.paused) fundirMusica(volMusica, 1500);
+  }
+  function pintarMusica() {
+    pintarBoton(btnMusica, musicaOff, 'música de fondo', 'Música de fondo: activada', 'Música de fondo: silenciada');
+  }
+  if (btnMusica) {
+    btnMusica.addEventListener('click', () => {
+      musicaOff = !musicaOff;
+      try {
+        sessionStorage.setItem('musicaSilencio', musicaOff ? '1' : '0');
+      } catch (e) {}
+      if (musicaOff) frenarMusica(600);
+      else if (musicaLista) arrancarMusica();
+      pintarMusica();
+    });
+  }
+  pintarMusica();
+  // Con la pestaña del navegador oculta, la música se pausa; al volver, sigue.
+  document.addEventListener('visibilitychange', () => {
+    if (!musicaLista || musicaOff) return;
+    if (document.hidden) frenarMusica(300);
+    else arrancarMusica();
+  });
+  // Mientras suena el sonido del final, la música baja; cuando termina, vuelve.
+  if (audios.final) {
+    audios.final.addEventListener('ended', subirMusica);
+    audios.final.addEventListener('pause', subirMusica);
+  }
 
   // El sonido "carga" (intro, cuando aparece el título principal) arranca desde un script
   // al principio del <head> de index.html, para que no espere a los CSS ni a las fuentes.
@@ -126,7 +186,10 @@
         }
         return;
       }
-      if (e.target.closest('#me-final')) sfx('final');
+      if (e.target.closest('#me-final')) {
+        if (!silenciado) bajarMusica();
+        sfx('final');
+      }
     },
     true,
   );
@@ -150,10 +213,7 @@
   pintarBarra();
 
   // ---------- ANIMACIÓN DE ENTRADA (solo la primera vez de cada módulo) ----------
-  // 1) El número del círculo de la barra CRECE solo (derecho) hasta el centro de la tarjeta y ahí GIRA 360° sobre su eje Y; se deshace apenas empieza a girar.
-  // 2) El número se DESHACE en bolitas que viajan a cada elemento de la tarjeta (títulos,
-  //    pestañas, gráfico, fuente...). Los elementos reales van apareciendo a
-  //    medida que llegan.
+  // El número del círculo crece hasta la tarjeta, gira y se deshace en bolitas que viajan a cada elemento mientras aparece.
   const vistos = new Set(); // ids de capítulos que ya hicieron la animación
   let actual = null; // animación en curso (para poder cortarla)
 
@@ -220,11 +280,7 @@
     return { x: x, y: y, w: w, h: h, tarjeta: tarjeta };
   }
 
-  // Puntos de destino: repartidos sobre los elementos reales del capítulo
-  // (título del capítulo + todo lo que hay dentro de la tarjeta):
-  //   - texto: una franja por cada línea de texto
-  //   - gráficos y campos: canvas, svg, input, imagen
-  //   - piezas con fondo propio: barras, botones/pastillas
+  // Destinos de las bolitas: repartidos sobre el título del capítulo y lo que hay en la tarjeta (líneas de texto, gráficos, botones).
   function destinosTarjeta(capitulo, zona, N, W, H, barH) {
     const rects = [];
     const limiteY = H - barH;
@@ -511,9 +567,7 @@
     else listo();
   }
 
-  // ---------- API (la usa script.js) ----------
-  // entrar(capitulo, item, retrasoMs): se llama cada vez que se entra a un capítulo.
-  // Devuelve true si hizo la animación completa (solo la primera vez de cada módulo).
+  // ---------- API: entrar() anima la entrada; sfx() suena un efecto; musica() arranca la música; musicaActiva() dice si está prendida ----------
   function entrar(capitulo, item, retraso) {
     pintarBarra();
     if (!capitulo || !item || vistos.has(capitulo.id)) return false;
@@ -526,6 +580,10 @@
   window.Transicion = {
     entrar: entrar,
     sfx: sfx,
+    musica: arrancarMusica,
+    musicaActiva: function () {
+      return !musicaOff;
+    },
     pintarBarra: pintarBarra,
     audio: function (nombre) {
       return audios[nombre];
