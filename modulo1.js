@@ -1207,14 +1207,9 @@
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
-      // La fuente desaparece y recién ahí se cambia el gráfico.
+      // La fuente desaparece y recién ahí se cambia el gráfico; cada pestaña conserva lo que ya se jugó.
       uiFuenteSalir(emSrc, function () {
         activeKey = tab.dataset.chart;
-        if (activeKey === 'casosPorTipo') {
-          tipoState = { revealed: false, guess: null, merged: false };
-        } else if (activeKey === 'casosPorEdad') {
-          edadState = { sel: null, revealed: [] }; // arranca de cero: 5 barras parejas sin tocar
-        }
         render1();
         animarEntrada();
       });
@@ -1223,10 +1218,26 @@
 
   render1(); // primer dibujo, apenas carga la página
 
+  // Al volver a este módulo desde otro, los dos juegos arrancan de cero (y se repite la entrada de "Casos por tipo").
+  let capituloActivo = chapterEl ? chapterEl.classList.contains('active') : true;
+  function revisarCambioDeModulo() {
+    const activo = chapterEl.classList.contains('active');
+    if (activo && !capituloActivo) {
+      tipoState = { revealed: false, guess: null, merged: false };
+      edadState = { sel: null, revealed: [] };
+      tipoIntroHecha = reduceMotion;
+      render1();
+    }
+    capituloActivo = activo;
+  }
+
   // La animación de entrada de "Casos por tipo" espera a que la pestaña se vea de verdad.
   if (window.MutationObserver) {
     const mo = new MutationObserver(revisarIntroTipo);
     if (introEl) mo.observe(introEl, { attributes: true, attributeFilter: ['class'] });
-    if (chapterEl) mo.observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
+    if (chapterEl) {
+      mo.observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(revisarCambioDeModulo).observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
+    }
   }
 })();

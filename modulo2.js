@@ -443,6 +443,14 @@
     //   redibuja solo cuando cambia el tamaño de su <canvas> (el alto
     //   lo fija un estilo inline en el HTML, el ancho lo da la
     //   columna -- ver .br-grid-layout en modulo2.css).
+    // Leyenda: en gráficos bajos (pantallas bajas) se achica para que los 2 ítems entren uno debajo del otro
+    function ajustarLeyenda(leyenda, alto) {
+      const bajo = alto < 190;
+      leyenda.labels.font.size = bajo ? 12 : 14;
+      leyenda.labels.padding = bajo ? 6 : 12;
+      leyenda.labels.boxWidth = bajo ? 11 : 14;
+      leyenda.title.padding.top = bajo ? 0 : 16;
+    }
     const provinceChart = new Chart(chartCtx, {
       type: 'bar',
       data: {
@@ -469,6 +477,7 @@
         events: [],
         responsive: true,
         maintainAspectRatio: false,
+        onResize: (chart, size) => ajustarLeyenda(chart.options.plugins.legend, size.height),
         layout: { padding: { top: 24 } },
         plugins: {
           legend: {
@@ -509,6 +518,8 @@
         },
       },
     });
+    ajustarLeyenda(provinceChart.options.plugins.legend, provinceChart.height);
+    provinceChart.update('none');
 
     function updateProvinceChart(p) {
       activeProvData = p; // la recordamos para poder redibujar al mover el slider
