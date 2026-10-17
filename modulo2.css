@@ -429,7 +429,7 @@
 
 /* Pista rosa de "Por año": el formato viene de .em-prompt (modulo1.css); acá solo el margen. */
 #brPanelAnio .br-panel .em-prompt {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
   font-size: 0.95rem; /* mismo tamaño que la pista de "Por provincia" */
 }
 
@@ -878,4 +878,144 @@
   justify-content: space-between;
   font-size: 0.72rem;
   color: var(--br-text-dim);
+}
+
+/* ============ COMPARAR CON OTROS PAÍSES ("Por año") — prefijo cp- ============
+   Botón "Comparar con otros países" y su panel (lo arma comparar-paises.js).
+  
+
+/* Botón: misma forma que las pestañas (.br-tab-btn), empujado a la derecha de la fila. */
+.br-widget .br-tabs .cp-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cp-btn svg {
+  flex: none;
+}
+/* Abierto: se pinta como pestaña activa. */
+.br-widget .br-tabs .cp-btn[aria-pressed='true'] {
+  background: var(--br-rose-strong);
+  color: #1a0510;
+  border-color: var(--br-rose-strong);
+  box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
+}
+
+/* Panel: misma subtarjeta que "Por año" (.br-panel); el alto lo fija el JS para que no salte. */
+#cpPanel .br-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px 10px;
+}
+#cpPanel .br-panel h2 {
+  margin-bottom: 8px;
+}
+
+/* Fila de países: Argentina fija + selector del otro país (hacen de leyenda). */
+.cp-paises {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: var(--br-text-dim);
+}
+.cp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 30px;
+  border: 1px solid var(--br-panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--br-text);
+  font-weight: 600;
+}
+.cp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+.cp-dot-arg {
+  background: var(--br-rose-strong);
+  box-shadow: 0 0 8px var(--br-rose-glow);
+}
+.cp-dot-otro {
+  background: #8fd3e8;
+}
+.cp-chip-sel {
+  position: relative;
+  padding-right: 30px;
+}
+/* Flechita del selector */
+.cp-chip-sel::after {
+  content: '';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid var(--br-text-dim);
+  border-bottom: 2px solid var(--br-text-dim);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.cp-chip-sel:focus-within {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.cp-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--br-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+.cp-select option {
+  background: #160f1b;
+  color: #f2e9ee;
+}
+
+/* Gráfico: ocupa el alto que sobra en la subtarjeta. */
+.cp-chart {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 150px;
+}
+
+/* Datos de abajo: el último año que tienen los dos países. */
+.cp-dato {
+  margin: 8px 0 0;
+  font-size: calc(0.8rem + 1px);
+  line-height: 1.4;
+  color: var(--br-text-dim);
+}
+.cp-dato b {
+  font-family: var(--br-serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--br-rose-strong);
+}
+.cp-dato b.cp-otro {
+  color: #8fd3e8;
+}
+.cp-aviso {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .br-widget .br-tabs .cp-btn {
+    margin-left: 0;
+  }
 }
