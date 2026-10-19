@@ -649,16 +649,58 @@
       const guess = tipoState.guess;
       const pct = (real / TIPO_MAX) * 100;
 
-      // Línea punteada "Tu respuesta": va dentro de .em-plot, en %, con la misma escala que la barra real.
-      const oldLine = mama.querySelector('.em-guess-line');
-      if (oldLine) oldLine.remove();
-      const line = document.createElement('div');
-      line.className = 'em-guess-line';
-      // Si la respuesta quedó cerca del valor real, "Tu respuesta" va debajo de la línea para no tapar el número.
-      if (Math.abs(guess - real) / real < 0.15) line.classList.add('em-guess-line-below');
-      line.style.bottom = (guess / TIPO_MAX) * 100 + '%';
-      line.innerHTML = '<span>Tu respuesta</span>';
-      plot.appendChild(line);
+      // Barra "Tu respuesta": va SUPERPUESTA a la barra real, con la misma escala (% de .em-plot).
+      const oldGhost = mama.querySelector('.em-guess-ghost');
+      if (oldGhost) oldGhost.remove();
+      const ghost = document.createElement('div');
+      ghost.className = 'em-guess-ghost';
+      ghost.style.height = (guess / TIPO_MAX) * 100 + '%';
+      // El cartel sale hacia la izquierda: "Tu respuesta" y debajo el valor que puso la persona.
+      ghost.innerHTML = '<span>Tu respuesta</span>';
+      plot.appendChild(ghost);
+
+      // Orden de las barras. Si la respuesta es IGUAL O MAYOR que el real, la barra rosa va adelante
+      // y la gris atrás (solo asoma por encima). Si es menor, la gris va adelante, como antes.
+      // El orden se fija acá, en línea, para que ninguna regla del CSS lo pise.
+      if (guess >= real) {
+        ghost.style.zIndex = '1';
+        bar.style.zIndex = '2';
+      } else {
+        ghost.style.zIndex = '3';
+        bar.style.zIndex = '';
+      }
+
+      // El número real pasa por encima de la barra de la respuesta (si no, quedaría tapado).
+      valEl.classList.add('em-val-sobre');
+
+      // Si el número real (20.750) pisaría la línea de "Tu respuesta", se mete adentro de su barra, pegado al tope.
+      function acomodarNumero() {
+        if (!valEl.isConnected) return;
+        const H = plot.clientHeight; // alto en px del área de dibujo
+        const T = (real / TIPO_MAX) * H; // altura del tope de la barra real
+        const L = (guess / TIPO_MAX) * H; // altura de la línea de la respuesta
+        const h = valEl.offsetHeight; // alto del número
+        // El número ocupa de T+6 a T+6+h (px desde el piso); la línea mide 2px y termina en L. Se deja 3px de margen.
+        const choca = L > T + 3 && L - 2 < T + 6 + h + 3;
+        if (choca) {
+          valEl.style.setProperty('--em-val-baja', h + 10 + 'px'); // 6px del margen original + 4px adentro de la barra
+          valEl.classList.add('em-val-dentro');
+        } else {
+          valEl.classList.remove('em-val-dentro');
+        }
+      }
+      acomodarNumero();
+      // Si cambia el tamaño del gráfico (ventana, zoom), se vuelve a calcular. Se desconecta solo cuando el gráfico se reconstruye.
+      if (window.ResizeObserver) {
+        const roNum = new ResizeObserver(function () {
+          if (!plot.isConnected) {
+            roNum.disconnect();
+            return;
+          }
+          acomodarNumero();
+        });
+        roNum.observe(plot);
+      }
 
       if (doAnimate && !reduceMotion) {
         // Arranca en 0 sin transición y recién ahí crece animada.
@@ -883,8 +925,12 @@
       const sumValEl = sumCol.querySelector('.em-val');
 
       // La línea "Tu respuesta" (si todavía está, de cuando se reveló) se borra apenas se toca cualquiera de los dos botones.
-      const guessLine = mama.querySelector('.em-guess-line');
-      if (guessLine) guessLine.remove();
+      const guessGhost = mama.querySelector('.em-guess-ghost');
+      if (guessGhost) guessGhost.remove();
+
+      // Sin la línea de respuesta, el número real vuelve arriba de su barra.
+      const numMama = mama.querySelector('.em-val');
+      if (numMama) numMama.classList.remove('em-val-dentro');
 
       if (tipoState.merged) {
         const x0 = mama.getBoundingClientRect().left;
@@ -1241,7 +1287,10 @@
     if (introEl) mo.observe(introEl, { attributes: true, attributeFilter: ['class'] });
     if (chapterEl) {
       mo.observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
-      new MutationObserver(revisarCambioDeModulo).observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(revisarCambioDeModulo).observe(chapterEl, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
     }
   }
 })();
