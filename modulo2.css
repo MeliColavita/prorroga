@@ -1069,3 +1069,10 @@
     transition: none;
   }
 }
+.cp-chip-sel {
+  padding-right: 12px;
+  cursor: pointer;
+}
+.cp-select {
+  padding-right: 24px;
+}

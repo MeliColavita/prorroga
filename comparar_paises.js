@@ -32,10 +32,10 @@
       url: 'https://population.un.org/wpp/',
     },
   ];
-  const NOTA_CMP =
+  /*const NOTA_CMP =
     'Tasa ajustada por edad (población estándar mundial de la OMS): así se pueden comparar países ' +
     'con poblaciones más jóvenes o más viejas. Por eso no coincide con la tasa bruta de "Por año". ' +
-    'La calidad del registro de muertes varía entre países. Análisis propio.';
+    'La calidad del registro de muertes varía entre países. Análisis propio.';*/
 
   const fmt1 = (v) =>
     v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -541,7 +541,7 @@
 
     srcSub.textContent = SUB_CMP;
     uiFuenteSalir(srcBox, function () {
-      if (abierto) uiFuente(srcBox, SRC_CMP, NOTA_CMP);
+      if (abierto) uiFuente(srcBox, SRC_CMP);
     });
 
     // Cada vez que se abre: Uruguay elegido y el gráfico vacío.
