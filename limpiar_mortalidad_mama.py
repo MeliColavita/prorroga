@@ -13,10 +13,14 @@ Fuentes
   * Defunciones: WHO Mortality Database, archivos crudos Morticd10_part2..part6
     https://www.who.int/data/data-collection-tools/who-mortality-database
   * Códigos de país: country_codes (misma página)
-  * Población femenina por edad: Naciones Unidas, World Population Prospects 2024
-    (archivo poblacion_wpp2024_latam.csv, generado con la opción --generar-poblacion).
+  * Población femenina por edad: Naciones Unidas, World Population Prospects 2024,
+    archivo oficial WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx
+    (https://population.un.org/wpp/ > Download Files > Standard Projections > Population >
+    Population by Single Age - Female). Hoja "Estimates" (2005-2023).
+    Se resume en poblacion_wpp2024_latam.csv con la opción --generar-poblacion.
     Se usa WPP porque el archivo "pop" de la OMS no tiene población de casi ningún
     país latinoamericano después de 2005. El portal de la OMS también usa WPP.
+  * Población estándar: OMS, World Standard Population 2000-2025 (Ahmad et al., 2001, Tabla 4)
 
 Uso
 ---
@@ -26,9 +30,9 @@ Uso
       --poblacion poblacion_wpp2024_latam.csv \
       --salida mortalidad_mama_latam.json
 
-  (Opcional) regenerar el CSV de población desde el repo de WPP 2024
-  (https://github.com/PPgp/wpp2024, carpeta data/; requiere `pip install pyreadr`):
-  python limpiar_mortalidad_mama.py --generar-poblacion ruta/a/wpp2024/data
+  Generar primero el CSV de población desde el Excel oficial de la ONU
+  (requiere `pip install openpyxl`; tarda unos minutos porque el Excel pesa ~200 MB):
+  python limpiar_mortalidad_mama.py --generar-poblacion WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx
 """
 
 import argparse
@@ -41,7 +45,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Parámetros
 # ---------------------------------------------------------------------------
-ANIO_DESDE, ANIO_HASTA = 2005, 2024
+ANIO_DESDE, ANIO_HASTA = 2005, 2023
 SEXO_FEMENINO = 2
 
 # Código OMS -> (nombre en español, código numérico ISO usado por WPP)
@@ -139,45 +143,39 @@ def leer_defunciones(archivos):
         raise ValueError("Deaths1 no coincide con la suma por edades")
 
     # Pasar a formato largo con los grupos de edad finales
-    largo = df.melt(id_vars=["Country", "Year", "Deaths1", "Deaths26"],
+    largo = df.melt(id_vars=["Country", "Year"],
                     value_vars=list(COLUMNAS_A_GRUPO),
                     var_name="col", value_name="muertes")
     largo["grupo"] = largo["col"].map(COLUMNAS_A_GRUPO)
-    largo = largo.groupby(["Country", "Year", "Deaths1", "Deaths26", "grupo"],
+    largo = largo.groupby(["Country", "Year", "grupo"],
                           as_index=False)["muertes"].sum()
 
-    # Repartir las muertes de edad desconocida en proporción a las conocidas
-    conocidas = largo.groupby(["Country", "Year"])["muertes"].transform("sum")
-    largo["muertes"] = np.where(
-        conocidas > 0,
-        largo["muertes"] + largo["Deaths26"] * largo["muertes"] / conocidas.replace(0, np.nan),
-        largo["muertes"],
-    )
-    return largo.rename(columns={"Deaths1": "muertes_total", "Deaths26": "edad_desconocida"})
+    return largo
 
 
 # ---------------------------------------------------------------------------
 # 2. Población (WPP 2024)
 # ---------------------------------------------------------------------------
-def generar_poblacion(carpeta_wpp, salida="poblacion_wpp2024_latam.csv"):
-    """Arma el CSV de población femenina por grupo quinquenal desde los .rda de WPP 2024."""
-    import pyreadr
+def generar_poblacion(archivo_onu, salida="poblacion_wpp2024_latam.csv"):
+    """Arma el CSV de población femenina por grupo quinquenal desde el archivo oficial de la ONU:
+    WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx (File POP/01-3, miles de personas al 1 de julio).
+    Usa la hoja "Estimates" (1950-2023)."""
+    edades = list(range(100)) + ["100+"]
+    pob = pd.read_excel(archivo_onu, sheet_name="Estimates", header=16)   # fila 17 = encabezados
+    pob.columns = [str(c) for c in pob.columns]
+    pob = pob[["Location code", "Year"] + [str(e) for e in edades]]
 
-    carpeta = Path(carpeta_wpp)
-    obs = pyreadr.read_r(carpeta / "popAge1dt.rda")["popAge1dt"]          # 1949-2023
-    proy = pyreadr.read_r(carpeta / "popprojAge1dt.rda")["popprojAge1dt"]  # 2024-2100 (variante media)
-    pob = pd.concat([obs[["country_code", "year", "age", "popF"]],
-                     proy[["country_code", "year", "age", "popF"]]])
-    for col in ["country_code", "year", "age"]:
-        pob[col] = pd.to_numeric(pob[col]).astype(int)
-
+    # Location code de la ONU = código numérico ISO del país
     iso_a_oms = {iso: oms for oms, (_, iso) in PAISES_LATAM.items()}
-    pob = pob[pob["country_code"].isin(iso_a_oms) & pob["year"].between(ANIO_DESDE, ANIO_HASTA)].copy()
-    pob["Country"] = pob["country_code"].map(iso_a_oms)
-    pob["grupo"] = pob["age"].astype(int).map(lambda a: "85+" if a >= 85 else GRUPOS[a // 5])
-    pob = (pob.groupby(["Country", "year", "grupo"], as_index=False)["popF"].sum()
-              .rename(columns={"year": "Year", "popF": "poblacion"}))
-    pob["poblacion"] = (pob["poblacion"] * 1000).round()   # WPP viene en miles
+    pob = pob[pob["Location code"].isin(iso_a_oms) & pob["Year"].between(ANIO_DESDE, ANIO_HASTA)]
+
+    pob = pob.melt(id_vars=["Location code", "Year"], var_name="edad", value_name="poblacion")
+    pob["Country"] = pob["Location code"].map(iso_a_oms)
+    pob["edad"] = pob["edad"].map(lambda e: 100 if e == "100+" else int(e))
+    pob["grupo"] = pob["edad"].map(lambda a: "85+" if a >= 85 else GRUPOS[a // 5])
+    pob["poblacion"] = pd.to_numeric(pob["poblacion"])
+    pob = pob.groupby(["Country", "Year", "grupo"], as_index=False)["poblacion"].sum()
+    pob["poblacion"] = (pob["poblacion"] * 1000).round()   # la ONU publica en miles
     pob["Year"] = pob["Year"].astype(int)
     pob.to_csv(salida, index=False)
     print(f"Población guardada en {salida} ({len(pob)} filas)")
@@ -202,10 +200,9 @@ def calcular_tasas(muertes, poblacion):
 
     def resumir(g):
         return pd.Series({
-            "muertes": int(round(g["muertes_total"].iloc[0])),
-            "muertes_edad_desconocida": int(round(g["edad_desconocida"].iloc[0])),
+            "muertes": int(round(g["muertes"].sum())),
             "poblacion_femenina": int(g["poblacion"].sum()),
-            "tasa_bruta": g["muertes_total"].iloc[0] / g["poblacion"].sum() * 1e5,
+            "tasa_bruta": g["muertes"].sum() / g["poblacion"].sum() * 1e5,
             "tasa_ajustada": (g["tasa_especifica"] * g["peso"]).sum() / g["peso"].sum() * 1e5,
         })
 
@@ -229,7 +226,6 @@ def exportar_json(tasas, codigos_paises, salida):
                 {
                     "anio": int(r.Year),
                     "muertes": int(r.muertes),
-                    "muertes_edad_desconocida": int(r.muertes_edad_desconocida),
                     "poblacion_femenina": int(r.poblacion_femenina),
                     "tasa_bruta": round(float(r.tasa_bruta), 2),
                     "tasa_ajustada": round(float(r.tasa_ajustada), 2),
@@ -244,10 +240,10 @@ def exportar_json(tasas, codigos_paises, salida):
             "indicador": "Mortalidad por cáncer de mama (CIE-10 C50), mujeres",
             "unidad_tasas": "muertes por 100.000 mujeres",
             "tasa_ajustada": "Estandarización directa, población estándar mundial OMS (Ahmad et al., 2001), 18 grupos de edad (0-4 ... 85+)",
-            "edad_desconocida": "Las muertes sin edad se reparten proporcionalmente entre los grupos para la tasa ajustada; la tasa bruta usa el total",
+            "edad_desconocida": "Las muertes sin edad registrada no se incluyen en las tasas ni en 'muertes'",
             "periodo": f"{ANIO_DESDE}-{ANIO_HASTA}",
             "fuente_defunciones": "WHO Mortality Database (actualización 23/02/2026)",
-            "fuente_poblacion": "UN World Population Prospects 2024 (población al 1 de julio; 2024 = proyección variante media)",
+            "fuente_poblacion": "UN World Population Prospects 2024, File POP/01-3: Female population by single age (población al 1 de julio, hoja Estimates)",
             "paises_sin_datos_en_el_periodo": sin_datos,
             "aviso": "Defunciones registradas: la cobertura y calidad del registro varía entre países. Análisis propio; la OMS solo provee los datos originales.",
         },
@@ -265,8 +261,8 @@ def main():
     ap.add_argument("--paises", default="country_codes")
     ap.add_argument("--poblacion", default="poblacion_wpp2024_latam.csv")
     ap.add_argument("--salida", default="mortalidad_mama_latam.json")
-    ap.add_argument("--generar-poblacion", metavar="CARPETA_WPP",
-                    help="Genera el CSV de población desde la carpeta data/ de WPP 2024 y termina")
+    ap.add_argument("--generar-poblacion", metavar="EXCEL_ONU",
+                    help="Genera el CSV de población desde WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx y termina")
     args = ap.parse_args()
 
     if args.generar_poblacion:
@@ -280,7 +276,6 @@ def main():
     tasas = calcular_tasas(muertes, poblacion)
     codigos = pd.read_csv(args.paises)
     exportar_json(tasas, codigos, args.salida)
-
 
 if __name__ == "__main__":
     main()

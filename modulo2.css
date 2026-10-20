@@ -880,9 +880,88 @@
   color: var(--br-text-dim);
 }
 
+.br-year-ctl input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 22px;
+  background: transparent;
+}
+.br-year-ctl input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--br-rose-strong) var(--br-fill, 100%),
+    var(--br-panel-border) var(--br-fill, 100%)
+  );
+}
+.br-year-ctl input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--br-rose-strong) var(--br-fill, 100%),
+    var(--br-panel-border) var(--br-fill, 100%)
+  );
+}
+.br-year-ctl input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 34px;
+  height: 20px;
+  margin-top: -8px; /* centra la pastilla sobre la barra de 4px */
+  border: 0;
+  border-radius: 999px;
+  background: var(--br-rose-strong)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 8l-4 4 4 4M17 8l4 4-4 4M3 12h18' fill='none' stroke='%231a0510' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 16px 16px no-repeat;
+  box-shadow: 0 0 10px var(--br-rose-glow);
+  cursor: ew-resize;
+  animation: em-dot-pulse 1.4s infinite;
+}
+.br-year-ctl input[type='range']::-moz-range-thumb {
+  width: 34px;
+  height: 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--br-rose-strong)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 8l-4 4 4 4M17 8l4 4-4 4M3 12h18' fill='none' stroke='%231a0510' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 16px 16px no-repeat;
+  box-shadow: 0 0 10px var(--br-rose-glow);
+  cursor: ew-resize;
+  animation: em-dot-pulse 1.4s infinite;
+}
+
+/* Después del primer movimiento ya se entendió: deja de latir. */
+.br-year-ctl input[type='range'].br-year-used::-webkit-slider-thumb {
+  animation: none;
+}
+.br-year-ctl input[type='range'].br-year-used::-moz-range-thumb {
+  animation: none;
+}
+/* Foco con teclado (Tab): anillo visible, igual que la manija del módulo 1. */
+.br-year-ctl input[type='range']:focus-visible {
+  outline: none;
+}
+.br-year-ctl input[type='range']:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--br-text);
+  outline-offset: 2px;
+}
+.br-year-ctl input[type='range']:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--br-text);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .br-year-ctl input[type='range']::-webkit-slider-thumb {
+    animation: none;
+  }
+  .br-year-ctl input[type='range']::-moz-range-thumb {
+    animation: none;
+  }
+}
+
 /* ============ COMPARAR CON OTROS PAÍSES ("Por año") — prefijo cp- ============
    Botón "Comparar con otros países" y su panel (lo arma comparar-paises.js).
-  
 
 /* Botón: misma forma que las pestañas (.br-tab-btn), empujado a la derecha de la fila. */
 .br-widget .br-tabs .cp-btn {
@@ -901,7 +980,15 @@
   border-color: var(--br-rose-strong);
   box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
 }
-
+/* Titila cuando se descubren los datos de "Por año", hasta que se lo toca. */
+.br-widget .br-tabs .cp-btn.cp-btn-blink {
+  animation: em-confirm-blink 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .br-widget .br-tabs .cp-btn.cp-btn-blink {
+    animation: none;
+  }
+}
 /* Panel: misma subtarjeta que "Por año" (.br-panel); el alto lo fija el JS para que no salte. */
 #cpPanel .br-panel {
   display: flex;
@@ -946,11 +1033,12 @@
 .cp-dot-otro {
   background: #b9a7e0;
 }
+/* Selector del otro país: un botón (punto + nombre) que abre una lista propia. */
 .cp-chip-sel {
   position: relative;
-  padding-right: 30px;
+  padding: 0;
 }
-/* Flechita del selector */
+/* Flechita del selector (solo dibujo: deja pasar el clic al botón) */
 .cp-chip-sel::after {
   content: '';
   position: absolute;
@@ -966,21 +1054,66 @@
 .cp-chip-sel:focus-within {
   border-color: rgba(255, 255, 255, 0.3);
 }
+.cp-chip-sel.cp-chip-blink {
+  animation: em-confirm-blink 2.4s ease-in-out infinite;
+}
+/* El texto del botón sigue el color del chip mientras titila (gris ⇄ blanco). */
+.cp-chip-sel.cp-chip-blink .cp-select {
+  color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-chip-sel.cp-chip-blink {
+    animation: none;
+  }
+}
+/* El botón ocupa todo el chip (punto, nombre y flecha): se puede tocar en cualquier lado. */
 .cp-select {
-  appearance: none;
-  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: transparent;
   border: 0;
+  border-radius: 30px;
   color: var(--br-text);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
-  padding: 0;
+  padding: 5px 34px 5px 12px;
   outline: none;
 }
-.cp-select option {
-  background: #160f1b;
-  color: #f2e9ee;
+/* Lista: misma estructura que la lista del buscador del módulo 3 (.me-suggest).
+   Se abre siempre para abajo. */
+.cp-lista {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  min-width: 100%;
+  width: max-content;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--br-panel);
+  border: 1px solid var(--br-panel-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+.cp-lista[hidden] {
+  display: none;
+}
+.cp-lista li {
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--br-text);
+}
+.cp-lista li[aria-selected='true'],
+.cp-lista li:hover {
+  background: rgba(255, 111, 156, 0.14);
 }
 
 /* Gráfico: ocupa el alto que sobra en la subtarjeta. */
@@ -1020,59 +1153,111 @@
   }
 }
 
-/* ============ COMPARAR CON OTROS PAÍSES: arranque vacío + pista rosa ============
-   Igual que "Por año": el gráfico arranca vacío con la pista rosa en el lugar del título;
-   al pasar el cursor (o tocar) aparecen el título, los países, las líneas y el dato. */
-
-/* Título y pista rosa ocupan la misma celda: no salta nada al hacer el reveal. */
-.cp-cabeza {
+/* ============ COMPARAR: "Ver todos" (ranking de todos los países) ============
+   Lo arma comparar_paises.js. La barra de años reutiliza .br-year-ctl ("Por provincia"). */
+/* Botón "Ver todos": misma forma que las pestañas, a la derecha de la fila de países. */
+#cpPanel .cp-todos-btn {
+  margin-left: auto;
+}
+#cpPanel .cp-todos-btn[aria-pressed='true'] {
+  background: var(--br-rose-strong);
+  color: #1a0510;
+  border-color: var(--br-rose-strong);
+  box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
+}
+/* En "Ver todos" se ocultan el gráfico de líneas y los chips "Argentina vs. país". */
+#cpPanel.cp-modo-todos .cp-chart,
+#cpPanel.cp-modo-todos .cp-paises > :not(.cp-todos-btn) {
+  display: none;
+}
+.cp-todos[hidden] {
+  display: none;
+}
+.cp-todos {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+/* Filas ubicadas con "top" según el puesto: al cambiar de año se reordenan deslizándose. */
+.cp-ranking {
+  position: relative;
+  transition: height 0.4s ease;
+}
+.cp-fila {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 14px;
   display: grid;
-  margin-bottom: 8px;
+  grid-template-columns: 132px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--br-text-dim);
+  transition: top 0.5s ease;
 }
-.cp-cabeza > * {
-  grid-area: 1 / 1;
-  align-self: center;
+.cp-fila[hidden] {
+  display: none;
 }
-#cpPanel .br-panel .cp-cabeza h2 {
-  margin-bottom: 0;
+.cp-fila-nombre {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-/* Pista: formato de .em-prompt / .em-prompt-tipo (modulo1.css), mismo tamaño que la de "Por año". */
-#cpPanel .em-prompt.cp-pista {
-  margin: 0;
-  font-size: 0.95rem;
+/* Barra + número pegado a su punta. */
+.cp-fila-barra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cp-fila-relleno {
+  flex: none;
+  height: 9px;
+  border-radius: 0 999px 999px 0;
   transition:
-    opacity 0.4s ease,
-    visibility 0.4s;
+    width 0.5s ease,
+    background 0.5s ease;
 }
-#cpPanel .em-prompt.cp-pista.br-prompt-gone {
-  opacity: 0;
-  visibility: hidden;
+.cp-fila-valor {
+  flex: none;
+  font-variant-numeric: tabular-nums;
 }
-
-/* Ocultos hasta el reveal, sin mover el espacio; al aparecer, fundido (como los datos de "Por año"). */
-#cpPanel .cp-cabeza h2,
-#cpPanel .cp-paises,
-#cpPanel .cp-dato {
-  transition: opacity 0.6s ease 0.3s;
+/* Argentina se destaca con el rosa fuerte del sitio. */
+.cp-fila-arg {
+  color: var(--br-text);
+  font-weight: 700;
 }
-#cpPanel .cp-vacio {
-  opacity: 0;
-  visibility: hidden;
-  transition: none;
+.cp-fila-arg .cp-fila-relleno {
+  background: var(--br-rose-strong);
+  box-shadow: 0 0 10px var(--br-rose-glow);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  #cpPanel .em-prompt.cp-pista,
-  #cpPanel .cp-cabeza h2,
-  #cpPanel .cp-paises,
-  #cpPanel .cp-dato {
-    transition: none;
+.cp-fila-arg .cp-fila-valor {
+  color: var(--br-rose-strong);
+}
+/* Barra de años en una sola línea: "Año: 2023" a la izquierda, la barra a la derecha. */
+.br-year-ctl.cp-todos-anio {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
+}
+.cp-todos-anio .br-year-lbl {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .cp-fila {
+    grid-template-columns: 96px 1fr;
   }
 }
-.cp-chip-sel {
-  padding-right: 12px;
-  cursor: pointer;
-}
-.cp-select {
-  padding-right: 24px;
+@media (prefers-reduced-motion: reduce) {
+  .cp-ranking,
+  .cp-fila,
+  .cp-fila-relleno {
+    transition: none;
+  }
 }

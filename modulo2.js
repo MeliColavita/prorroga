@@ -606,6 +606,27 @@
       tooltip.classList.remove('visible');
     });
 
+    // Barra de años: la parte rosa llega hasta el año elegido (--br-fill, ver modulo2.css)
+
+    function pintarBarraAnio() {
+      const min = Number(sliderProv.min);
+      const max = Number(sliderProv.max);
+      const pct = ((Number(sliderProv.value) - min) / (max - min)) * 100;
+      sliderProv.style.setProperty('--br-fill', pct + '%');
+    }
+    pintarBarraAnio();
+    sliderProv.addEventListener('input', () => {
+      pintarBarraAnio();
+      sliderProv.classList.add('br-year-used');
+    });
+
+    const volverAMoverCirculito = () => sliderProv.classList.remove('br-year-used');
+    document.getElementById('brTabProvincia').addEventListener('click', volverAMoverCirculito);
+    const capitulo2 = document.getElementById('chapter-2');
+    new MutationObserver(() => {
+      if (!capitulo2.classList.contains('active')) volverAMoverCirculito();
+    }).observe(capitulo2, { attributes: true, attributeFilter: ['class'] });
+
     // ---------- Botón Cantidad / Porcentaje ----------
     // Cambia la vista del mapa (clase .br-mode-pct en el <svg>) y muestra u
     // oculta la referencia de colores.
@@ -1335,7 +1356,7 @@
         const ant = YEAR_DATA.find((d) => d.year === act.year - 1);
 
         let html =
-          '<strong>' + act.year + '</strong>' + fila('Por 100.000 mujeres', num(tasaDe(act), 2));
+          '<strong>' + act.year + '</strong>' + fila('Cada 100.000 mujeres', num(tasaDe(act), 2));
         if (ant) {
           const dif = tasaDe(act) - tasaDe(ant);
           const pct = (dif / tasaDe(ant)) * 100;

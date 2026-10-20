@@ -3,10 +3,10 @@
     "indicador": "Mortalidad por cáncer de mama (CIE-10 C50), mujeres",
     "unidad_tasas": "muertes por 100.000 mujeres",
     "tasa_ajustada": "Estandarización directa, población estándar mundial OMS (Ahmad et al., 2001), 18 grupos de edad (0-4 ... 85+)",
-    "edad_desconocida": "Las muertes sin edad se reparten proporcionalmente entre los grupos para la tasa ajustada; la tasa bruta usa el total",
-    "periodo": "2005-2024",
+    "edad_desconocida": "Las muertes sin edad registrada no se incluyen en las tasas ni en 'muertes'",
+    "periodo": "2005-2023",
     "fuente_defunciones": "WHO Mortality Database (actualización 23/02/2026)",
-    "fuente_poblacion": "UN World Population Prospects 2024 (población al 1 de julio; 2024 = proyección variante media)",
+    "fuente_poblacion": "UN World Population Prospects 2024, File POP/01-3: Female population by single age (población al 1 de julio, hoja Estimates)",
     "paises_sin_datos_en_el_periodo": [
       "Bolivia",
       "Haití"
@@ -42,155 +42,136 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 5361,
-          "muertes_edad_desconocida": 7,
-          "poblacion_femenina": 19975569,
-          "tasa_bruta": 26.84,
-          "tasa_ajustada": 21.6
+          "muertes": 5354,
+          "poblacion_femenina": 19874795,
+          "tasa_bruta": 26.94,
+          "tasa_ajustada": 21.76
         },
         {
           "anio": 2006,
-          "muertes": 5339,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 20173022,
-          "tasa_bruta": 26.47,
-          "tasa_ajustada": 21.06
+          "muertes": 5337,
+          "poblacion_femenina": 20074294,
+          "tasa_bruta": 26.59,
+          "tasa_ajustada": 21.23
         },
         {
           "anio": 2007,
-          "muertes": 5368,
-          "muertes_edad_desconocida": 6,
-          "poblacion_femenina": 20359954,
-          "tasa_bruta": 26.37,
-          "tasa_ajustada": 20.91
+          "muertes": 5362,
+          "poblacion_femenina": 20266487,
+          "tasa_bruta": 26.46,
+          "tasa_ajustada": 21.04
         },
         {
           "anio": 2008,
-          "muertes": 5181,
-          "muertes_edad_desconocida": 6,
-          "poblacion_femenina": 20568828,
-          "tasa_bruta": 25.19,
-          "tasa_ajustada": 19.83
+          "muertes": 5175,
+          "poblacion_femenina": 20464390,
+          "tasa_bruta": 25.29,
+          "tasa_ajustada": 19.97
         },
         {
           "anio": 2009,
-          "muertes": 5392,
-          "muertes_edad_desconocida": 14,
-          "poblacion_femenina": 20778189,
-          "tasa_bruta": 25.95,
-          "tasa_ajustada": 20.17
+          "muertes": 5378,
+          "poblacion_femenina": 20673510,
+          "tasa_bruta": 26.01,
+          "tasa_ajustada": 20.29
         },
         {
           "anio": 2010,
-          "muertes": 5451,
-          "muertes_edad_desconocida": 5,
-          "poblacion_femenina": 20989243,
-          "tasa_bruta": 25.97,
-          "tasa_ajustada": 20.05
+          "muertes": 5446,
+          "poblacion_femenina": 20883716,
+          "tasa_bruta": 26.08,
+          "tasa_ajustada": 20.19
         },
         {
           "anio": 2011,
-          "muertes": 5391,
-          "muertes_edad_desconocida": 9,
-          "poblacion_femenina": 21208778,
-          "tasa_bruta": 25.42,
-          "tasa_ajustada": 19.51
+          "muertes": 5382,
+          "poblacion_femenina": 21099010,
+          "tasa_bruta": 25.51,
+          "tasa_ajustada": 19.64
         },
         {
           "anio": 2012,
-          "muertes": 5499,
-          "muertes_edad_desconocida": 8,
-          "poblacion_femenina": 21405859,
-          "tasa_bruta": 25.69,
-          "tasa_ajustada": 19.69
+          "muertes": 5491,
+          "poblacion_femenina": 21307320,
+          "tasa_bruta": 25.77,
+          "tasa_ajustada": 19.81
         },
         {
           "anio": 2013,
-          "muertes": 5635,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 21608283,
-          "tasa_bruta": 26.08,
-          "tasa_ajustada": 19.79
+          "muertes": 5632,
+          "poblacion_femenina": 21507071,
+          "tasa_bruta": 26.19,
+          "tasa_ajustada": 19.92
         },
         {
           "anio": 2014,
-          "muertes": 5622,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 21828458,
-          "tasa_bruta": 25.76,
-          "tasa_ajustada": 19.42
+          "muertes": 5620,
+          "poblacion_femenina": 21718372,
+          "tasa_bruta": 25.88,
+          "tasa_ajustada": 19.57
         },
         {
           "anio": 2015,
-          "muertes": 5932,
-          "muertes_edad_desconocida": 15,
-          "poblacion_femenina": 22050162,
-          "tasa_bruta": 26.9,
-          "tasa_ajustada": 20.01
+          "muertes": 5917,
+          "poblacion_femenina": 21939311,
+          "tasa_bruta": 26.97,
+          "tasa_ajustada": 20.13
         },
         {
           "anio": 2016,
-          "muertes": 5851,
-          "muertes_edad_desconocida": 21,
-          "poblacion_femenina": 22244656,
-          "tasa_bruta": 26.3,
-          "tasa_ajustada": 19.63
+          "muertes": 5830,
+          "poblacion_femenina": 22147405,
+          "tasa_bruta": 26.32,
+          "tasa_ajustada": 19.71
         },
         {
           "anio": 2017,
-          "muertes": 6049,
-          "muertes_edad_desconocida": 25,
-          "poblacion_femenina": 22426826,
+          "muertes": 6024,
+          "poblacion_femenina": 22335740,
           "tasa_bruta": 26.97,
-          "tasa_ajustada": 19.93
+          "tasa_ajustada": 20.0
         },
         {
           "anio": 2018,
-          "muertes": 5740,
-          "muertes_edad_desconocida": 15,
-          "poblacion_femenina": 22597366,
-          "tasa_bruta": 25.4,
-          "tasa_ajustada": 18.8
+          "muertes": 5725,
+          "poblacion_femenina": 22512095,
+          "tasa_bruta": 25.43,
+          "tasa_ajustada": 18.9
         },
         {
           "anio": 2019,
-          "muertes": 5900,
-          "muertes_edad_desconocida": 26,
-          "poblacion_femenina": 22734138,
-          "tasa_bruta": 25.95,
-          "tasa_ajustada": 18.98
+          "muertes": 5874,
+          "poblacion_femenina": 22665754,
+          "tasa_bruta": 25.92,
+          "tasa_ajustada": 19.04
         },
         {
           "anio": 2020,
-          "muertes": 5594,
-          "muertes_edad_desconocida": 31,
-          "poblacion_femenina": 22810822,
-          "tasa_bruta": 24.52,
-          "tasa_ajustada": 17.91
+          "muertes": 5563,
+          "poblacion_femenina": 22772479,
+          "tasa_bruta": 24.43,
+          "tasa_ajustada": 17.93
         },
         {
           "anio": 2021,
-          "muertes": 5820,
-          "muertes_edad_desconocida": 12,
-          "poblacion_femenina": 22857511,
-          "tasa_bruta": 25.46,
-          "tasa_ajustada": 18.5
+          "muertes": 5808,
+          "poblacion_femenina": 22834167,
+          "tasa_bruta": 25.44,
+          "tasa_ajustada": 18.56
         },
         {
           "anio": 2022,
-          "muertes": 5768,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 22904039,
-          "tasa_bruta": 25.18,
-          "tasa_ajustada": 18.0
+          "muertes": 5764,
+          "poblacion_femenina": 22880776,
+          "tasa_bruta": 25.19,
+          "tasa_ajustada": 18.1
         },
         {
           "anio": 2023,
-          "muertes": 5840,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 22978794,
-          "tasa_bruta": 25.41,
-          "tasa_ajustada": 18.03
+          "muertes": 5838,
+          "poblacion_femenina": 22941416,
+          "tasa_bruta": 25.45,
+          "tasa_ajustada": 18.16
         }
       ]
     },
@@ -222,155 +203,136 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 10208,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 93637426,
-          "tasa_bruta": 10.9,
-          "tasa_ajustada": 12.71
+          "muertes": 10206,
+          "poblacion_femenina": 93116141,
+          "tasa_bruta": 10.96,
+          "tasa_ajustada": 12.94
         },
         {
           "anio": 2006,
-          "muertes": 10834,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 94650691,
-          "tasa_bruta": 11.45,
-          "tasa_ajustada": 13.03
+          "muertes": 10832,
+          "poblacion_femenina": 94144060,
+          "tasa_bruta": 11.51,
+          "tasa_ajustada": 13.27
         },
         {
           "anio": 2007,
-          "muertes": 11060,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 95628912,
-          "tasa_bruta": 11.57,
-          "tasa_ajustada": 12.83
+          "muertes": 11058,
+          "poblacion_femenina": 95139802,
+          "tasa_bruta": 11.62,
+          "tasa_ajustada": 13.07
         },
         {
           "anio": 2008,
-          "muertes": 11790,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 96560206,
-          "tasa_bruta": 12.21,
-          "tasa_ajustada": 13.17
+          "muertes": 11786,
+          "poblacion_femenina": 96094559,
+          "tasa_bruta": 12.27,
+          "tasa_ajustada": 13.41
         },
         {
           "anio": 2009,
-          "muertes": 11968,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 97437126,
-          "tasa_bruta": 12.28,
-          "tasa_ajustada": 12.9
+          "muertes": 11967,
+          "poblacion_femenina": 96998666,
+          "tasa_bruta": 12.34,
+          "tasa_ajustada": 13.13
         },
         {
           "anio": 2010,
           "muertes": 12705,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 98278014,
-          "tasa_bruta": 12.93,
-          "tasa_ajustada": 13.24
+          "poblacion_femenina": 97857569,
+          "tasa_bruta": 12.98,
+          "tasa_ajustada": 13.47
         },
         {
           "anio": 2011,
-          "muertes": 13225,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 99117316,
-          "tasa_bruta": 13.34,
-          "tasa_ajustada": 13.3
+          "muertes": 13223,
+          "poblacion_femenina": 98697665,
+          "tasa_bruta": 13.4,
+          "tasa_ajustada": 13.54
         },
         {
           "anio": 2012,
-          "muertes": 13591,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 99968363,
-          "tasa_bruta": 13.6,
-          "tasa_ajustada": 13.21
+          "muertes": 13590,
+          "poblacion_femenina": 99542841,
+          "tasa_bruta": 13.65,
+          "tasa_ajustada": 13.44
         },
         {
           "anio": 2013,
-          "muertes": 14206,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 100818054,
-          "tasa_bruta": 14.09,
-          "tasa_ajustada": 13.34
+          "muertes": 14204,
+          "poblacion_femenina": 100393208,
+          "tasa_bruta": 14.15,
+          "tasa_ajustada": 13.57
         },
         {
           "anio": 2014,
-          "muertes": 14622,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 101673066,
-          "tasa_bruta": 14.38,
-          "tasa_ajustada": 13.29
+          "muertes": 14621,
+          "poblacion_femenina": 101245561,
+          "tasa_bruta": 14.44,
+          "tasa_ajustada": 13.51
         },
         {
           "anio": 2015,
           "muertes": 15403,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 102503091,
-          "tasa_bruta": 15.03,
-          "tasa_ajustada": 13.55
+          "poblacion_femenina": 102088080,
+          "tasa_bruta": 15.09,
+          "tasa_ajustada": 13.77
         },
         {
           "anio": 2016,
-          "muertes": 16069,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 103313661,
-          "tasa_bruta": 15.55,
-          "tasa_ajustada": 13.71
+          "muertes": 16068,
+          "poblacion_femenina": 102908375,
+          "tasa_bruta": 15.61,
+          "tasa_ajustada": 13.92
         },
         {
           "anio": 2017,
-          "muertes": 16724,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 104089792,
-          "tasa_bruta": 16.07,
-          "tasa_ajustada": 13.83
+          "muertes": 16723,
+          "poblacion_femenina": 103701729,
+          "tasa_bruta": 16.13,
+          "tasa_ajustada": 14.04
         },
         {
           "anio": 2018,
           "muertes": 17572,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 104815684,
-          "tasa_bruta": 16.76,
-          "tasa_ajustada": 14.1
+          "poblacion_femenina": 104452738,
+          "tasa_bruta": 16.82,
+          "tasa_ajustada": 14.3
         },
         {
           "anio": 2019,
-          "muertes": 18068,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 105533771,
-          "tasa_bruta": 17.12,
-          "tasa_ajustada": 14.08
+          "muertes": 18065,
+          "poblacion_femenina": 105174726,
+          "tasa_bruta": 17.18,
+          "tasa_ajustada": 14.27
         },
         {
           "anio": 2020,
-          "muertes": 17825,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 106098968,
-          "tasa_bruta": 16.8,
-          "tasa_ajustada": 13.61
+          "muertes": 17823,
+          "poblacion_femenina": 105816367,
+          "tasa_bruta": 16.84,
+          "tasa_ajustada": 13.75
         },
         {
           "anio": 2021,
           "muertes": 18139,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 106528690,
-          "tasa_bruta": 17.03,
-          "tasa_ajustada": 13.49
+          "poblacion_femenina": 106313829,
+          "tasa_bruta": 17.06,
+          "tasa_ajustada": 13.65
         },
         {
           "anio": 2022,
           "muertes": 19103,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 106986270,
-          "tasa_bruta": 17.86,
-          "tasa_ajustada": 13.9
+          "poblacion_femenina": 106757480,
+          "tasa_bruta": 17.89,
+          "tasa_ajustada": 14.06
         },
         {
           "anio": 2023,
-          "muertes": 20165,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 107469066,
-          "tasa_bruta": 18.76,
-          "tasa_ajustada": 14.3
+          "muertes": 20164,
+          "poblacion_femenina": 107227667,
+          "tasa_bruta": 18.8,
+          "tasa_ajustada": 14.47
         }
       ]
     },
@@ -403,154 +365,135 @@
         {
           "anio": 2005,
           "muertes": 1169,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8259709,
-          "tasa_bruta": 14.15,
-          "tasa_ajustada": 12.19
+          "poblacion_femenina": 8218875,
+          "tasa_bruta": 14.22,
+          "tasa_ajustada": 12.39
         },
         {
           "anio": 2006,
           "muertes": 1145,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8340301,
-          "tasa_bruta": 13.73,
-          "tasa_ajustada": 11.59
+          "poblacion_femenina": 8300004,
+          "tasa_bruta": 13.8,
+          "tasa_ajustada": 11.77
         },
         {
           "anio": 2007,
           "muertes": 1123,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8423545,
-          "tasa_bruta": 13.33,
-          "tasa_ajustada": 10.99
+          "poblacion_femenina": 8381923,
+          "tasa_bruta": 13.4,
+          "tasa_ajustada": 11.16
         },
         {
           "anio": 2008,
           "muertes": 1184,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8508842,
-          "tasa_bruta": 13.91,
-          "tasa_ajustada": 11.3
+          "poblacion_femenina": 8466197,
+          "tasa_bruta": 13.99,
+          "tasa_ajustada": 11.46
         },
         {
           "anio": 2009,
           "muertes": 1338,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8594944,
-          "tasa_bruta": 15.57,
-          "tasa_ajustada": 12.32
+          "poblacion_femenina": 8551890,
+          "tasa_bruta": 15.65,
+          "tasa_ajustada": 12.5
         },
         {
           "anio": 2010,
           "muertes": 1297,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8681186,
-          "tasa_bruta": 14.94,
-          "tasa_ajustada": 11.7
+          "poblacion_femenina": 8638065,
+          "tasa_bruta": 15.01,
+          "tasa_ajustada": 11.87
         },
         {
           "anio": 2011,
           "muertes": 1347,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8765549,
-          "tasa_bruta": 15.37,
-          "tasa_ajustada": 11.65
+          "poblacion_femenina": 8723367,
+          "tasa_bruta": 15.44,
+          "tasa_ajustada": 11.81
         },
         {
           "anio": 2012,
           "muertes": 1367,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8848176,
-          "tasa_bruta": 15.45,
-          "tasa_ajustada": 11.46
+          "poblacion_femenina": 8806864,
+          "tasa_bruta": 15.52,
+          "tasa_ajustada": 11.61
         },
         {
           "anio": 2013,
           "muertes": 1389,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8933046,
-          "tasa_bruta": 15.55,
-          "tasa_ajustada": 11.51
+          "poblacion_femenina": 8890610,
+          "tasa_bruta": 15.62,
+          "tasa_ajustada": 11.65
         },
         {
           "anio": 2014,
           "muertes": 1422,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9025210,
-          "tasa_bruta": 15.76,
-          "tasa_ajustada": 11.35
+          "poblacion_femenina": 8979129,
+          "tasa_bruta": 15.84,
+          "tasa_ajustada": 11.49
         },
         {
           "anio": 2015,
           "muertes": 1511,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9117111,
-          "tasa_bruta": 16.57,
-          "tasa_ajustada": 11.76
+          "poblacion_femenina": 9071161,
+          "tasa_bruta": 16.66,
+          "tasa_ajustada": 11.91
         },
         {
           "anio": 2016,
           "muertes": 1490,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9245954,
-          "tasa_bruta": 16.12,
-          "tasa_ajustada": 11.37
+          "poblacion_femenina": 9181534,
+          "tasa_bruta": 16.23,
+          "tasa_ajustada": 11.52
         },
         {
           "anio": 2017,
           "muertes": 1504,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9409791,
-          "tasa_bruta": 15.98,
-          "tasa_ajustada": 11.08
+          "poblacion_femenina": 9327874,
+          "tasa_bruta": 16.12,
+          "tasa_ajustada": 11.24
         },
         {
           "anio": 2018,
           "muertes": 1552,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9581332,
-          "tasa_bruta": 16.2,
-          "tasa_ajustada": 11.07
+          "poblacion_femenina": 9495562,
+          "tasa_bruta": 16.34,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2019,
           "muertes": 1654,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9715841,
-          "tasa_bruta": 17.02,
-          "tasa_ajustada": 11.46
+          "poblacion_femenina": 9648587,
+          "tasa_bruta": 17.14,
+          "tasa_ajustada": 11.6
         },
         {
           "anio": 2020,
           "muertes": 1644,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9758930,
-          "tasa_bruta": 16.85,
-          "tasa_ajustada": 11.19
+          "poblacion_femenina": 9737386,
+          "tasa_bruta": 16.88,
+          "tasa_ajustada": 11.31
         },
         {
           "anio": 2021,
           "muertes": 1707,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9809004,
-          "tasa_bruta": 17.4,
-          "tasa_ajustada": 11.1
+          "poblacion_femenina": 9783968,
+          "tasa_bruta": 17.45,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2022,
           "muertes": 1705,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9861125,
-          "tasa_bruta": 17.29,
-          "tasa_ajustada": 11.03
+          "poblacion_femenina": 9835065,
+          "tasa_bruta": 17.34,
+          "tasa_ajustada": 11.14
         },
         {
           "anio": 2023,
           "muertes": 1789,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9916238,
-          "tasa_bruta": 18.04,
-          "tasa_ajustada": 11.34
+          "poblacion_femenina": 9888686,
+          "tasa_bruta": 18.09,
+          "tasa_ajustada": 11.47
         }
       ]
     },
@@ -583,154 +526,135 @@
         {
           "anio": 2005,
           "muertes": 1849,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 21394923,
-          "tasa_bruta": 8.64,
-          "tasa_ajustada": 10.93
+          "poblacion_femenina": 21248758,
+          "tasa_bruta": 8.7,
+          "tasa_ajustada": 11.14
         },
         {
           "anio": 2006,
           "muertes": 1910,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 21680806,
-          "tasa_bruta": 8.81,
-          "tasa_ajustada": 10.71
+          "poblacion_femenina": 21537866,
+          "tasa_bruta": 8.87,
+          "tasa_ajustada": 10.92
         },
         {
           "anio": 2007,
-          "muertes": 2114,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 21956168,
-          "tasa_bruta": 9.63,
-          "tasa_ajustada": 11.51
+          "muertes": 2110,
+          "poblacion_femenina": 21818486,
+          "tasa_bruta": 9.67,
+          "tasa_ajustada": 11.71
         },
         {
           "anio": 2008,
-          "muertes": 2067,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 22221401,
-          "tasa_bruta": 9.3,
-          "tasa_ajustada": 10.8
+          "muertes": 2065,
+          "poblacion_femenina": 22088784,
+          "tasa_bruta": 9.35,
+          "tasa_ajustada": 11.01
         },
         {
           "anio": 2009,
-          "muertes": 2242,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 22485141,
-          "tasa_bruta": 9.97,
-          "tasa_ajustada": 11.26
+          "muertes": 2239,
+          "poblacion_femenina": 22353273,
+          "tasa_bruta": 10.02,
+          "tasa_ajustada": 11.46
         },
         {
           "anio": 2010,
-          "muertes": 2394,
-          "muertes_edad_desconocida": 5,
-          "poblacion_femenina": 22742616,
-          "tasa_bruta": 10.53,
-          "tasa_ajustada": 11.61
+          "muertes": 2389,
+          "poblacion_femenina": 22613880,
+          "tasa_bruta": 10.56,
+          "tasa_ajustada": 11.8
         },
         {
           "anio": 2011,
           "muertes": 2319,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 22983016,
-          "tasa_bruta": 10.09,
-          "tasa_ajustada": 10.84
+          "poblacion_femenina": 22862818,
+          "tasa_bruta": 10.14,
+          "tasa_ajustada": 11.05
         },
         {
           "anio": 2012,
-          "muertes": 2489,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 23214681,
-          "tasa_bruta": 10.72,
-          "tasa_ajustada": 11.2
+          "muertes": 2488,
+          "poblacion_femenina": 23098848,
+          "tasa_bruta": 10.77,
+          "tasa_ajustada": 11.41
         },
         {
           "anio": 2013,
           "muertes": 2613,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 23434457,
-          "tasa_bruta": 11.15,
-          "tasa_ajustada": 11.38
+          "poblacion_femenina": 23324569,
+          "tasa_bruta": 11.2,
+          "tasa_ajustada": 11.59
         },
         {
           "anio": 2014,
           "muertes": 2773,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 23643538,
-          "tasa_bruta": 11.73,
-          "tasa_ajustada": 11.64
+          "poblacion_femenina": 23538998,
+          "tasa_bruta": 11.78,
+          "tasa_ajustada": 11.85
         },
         {
           "anio": 2015,
           "muertes": 2865,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 23853217,
-          "tasa_bruta": 12.01,
-          "tasa_ajustada": 11.65
+          "poblacion_femenina": 23748378,
+          "tasa_bruta": 12.06,
+          "tasa_ajustada": 11.85
         },
         {
           "anio": 2016,
           "muertes": 3157,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 24124393,
-          "tasa_bruta": 13.09,
-          "tasa_ajustada": 12.41
+          "poblacion_femenina": 23988806,
+          "tasa_bruta": 13.16,
+          "tasa_ajustada": 12.62
         },
         {
           "anio": 2017,
           "muertes": 3300,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 24559625,
-          "tasa_bruta": 13.44,
-          "tasa_ajustada": 12.5
+          "poblacion_femenina": 24342008,
+          "tasa_bruta": 13.56,
+          "tasa_ajustada": 12.73
         },
         {
           "anio": 2018,
           "muertes": 3428,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 25031046,
-          "tasa_bruta": 13.69,
-          "tasa_ajustada": 12.53
+          "poblacion_femenina": 24795336,
+          "tasa_bruta": 13.83,
+          "tasa_ajustada": 12.76
         },
         {
           "anio": 2019,
           "muertes": 3608,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 25456836,
-          "tasa_bruta": 14.17,
-          "tasa_ajustada": 12.72
+          "poblacion_femenina": 25243943,
+          "tasa_bruta": 14.29,
+          "tasa_ajustada": 12.95
         },
         {
           "anio": 2020,
           "muertes": 3671,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 25776958,
-          "tasa_bruta": 14.24,
-          "tasa_ajustada": 12.6
+          "poblacion_femenina": 25616899,
+          "tasa_bruta": 14.33,
+          "tasa_ajustada": 12.78
         },
         {
           "anio": 2021,
           "muertes": 3804,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 26052849,
-          "tasa_bruta": 14.6,
-          "tasa_ajustada": 12.67
+          "poblacion_femenina": 25914904,
+          "tasa_bruta": 14.68,
+          "tasa_ajustada": 12.83
         },
         {
           "anio": 2022,
           "muertes": 3757,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 26355653,
-          "tasa_bruta": 14.26,
-          "tasa_ajustada": 12.13
+          "poblacion_femenina": 26204251,
+          "tasa_bruta": 14.34,
+          "tasa_ajustada": 12.32
         },
         {
           "anio": 2023,
           "muertes": 3815,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 26649540,
-          "tasa_bruta": 14.32,
-          "tasa_ajustada": 11.91
+          "poblacion_femenina": 26502595,
+          "tasa_bruta": 14.39,
+          "tasa_ajustada": 12.11
         }
       ]
     },
@@ -763,154 +687,135 @@
         {
           "anio": 2005,
           "muertes": 210,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2163855,
-          "tasa_bruta": 9.7,
-          "tasa_ajustada": 10.77
+          "poblacion_femenina": 2148059,
+          "tasa_bruta": 9.78,
+          "tasa_ajustada": 10.99
         },
         {
           "anio": 2006,
           "muertes": 255,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2193920,
-          "tasa_bruta": 11.62,
-          "tasa_ajustada": 12.56
+          "poblacion_femenina": 2178887,
+          "tasa_bruta": 11.7,
+          "tasa_ajustada": 12.82
         },
         {
           "anio": 2007,
-          "muertes": 243,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 2224407,
-          "tasa_bruta": 10.92,
-          "tasa_ajustada": 11.47
+          "muertes": 242,
+          "poblacion_femenina": 2209164,
+          "tasa_bruta": 10.95,
+          "tasa_ajustada": 11.66
         },
         {
           "anio": 2008,
           "muertes": 262,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2255340,
-          "tasa_bruta": 11.62,
-          "tasa_ajustada": 11.85
+          "poblacion_femenina": 2239871,
+          "tasa_bruta": 11.7,
+          "tasa_ajustada": 12.1
         },
         {
           "anio": 2009,
           "muertes": 268,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2285664,
-          "tasa_bruta": 11.73,
-          "tasa_ajustada": 11.67
+          "poblacion_femenina": 2270504,
+          "tasa_bruta": 11.8,
+          "tasa_ajustada": 11.9
         },
         {
           "anio": 2010,
           "muertes": 296,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2312883,
-          "tasa_bruta": 12.8,
-          "tasa_ajustada": 12.44
+          "poblacion_femenina": 2299275,
+          "tasa_bruta": 12.87,
+          "tasa_ajustada": 12.68
         },
         {
           "anio": 2011,
           "muertes": 262,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2340644,
-          "tasa_bruta": 11.19,
-          "tasa_ajustada": 10.48
+          "poblacion_femenina": 2326761,
+          "tasa_bruta": 11.26,
+          "tasa_ajustada": 10.69
         },
         {
           "anio": 2012,
           "muertes": 283,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2367694,
-          "tasa_bruta": 11.95,
-          "tasa_ajustada": 11.02
+          "poblacion_femenina": 2354170,
+          "tasa_bruta": 12.02,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2013,
           "muertes": 342,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2393413,
-          "tasa_bruta": 14.29,
-          "tasa_ajustada": 12.88
+          "poblacion_femenina": 2380552,
+          "tasa_bruta": 14.37,
+          "tasa_ajustada": 13.11
         },
         {
           "anio": 2014,
           "muertes": 328,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2419315,
-          "tasa_bruta": 13.56,
-          "tasa_ajustada": 11.85
+          "poblacion_femenina": 2406363,
+          "tasa_bruta": 13.63,
+          "tasa_ajustada": 12.06
         },
         {
           "anio": 2015,
           "muertes": 315,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2445235,
-          "tasa_bruta": 12.88,
-          "tasa_ajustada": 11.02
+          "poblacion_femenina": 2432274,
+          "tasa_bruta": 12.95,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2016,
           "muertes": 327,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2469319,
-          "tasa_bruta": 13.24,
-          "tasa_ajustada": 10.98
+          "poblacion_femenina": 2457279,
+          "tasa_bruta": 13.31,
+          "tasa_ajustada": 11.17
         },
         {
           "anio": 2017,
           "muertes": 366,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2492352,
-          "tasa_bruta": 14.68,
-          "tasa_ajustada": 11.97
+          "poblacion_femenina": 2480836,
+          "tasa_bruta": 14.75,
+          "tasa_ajustada": 12.17
         },
         {
           "anio": 2018,
           "muertes": 346,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2515136,
-          "tasa_bruta": 13.76,
-          "tasa_ajustada": 10.94
+          "poblacion_femenina": 2503742,
+          "tasa_bruta": 13.82,
+          "tasa_ajustada": 11.11
         },
         {
           "anio": 2019,
           "muertes": 375,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2535374,
-          "tasa_bruta": 14.79,
-          "tasa_ajustada": 11.36
+          "poblacion_femenina": 2525255,
+          "tasa_bruta": 14.85,
+          "tasa_ajustada": 11.53
         },
         {
           "anio": 2020,
           "muertes": 424,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2551642,
-          "tasa_bruta": 16.62,
-          "tasa_ajustada": 12.46
+          "poblacion_femenina": 2543507,
+          "tasa_bruta": 16.67,
+          "tasa_ajustada": 12.66
         },
         {
           "anio": 2021,
           "muertes": 414,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2563634,
-          "tasa_bruta": 16.15,
-          "tasa_ajustada": 11.79
+          "poblacion_femenina": 2557636,
+          "tasa_bruta": 16.19,
+          "tasa_ajustada": 11.96
         },
         {
           "anio": 2022,
-          "muertes": 396,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 2575816,
+          "muertes": 395,
+          "poblacion_femenina": 2569725,
           "tasa_bruta": 15.37,
-          "tasa_ajustada": 10.96
+          "tasa_ajustada": 11.08
         },
         {
           "anio": 2023,
-          "muertes": 427,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 2588968,
-          "tasa_bruta": 16.49,
-          "tasa_ajustada": 11.44
+          "muertes": 426,
+          "poblacion_femenina": 2582392,
+          "tasa_bruta": 16.5,
+          "tasa_ajustada": 11.58
         }
       ]
     },
@@ -943,154 +848,135 @@
         {
           "anio": 2005,
           "muertes": 1208,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5644080,
-          "tasa_bruta": 21.4,
-          "tasa_ajustada": 15.77
+          "poblacion_femenina": 5636317,
+          "tasa_bruta": 21.43,
+          "tasa_ajustada": 15.95
         },
         {
           "anio": 2006,
           "muertes": 1216,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5655553,
-          "tasa_bruta": 21.5,
-          "tasa_ajustada": 15.59
+          "poblacion_femenina": 5649814,
+          "tasa_bruta": 21.52,
+          "tasa_ajustada": 15.76
         },
         {
           "anio": 2007,
           "muertes": 1326,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5663703,
-          "tasa_bruta": 23.41,
-          "tasa_ajustada": 16.46
+          "poblacion_femenina": 5659627,
+          "tasa_bruta": 23.43,
+          "tasa_ajustada": 16.63
         },
         {
           "anio": 2008,
           "muertes": 1368,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5670701,
-          "tasa_bruta": 24.12,
-          "tasa_ajustada": 16.59
+          "poblacion_femenina": 5667203,
+          "tasa_bruta": 24.14,
+          "tasa_ajustada": 16.78
         },
         {
           "anio": 2009,
           "muertes": 1415,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5677189,
-          "tasa_bruta": 24.92,
-          "tasa_ajustada": 16.84
+          "poblacion_femenina": 5673946,
+          "tasa_bruta": 24.94,
+          "tasa_ajustada": 17.0
         },
         {
           "anio": 2010,
           "muertes": 1470,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5683805,
-          "tasa_bruta": 25.86,
-          "tasa_ajustada": 16.92
+          "poblacion_femenina": 5680497,
+          "tasa_bruta": 25.88,
+          "tasa_ajustada": 17.09
         },
         {
           "anio": 2011,
           "muertes": 1390,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5691772,
-          "tasa_bruta": 24.42,
-          "tasa_ajustada": 15.93
+          "poblacion_femenina": 5687788,
+          "tasa_bruta": 24.44,
+          "tasa_ajustada": 16.07
         },
         {
           "anio": 2012,
           "muertes": 1527,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5691555,
+          "poblacion_femenina": 5691662,
           "tasa_bruta": 26.83,
-          "tasa_ajustada": 16.73
+          "tasa_ajustada": 16.9
         },
         {
           "anio": 2013,
           "muertes": 1445,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5688752,
-          "tasa_bruta": 25.4,
-          "tasa_ajustada": 15.55
+          "poblacion_femenina": 5690155,
+          "tasa_bruta": 25.39,
+          "tasa_ajustada": 15.7
         },
         {
           "anio": 2014,
           "muertes": 1541,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5681643,
-          "tasa_bruta": 27.12,
-          "tasa_ajustada": 16.4
+          "poblacion_femenina": 5685201,
+          "tasa_bruta": 27.11,
+          "tasa_ajustada": 16.53
         },
         {
           "anio": 2015,
           "muertes": 1557,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5681169,
+          "poblacion_femenina": 5681406,
           "tasa_bruta": 27.41,
-          "tasa_ajustada": 16.28
+          "tasa_ajustada": 16.43
         },
         {
           "anio": 2016,
           "muertes": 1527,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5676376,
-          "tasa_bruta": 26.9,
-          "tasa_ajustada": 15.56
+          "poblacion_femenina": 5678771,
+          "tasa_bruta": 26.89,
+          "tasa_ajustada": 15.69
         },
         {
           "anio": 2017,
           "muertes": 1519,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5668798,
-          "tasa_bruta": 26.8,
-          "tasa_ajustada": 14.94
+          "poblacion_femenina": 5672589,
+          "tasa_bruta": 26.78,
+          "tasa_ajustada": 15.07
         },
         {
           "anio": 2018,
           "muertes": 1595,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5661539,
-          "tasa_bruta": 28.17,
-          "tasa_ajustada": 15.63
+          "poblacion_femenina": 5665168,
+          "tasa_bruta": 28.15,
+          "tasa_ajustada": 15.76
         },
         {
           "anio": 2019,
-          "muertes": 1727,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 5650540,
-          "tasa_bruta": 30.56,
-          "tasa_ajustada": 16.48
+          "muertes": 1726,
+          "poblacion_femenina": 5656038,
+          "tasa_bruta": 30.52,
+          "tasa_ajustada": 16.61
         },
         {
           "anio": 2020,
           "muertes": 1714,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5641573,
-          "tasa_bruta": 30.38,
-          "tasa_ajustada": 16.13
+          "poblacion_femenina": 5646057,
+          "tasa_bruta": 30.36,
+          "tasa_ajustada": 16.25
         },
         {
           "anio": 2021,
           "muertes": 1909,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5607429,
-          "tasa_bruta": 34.04,
-          "tasa_ajustada": 17.99
+          "poblacion_femenina": 5624502,
+          "tasa_bruta": 33.94,
+          "tasa_ajustada": 18.02
         },
         {
           "anio": 2022,
           "muertes": 1761,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5589522,
-          "tasa_bruta": 31.51,
-          "tasa_ajustada": 16.39
+          "poblacion_femenina": 5598475,
+          "tasa_bruta": 31.45,
+          "tasa_ajustada": 16.52
         },
         {
           "anio": 2023,
-          "muertes": 1814,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 5572460,
-          "tasa_bruta": 32.55,
-          "tasa_ajustada": 16.58
+          "muertes": 1812,
+          "poblacion_femenina": 5580991,
+          "tasa_bruta": 32.47,
+          "tasa_ajustada": 16.68
         }
       ]
     },
@@ -1121,147 +1007,129 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 284,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 4644159,
-          "tasa_bruta": 6.12,
-          "tasa_ajustada": 8.31
+          "muertes": 283,
+          "poblacion_femenina": 4614334,
+          "tasa_bruta": 6.13,
+          "tasa_ajustada": 8.43
         },
         {
           "anio": 2006,
           "muertes": 286,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4701442,
-          "tasa_bruta": 6.08,
-          "tasa_ajustada": 8.25
+          "poblacion_femenina": 4672801,
+          "tasa_bruta": 6.12,
+          "tasa_ajustada": 8.39
         },
         {
           "anio": 2007,
-          "muertes": 250,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 4759264,
-          "tasa_bruta": 5.25,
-          "tasa_ajustada": 6.97
+          "muertes": 247,
+          "poblacion_femenina": 4730353,
+          "tasa_bruta": 5.22,
+          "tasa_ajustada": 7.0
         },
         {
           "anio": 2008,
           "muertes": 261,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4819866,
-          "tasa_bruta": 5.42,
-          "tasa_ajustada": 7.01
+          "poblacion_femenina": 4789564,
+          "tasa_bruta": 5.45,
+          "tasa_ajustada": 7.13
         },
         {
           "anio": 2009,
-          "muertes": 236,
-          "muertes_edad_desconocida": 9,
-          "poblacion_femenina": 4883155,
-          "tasa_bruta": 4.83,
-          "tasa_ajustada": 6.18
+          "muertes": 227,
+          "poblacion_femenina": 4851511,
+          "tasa_bruta": 4.68,
+          "tasa_ajustada": 6.04
         },
         {
           "anio": 2010,
           "muertes": 322,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4947489,
-          "tasa_bruta": 6.51,
-          "tasa_ajustada": 8.1
+          "poblacion_femenina": 4915323,
+          "tasa_bruta": 6.55,
+          "tasa_ajustada": 8.24
         },
         {
           "anio": 2011,
-          "muertes": 337,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 5012149,
-          "tasa_bruta": 6.72,
-          "tasa_ajustada": 8.21
+          "muertes": 336,
+          "poblacion_femenina": 4979819,
+          "tasa_bruta": 6.75,
+          "tasa_ajustada": 8.32
         },
         {
           "anio": 2012,
-          "muertes": 360,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 5076261,
-          "tasa_bruta": 7.09,
-          "tasa_ajustada": 8.41
+          "muertes": 356,
+          "poblacion_femenina": 5044206,
+          "tasa_bruta": 7.06,
+          "tasa_ajustada": 8.47
         },
         {
           "anio": 2013,
           "muertes": 442,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5139491,
-          "tasa_bruta": 8.6,
-          "tasa_ajustada": 10.07
+          "poblacion_femenina": 5107875,
+          "tasa_bruta": 8.65,
+          "tasa_ajustada": 10.24
         },
         {
           "anio": 2014,
-          "muertes": 396,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 5201538,
-          "tasa_bruta": 7.61,
-          "tasa_ajustada": 8.79
+          "muertes": 395,
+          "poblacion_femenina": 5170516,
+          "tasa_bruta": 7.64,
+          "tasa_ajustada": 8.92
         },
         {
           "anio": 2015,
           "muertes": 367,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5261841,
-          "tasa_bruta": 6.97,
-          "tasa_ajustada": 7.86
+          "poblacion_femenina": 5231690,
+          "tasa_bruta": 7.01,
+          "tasa_ajustada": 7.97
         },
         {
           "anio": 2016,
           "muertes": 387,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5321390,
-          "tasa_bruta": 7.27,
-          "tasa_ajustada": 8.03
+          "poblacion_femenina": 5291614,
+          "tasa_bruta": 7.31,
+          "tasa_ajustada": 8.15
         },
         {
           "anio": 2017,
           "muertes": 436,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5380619,
-          "tasa_bruta": 8.1,
-          "tasa_ajustada": 8.78
+          "poblacion_femenina": 5351006,
+          "tasa_bruta": 8.15,
+          "tasa_ajustada": 8.92
         },
         {
           "anio": 2018,
           "muertes": 406,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5439591,
-          "tasa_bruta": 7.46,
-          "tasa_ajustada": 7.91
+          "poblacion_femenina": 5410107,
+          "tasa_bruta": 7.5,
+          "tasa_ajustada": 8.03
         },
         {
           "anio": 2019,
-          "muertes": 455,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 5495655,
-          "tasa_bruta": 8.28,
-          "tasa_ajustada": 8.61
+          "muertes": 454,
+          "poblacion_femenina": 5467620,
+          "tasa_bruta": 8.3,
+          "tasa_ajustada": 8.71
         },
         {
           "anio": 2020,
           "muertes": 411,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5559059,
-          "tasa_bruta": 7.39,
-          "tasa_ajustada": 7.57
+          "poblacion_femenina": 5527357,
+          "tasa_bruta": 7.44,
+          "tasa_ajustada": 7.68
         },
         {
           "anio": 2021,
           "muertes": 507,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 5617434,
-          "tasa_bruta": 9.03,
-          "tasa_ajustada": 9.17
+          "poblacion_femenina": 5588249,
+          "tasa_bruta": 9.07,
+          "tasa_ajustada": 9.28
         },
         {
           "anio": 2022,
-          "muertes": 548,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 5671605,
-          "tasa_bruta": 9.66,
-          "tasa_ajustada": 9.65
+          "muertes": 547,
+          "poblacion_femenina": 5644521,
+          "tasa_bruta": 9.69,
+          "tasa_ajustada": 9.78
         }
       ]
     },
@@ -1287,170 +1155,142 @@
         2020,
         2021,
         2022,
-        2023,
-        2024
+        2023
       ],
       "advertencia": null,
       "serie": [
         {
           "anio": 2005,
           "muertes": 326,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 6985945,
-          "tasa_bruta": 4.67,
-          "tasa_ajustada": 6.11
+          "poblacion_femenina": 6925942,
+          "tasa_bruta": 4.71,
+          "tasa_ajustada": 6.22
         },
         {
           "anio": 2006,
           "muertes": 405,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7107580,
-          "tasa_bruta": 5.7,
-          "tasa_ajustada": 7.41
+          "poblacion_femenina": 7046764,
+          "tasa_bruta": 5.75,
+          "tasa_ajustada": 7.54
         },
         {
           "anio": 2007,
           "muertes": 352,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7230348,
-          "tasa_bruta": 4.87,
-          "tasa_ajustada": 6.22
+          "poblacion_femenina": 7168965,
+          "tasa_bruta": 4.91,
+          "tasa_ajustada": 6.33
         },
         {
           "anio": 2008,
           "muertes": 390,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7355844,
-          "tasa_bruta": 5.3,
-          "tasa_ajustada": 6.65
+          "poblacion_femenina": 7293098,
+          "tasa_bruta": 5.35,
+          "tasa_ajustada": 6.77
         },
         {
           "anio": 2009,
-          "muertes": 444,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 7482932,
-          "tasa_bruta": 5.93,
-          "tasa_ajustada": 7.33
+          "muertes": 443,
+          "poblacion_femenina": 7419389,
+          "tasa_bruta": 5.97,
+          "tasa_ajustada": 7.44
         },
         {
           "anio": 2010,
           "muertes": 470,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7608229,
-          "tasa_bruta": 6.18,
-          "tasa_ajustada": 7.46
+          "poblacion_femenina": 7545582,
+          "tasa_bruta": 6.23,
+          "tasa_ajustada": 7.59
         },
         {
           "anio": 2011,
           "muertes": 419,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7733702,
-          "tasa_bruta": 5.42,
-          "tasa_ajustada": 6.45
+          "poblacion_femenina": 7670969,
+          "tasa_bruta": 5.46,
+          "tasa_ajustada": 6.56
         },
         {
           "anio": 2012,
           "muertes": 513,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7854811,
-          "tasa_bruta": 6.53,
-          "tasa_ajustada": 7.65
+          "poblacion_femenina": 7794257,
+          "tasa_bruta": 6.58,
+          "tasa_ajustada": 7.77
         },
         {
           "anio": 2013,
           "muertes": 518,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7968618,
-          "tasa_bruta": 6.5,
-          "tasa_ajustada": 7.48
+          "poblacion_femenina": 7911713,
+          "tasa_bruta": 6.55,
+          "tasa_ajustada": 7.59
         },
         {
           "anio": 2014,
           "muertes": 520,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8082296,
-          "tasa_bruta": 6.43,
-          "tasa_ajustada": 7.25
+          "poblacion_femenina": 8025455,
+          "tasa_bruta": 6.48,
+          "tasa_ajustada": 7.36
         },
         {
           "anio": 2015,
           "muertes": 551,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8198960,
-          "tasa_bruta": 6.72,
-          "tasa_ajustada": 7.49
+          "poblacion_femenina": 8140630,
+          "tasa_bruta": 6.77,
+          "tasa_ajustada": 7.6
         },
         {
           "anio": 2016,
           "muertes": 638,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8320442,
-          "tasa_bruta": 7.67,
-          "tasa_ajustada": 8.38
+          "poblacion_femenina": 8259701,
+          "tasa_bruta": 7.72,
+          "tasa_ajustada": 8.52
         },
         {
           "anio": 2017,
           "muertes": 667,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8452761,
-          "tasa_bruta": 7.89,
-          "tasa_ajustada": 8.46
+          "poblacion_femenina": 8386600,
+          "tasa_bruta": 7.95,
+          "tasa_ajustada": 8.59
         },
         {
           "anio": 2018,
           "muertes": 729,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8611057,
-          "tasa_bruta": 8.47,
-          "tasa_ajustada": 8.89
+          "poblacion_femenina": 8531909,
+          "tasa_bruta": 8.54,
+          "tasa_ajustada": 9.05
         },
         {
           "anio": 2019,
           "muertes": 757,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8745268,
-          "tasa_bruta": 8.66,
-          "tasa_ajustada": 8.92
+          "poblacion_femenina": 8678161,
+          "tasa_bruta": 8.72,
+          "tasa_ajustada": 9.08
         },
         {
           "anio": 2020,
           "muertes": 736,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8826859,
-          "tasa_bruta": 8.34,
-          "tasa_ajustada": 8.51
+          "poblacion_femenina": 8786063,
+          "tasa_bruta": 8.38,
+          "tasa_ajustada": 8.62
         },
         {
           "anio": 2021,
           "muertes": 759,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8894913,
-          "tasa_bruta": 8.53,
-          "tasa_ajustada": 8.53
+          "poblacion_femenina": 8860886,
+          "tasa_bruta": 8.57,
+          "tasa_ajustada": 8.63
         },
         {
           "anio": 2022,
           "muertes": 748,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8975232,
-          "tasa_bruta": 8.33,
-          "tasa_ajustada": 8.13
+          "poblacion_femenina": 8935073,
+          "tasa_bruta": 8.37,
+          "tasa_ajustada": 8.25
         },
         {
           "anio": 2023,
           "muertes": 817,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9055033,
-          "tasa_bruta": 9.02,
-          "tasa_ajustada": 8.66
-        },
-        {
-          "anio": 2024,
-          "muertes": 831,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9133662,
-          "tasa_bruta": 9.1,
-          "tasa_ajustada": 8.57
+          "poblacion_femenina": 9015134,
+          "tasa_bruta": 9.06,
+          "tasa_ajustada": 8.79
         }
       ]
     },
@@ -1478,114 +1318,100 @@
         {
           "anio": 2005,
           "muertes": 109,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3135503,
+          "poblacion_femenina": 3133113,
           "tasa_bruta": 3.48,
-          "tasa_ajustada": 4.39
+          "tasa_ajustada": 4.45
         },
         {
           "anio": 2006,
           "muertes": 127,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3138783,
+          "poblacion_femenina": 3137145,
           "tasa_bruta": 4.05,
-          "tasa_ajustada": 4.95
+          "tasa_ajustada": 5.01
         },
         {
           "anio": 2007,
           "muertes": 145,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3149861,
-          "tasa_bruta": 4.6,
-          "tasa_ajustada": 5.55
+          "poblacion_femenina": 3144323,
+          "tasa_bruta": 4.61,
+          "tasa_ajustada": 5.6
         },
         {
           "anio": 2008,
           "muertes": 145,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3160345,
-          "tasa_bruta": 4.59,
-          "tasa_ajustada": 5.49
+          "poblacion_femenina": 3155103,
+          "tasa_bruta": 4.6,
+          "tasa_ajustada": 5.54
         },
         {
           "anio": 2009,
           "muertes": 134,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3170542,
+          "poblacion_femenina": 3165448,
           "tasa_bruta": 4.23,
-          "tasa_ajustada": 4.98
+          "tasa_ajustada": 5.02
         },
         {
           "anio": 2010,
           "muertes": 157,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3181663,
-          "tasa_bruta": 4.93,
-          "tasa_ajustada": 5.76
+          "poblacion_femenina": 3176103,
+          "tasa_bruta": 4.94,
+          "tasa_ajustada": 5.82
         },
         {
           "anio": 2011,
           "muertes": 140,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3193583,
-          "tasa_bruta": 4.38,
-          "tasa_ajustada": 5.01
+          "poblacion_femenina": 3187623,
+          "tasa_bruta": 4.39,
+          "tasa_ajustada": 5.06
         },
         {
           "anio": 2012,
           "muertes": 168,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3206651,
-          "tasa_bruta": 5.24,
-          "tasa_ajustada": 5.95
+          "poblacion_femenina": 3200118,
+          "tasa_bruta": 5.25,
+          "tasa_ajustada": 6.01
         },
         {
           "anio": 2013,
           "muertes": 189,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3220052,
-          "tasa_bruta": 5.87,
-          "tasa_ajustada": 6.49
+          "poblacion_femenina": 3213351,
+          "tasa_bruta": 5.88,
+          "tasa_ajustada": 6.56
         },
         {
           "anio": 2014,
           "muertes": 196,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3233053,
-          "tasa_bruta": 6.06,
-          "tasa_ajustada": 6.61
+          "poblacion_femenina": 3226553,
+          "tasa_bruta": 6.07,
+          "tasa_ajustada": 6.67
         },
         {
           "anio": 2015,
           "muertes": 149,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3243573,
-          "tasa_bruta": 4.59,
-          "tasa_ajustada": 4.88
+          "poblacion_femenina": 3238313,
+          "tasa_bruta": 4.6,
+          "tasa_ajustada": 4.93
         },
         {
           "anio": 2016,
           "muertes": 190,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3253576,
-          "tasa_bruta": 5.84,
-          "tasa_ajustada": 6.17
+          "poblacion_femenina": 3248574,
+          "tasa_bruta": 5.85,
+          "tasa_ajustada": 6.24
         },
         {
           "anio": 2017,
           "muertes": 217,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3260042,
+          "poblacion_femenina": 3256812,
           "tasa_bruta": 6.66,
-          "tasa_ajustada": 6.92
+          "tasa_ajustada": 6.99
         },
         {
           "anio": 2018,
           "muertes": 176,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3263294,
-          "tasa_bruta": 5.39,
-          "tasa_ajustada": 5.46
+          "poblacion_femenina": 3261669,
+          "tasa_bruta": 5.4,
+          "tasa_ajustada": 5.51
         }
       ]
     },
@@ -1618,154 +1444,135 @@
         {
           "anio": 2005,
           "muertes": 166,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 6652722,
-          "tasa_bruta": 2.5,
-          "tasa_ajustada": 4.6
+          "poblacion_femenina": 6582500,
+          "tasa_bruta": 2.52,
+          "tasa_ajustada": 4.68
         },
         {
           "anio": 2006,
           "muertes": 190,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 6796943,
-          "tasa_bruta": 2.8,
-          "tasa_ajustada": 5.1
+          "poblacion_femenina": 6724832,
+          "tasa_bruta": 2.83,
+          "tasa_ajustada": 5.19
         },
         {
           "anio": 2007,
           "muertes": 140,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 6942074,
-          "tasa_bruta": 2.02,
-          "tasa_ajustada": 3.69
+          "poblacion_femenina": 6869510,
+          "tasa_bruta": 2.04,
+          "tasa_ajustada": 3.76
         },
         {
           "anio": 2008,
           "muertes": 197,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7084697,
-          "tasa_bruta": 2.78,
-          "tasa_ajustada": 4.95
+          "poblacion_femenina": 7013384,
+          "tasa_bruta": 2.81,
+          "tasa_ajustada": 5.04
         },
         {
           "anio": 2009,
           "muertes": 216,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7227068,
-          "tasa_bruta": 2.99,
-          "tasa_ajustada": 5.37
+          "poblacion_femenina": 7155881,
+          "tasa_bruta": 3.02,
+          "tasa_ajustada": 5.46
         },
         {
           "anio": 2010,
-          "muertes": 240,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 7373379,
-          "tasa_bruta": 3.25,
-          "tasa_ajustada": 5.77
+          "muertes": 238,
+          "poblacion_femenina": 7300225,
+          "tasa_bruta": 3.26,
+          "tasa_ajustada": 5.82
         },
         {
           "anio": 2011,
           "muertes": 233,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7522664,
-          "tasa_bruta": 3.1,
-          "tasa_ajustada": 5.3
+          "poblacion_femenina": 7448022,
+          "tasa_bruta": 3.13,
+          "tasa_ajustada": 5.39
         },
         {
           "anio": 2012,
           "muertes": 284,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7674040,
-          "tasa_bruta": 3.7,
-          "tasa_ajustada": 6.23
+          "poblacion_femenina": 7598349,
+          "tasa_bruta": 3.74,
+          "tasa_ajustada": 6.34
         },
         {
           "anio": 2013,
           "muertes": 313,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7823310,
-          "tasa_bruta": 4.0,
-          "tasa_ajustada": 6.72
+          "poblacion_femenina": 7748675,
+          "tasa_bruta": 4.04,
+          "tasa_ajustada": 6.83
         },
         {
           "anio": 2014,
           "muertes": 284,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 7971269,
-          "tasa_bruta": 3.56,
-          "tasa_ajustada": 5.78
+          "poblacion_femenina": 7897291,
+          "tasa_bruta": 3.6,
+          "tasa_ajustada": 5.88
         },
         {
           "anio": 2015,
           "muertes": 356,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8116060,
-          "tasa_bruta": 4.39,
-          "tasa_ajustada": 7.02
+          "poblacion_femenina": 8043665,
+          "tasa_bruta": 4.43,
+          "tasa_ajustada": 7.13
         },
         {
           "anio": 2016,
           "muertes": 328,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8270906,
-          "tasa_bruta": 3.97,
-          "tasa_ajustada": 6.32
+          "poblacion_femenina": 8193481,
+          "tasa_bruta": 4.0,
+          "tasa_ajustada": 6.43
         },
         {
           "anio": 2017,
-          "muertes": 360,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 8417052,
-          "tasa_bruta": 4.28,
-          "tasa_ajustada": 6.8
+          "muertes": 359,
+          "poblacion_femenina": 8343984,
+          "tasa_bruta": 4.3,
+          "tasa_ajustada": 6.89
         },
         {
           "anio": 2018,
           "muertes": 376,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8551019,
-          "tasa_bruta": 4.4,
-          "tasa_ajustada": 6.8
+          "poblacion_femenina": 8484035,
+          "tasa_bruta": 4.43,
+          "tasa_ajustada": 6.91
         },
         {
           "anio": 2019,
-          "muertes": 357,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 8676827,
-          "tasa_bruta": 4.11,
-          "tasa_ajustada": 6.32
+          "muertes": 356,
+          "poblacion_femenina": 8613923,
+          "tasa_bruta": 4.13,
+          "tasa_ajustada": 6.4
         },
         {
           "anio": 2020,
           "muertes": 390,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8809836,
-          "tasa_bruta": 4.43,
-          "tasa_ajustada": 6.66
+          "poblacion_femenina": 8743331,
+          "tasa_bruta": 4.46,
+          "tasa_ajustada": 6.75
         },
         {
           "anio": 2021,
           "muertes": 405,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 8927416,
-          "tasa_bruta": 4.54,
-          "tasa_ajustada": 6.82
+          "poblacion_femenina": 8868625,
+          "tasa_bruta": 4.57,
+          "tasa_ajustada": 6.88
         },
         {
           "anio": 2022,
           "muertes": 401,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9065399,
-          "tasa_bruta": 4.42,
-          "tasa_ajustada": 6.52
+          "poblacion_femenina": 8996409,
+          "tasa_bruta": 4.46,
+          "tasa_ajustada": 6.63
         },
         {
           "anio": 2023,
           "muertes": 420,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 9206252,
-          "tasa_bruta": 4.56,
-          "tasa_ajustada": 6.6
+          "poblacion_femenina": 9135824,
+          "tasa_bruta": 4.6,
+          "tasa_ajustada": 6.72
         }
       ]
     },
@@ -1785,50 +1592,44 @@
         {
           "anio": 2008,
           "muertes": 16,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4015883,
+          "poblacion_femenina": 3971936,
           "tasa_bruta": 0.4,
-          "tasa_ajustada": 0.72
+          "tasa_ajustada": 0.74
         },
         {
           "anio": 2009,
           "muertes": 21,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4103550,
-          "tasa_bruta": 0.51,
-          "tasa_ajustada": 0.91
+          "poblacion_femenina": 4059716,
+          "tasa_bruta": 0.52,
+          "tasa_ajustada": 0.92
         },
         {
           "anio": 2010,
           "muertes": 13,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4190241,
+          "poblacion_femenina": 4146895,
           "tasa_bruta": 0.31,
-          "tasa_ajustada": 0.57
+          "tasa_ajustada": 0.58
         },
         {
           "anio": 2011,
           "muertes": 17,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4276822,
+          "poblacion_femenina": 4233533,
           "tasa_bruta": 0.4,
-          "tasa_ajustada": 0.64
+          "tasa_ajustada": 0.65
         },
         {
           "anio": 2012,
           "muertes": 14,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4363467,
+          "poblacion_femenina": 4320143,
           "tasa_bruta": 0.32,
-          "tasa_ajustada": 0.51
+          "tasa_ajustada": 0.52
         },
         {
           "anio": 2013,
           "muertes": 17,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 4449920,
-          "tasa_bruta": 0.38,
-          "tasa_ajustada": 0.62
+          "poblacion_femenina": 4406693,
+          "tasa_bruta": 0.39,
+          "tasa_ajustada": 0.63
         }
       ]
     },
@@ -1860,155 +1661,136 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 4220,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 54514226,
-          "tasa_bruta": 7.74,
-          "tasa_ajustada": 9.9
+          "muertes": 4216,
+          "poblacion_femenina": 54151769,
+          "tasa_bruta": 7.79,
+          "tasa_ajustada": 10.06
         },
         {
           "anio": 2006,
-          "muertes": 4451,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 55256936,
-          "tasa_bruta": 8.06,
-          "tasa_ajustada": 10.11
+          "muertes": 4449,
+          "poblacion_femenina": 54885580,
+          "tasa_bruta": 8.11,
+          "tasa_ajustada": 10.28
         },
         {
           "anio": 2007,
-          "muertes": 4518,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 56054214,
-          "tasa_bruta": 8.06,
-          "tasa_ajustada": 9.95
+          "muertes": 4514,
+          "poblacion_femenina": 55655575,
+          "tasa_bruta": 8.11,
+          "tasa_ajustada": 10.1
         },
         {
           "anio": 2008,
-          "muertes": 4840,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 56872399,
-          "tasa_bruta": 8.51,
-          "tasa_ajustada": 10.38
+          "muertes": 4837,
+          "poblacion_femenina": 56463305,
+          "tasa_bruta": 8.57,
+          "tasa_ajustada": 10.53
         },
         {
           "anio": 2009,
-          "muertes": 4805,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 57697571,
-          "tasa_bruta": 8.33,
-          "tasa_ajustada": 9.99
+          "muertes": 4803,
+          "poblacion_femenina": 57284983,
+          "tasa_bruta": 8.38,
+          "tasa_ajustada": 10.14
         },
         {
           "anio": 2010,
-          "muertes": 4969,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 58523829,
-          "tasa_bruta": 8.49,
-          "tasa_ajustada": 10.03
+          "muertes": 4966,
+          "poblacion_femenina": 58110702,
+          "tasa_bruta": 8.55,
+          "tasa_ajustada": 10.18
         },
         {
           "anio": 2011,
-          "muertes": 5148,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 59353029,
-          "tasa_bruta": 8.67,
-          "tasa_ajustada": 10.08
+          "muertes": 5147,
+          "poblacion_femenina": 58938429,
+          "tasa_bruta": 8.73,
+          "tasa_ajustada": 10.24
         },
         {
           "anio": 2012,
-          "muertes": 5526,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 60150750,
-          "tasa_bruta": 9.19,
-          "tasa_ajustada": 10.5
+          "muertes": 5525,
+          "poblacion_femenina": 59751892,
+          "tasa_bruta": 9.25,
+          "tasa_ajustada": 10.66
         },
         {
           "anio": 2013,
-          "muertes": 5338,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 60943882,
-          "tasa_bruta": 8.76,
-          "tasa_ajustada": 9.85
+          "muertes": 5337,
+          "poblacion_femenina": 60547314,
+          "tasa_bruta": 8.81,
+          "tasa_ajustada": 10.0
         },
         {
           "anio": 2014,
           "muertes": 5895,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 61671967,
-          "tasa_bruta": 9.56,
-          "tasa_ajustada": 10.53
+          "poblacion_femenina": 61307925,
+          "tasa_bruta": 9.62,
+          "tasa_ajustada": 10.69
         },
         {
           "anio": 2015,
-          "muertes": 6169,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 62340622,
-          "tasa_bruta": 9.9,
-          "tasa_ajustada": 10.73
+          "muertes": 6168,
+          "poblacion_femenina": 62006294,
+          "tasa_bruta": 9.95,
+          "tasa_ajustada": 10.89
         },
         {
           "anio": 2016,
           "muertes": 6548,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 62975801,
-          "tasa_bruta": 10.4,
-          "tasa_ajustada": 11.05
+          "poblacion_femenina": 62658213,
+          "tasa_bruta": 10.45,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2017,
-          "muertes": 6756,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 63609664,
-          "tasa_bruta": 10.62,
-          "tasa_ajustada": 11.06
+          "muertes": 6755,
+          "poblacion_femenina": 63292733,
+          "tasa_bruta": 10.67,
+          "tasa_ajustada": 11.22
         },
         {
           "anio": 2018,
           "muertes": 7105,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 64255684,
-          "tasa_bruta": 11.06,
-          "tasa_ajustada": 11.28
+          "poblacion_femenina": 63932673,
+          "tasa_bruta": 11.11,
+          "tasa_ajustada": 11.45
         },
         {
           "anio": 2019,
           "muertes": 7371,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 64901303,
-          "tasa_bruta": 11.36,
-          "tasa_ajustada": 11.36
+          "poblacion_femenina": 64578494,
+          "tasa_bruta": 11.41,
+          "tasa_ajustada": 11.53
         },
         {
           "anio": 2020,
           "muertes": 7685,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 65425855,
-          "tasa_bruta": 11.75,
-          "tasa_ajustada": 11.58
+          "poblacion_femenina": 65163577,
+          "tasa_bruta": 11.79,
+          "tasa_ajustada": 11.71
         },
         {
           "anio": 2021,
-          "muertes": 7688,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 65910854,
-          "tasa_bruta": 11.66,
-          "tasa_ajustada": 11.35
+          "muertes": 7687,
+          "poblacion_femenina": 65668354,
+          "tasa_bruta": 11.71,
+          "tasa_ajustada": 11.46
         },
         {
           "anio": 2022,
-          "muertes": 7625,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 66511938,
-          "tasa_bruta": 11.46,
-          "tasa_ajustada": 10.93
+          "muertes": 7624,
+          "poblacion_femenina": 66211398,
+          "tasa_bruta": 11.51,
+          "tasa_ajustada": 11.09
         },
         {
           "anio": 2023,
           "muertes": 7792,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 67115317,
-          "tasa_bruta": 11.61,
-          "tasa_ajustada": 10.84
+          "poblacion_femenina": 66813628,
+          "tasa_bruta": 11.66,
+          "tasa_ajustada": 11.01
         }
       ]
     },
@@ -2040,146 +1822,128 @@
         {
           "anio": 2005,
           "muertes": 94,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2740090,
-          "tasa_bruta": 3.43,
-          "tasa_ajustada": 5.77
+          "poblacion_femenina": 2720774,
+          "tasa_bruta": 3.45,
+          "tasa_ajustada": 5.88
         },
         {
           "anio": 2006,
           "muertes": 96,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2779413,
-          "tasa_bruta": 3.45,
-          "tasa_ajustada": 5.46
+          "poblacion_femenina": 2759751,
+          "tasa_bruta": 3.48,
+          "tasa_ajustada": 5.55
         },
         {
           "anio": 2007,
           "muertes": 111,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2819292,
-          "tasa_bruta": 3.94,
-          "tasa_ajustada": 6.12
+          "poblacion_femenina": 2799353,
+          "tasa_bruta": 3.97,
+          "tasa_ajustada": 6.22
         },
         {
           "anio": 2008,
           "muertes": 126,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2859504,
-          "tasa_bruta": 4.41,
-          "tasa_ajustada": 7.0
+          "poblacion_femenina": 2839398,
+          "tasa_bruta": 4.44,
+          "tasa_ajustada": 7.13
         },
         {
           "anio": 2009,
           "muertes": 151,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2900053,
-          "tasa_bruta": 5.21,
-          "tasa_ajustada": 8.21
+          "poblacion_femenina": 2879776,
+          "tasa_bruta": 5.24,
+          "tasa_ajustada": 8.34
         },
         {
           "anio": 2010,
           "muertes": 131,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2941074,
-          "tasa_bruta": 4.45,
-          "tasa_ajustada": 6.7
+          "poblacion_femenina": 2920564,
+          "tasa_bruta": 4.49,
+          "tasa_ajustada": 6.81
         },
         {
           "anio": 2011,
           "muertes": 165,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2982350,
-          "tasa_bruta": 5.53,
-          "tasa_ajustada": 8.28
+          "poblacion_femenina": 2961712,
+          "tasa_bruta": 5.57,
+          "tasa_ajustada": 8.42
         },
         {
           "anio": 2012,
           "muertes": 145,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3024009,
-          "tasa_bruta": 4.79,
-          "tasa_ajustada": 6.9
+          "poblacion_femenina": 3003179,
+          "tasa_bruta": 4.83,
+          "tasa_ajustada": 7.01
         },
         {
           "anio": 2013,
           "muertes": 170,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3065591,
-          "tasa_bruta": 5.55,
-          "tasa_ajustada": 7.86
+          "poblacion_femenina": 3044799,
+          "tasa_bruta": 5.58,
+          "tasa_ajustada": 7.99
         },
         {
           "anio": 2014,
           "muertes": 186,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3107187,
-          "tasa_bruta": 5.99,
-          "tasa_ajustada": 8.51
+          "poblacion_femenina": 3086390,
+          "tasa_bruta": 6.03,
+          "tasa_ajustada": 8.65
         },
         {
           "anio": 2015,
           "muertes": 197,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3148853,
-          "tasa_bruta": 6.26,
-          "tasa_ajustada": 8.64
+          "poblacion_femenina": 3128021,
+          "tasa_bruta": 6.3,
+          "tasa_ajustada": 8.78
         },
         {
           "anio": 2016,
           "muertes": 211,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3190697,
-          "tasa_bruta": 6.61,
-          "tasa_ajustada": 8.89
+          "poblacion_femenina": 3169774,
+          "tasa_bruta": 6.66,
+          "tasa_ajustada": 9.02
         },
         {
           "anio": 2017,
           "muertes": 202,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3232547,
-          "tasa_bruta": 6.25,
-          "tasa_ajustada": 8.39
+          "poblacion_femenina": 3211621,
+          "tasa_bruta": 6.29,
+          "tasa_ajustada": 8.53
         },
         {
           "anio": 2018,
           "muertes": 216,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3274830,
-          "tasa_bruta": 6.6,
-          "tasa_ajustada": 8.63
+          "poblacion_femenina": 3253688,
+          "tasa_bruta": 6.64,
+          "tasa_ajustada": 8.77
         },
         {
           "anio": 2019,
           "muertes": 209,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3316557,
-          "tasa_bruta": 6.3,
-          "tasa_ajustada": 8.0
+          "poblacion_femenina": 3295693,
+          "tasa_bruta": 6.34,
+          "tasa_ajustada": 8.13
         },
         {
           "anio": 2020,
           "muertes": 251,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3357982,
-          "tasa_bruta": 7.47,
-          "tasa_ajustada": 9.47
+          "poblacion_femenina": 3337271,
+          "tasa_bruta": 7.52,
+          "tasa_ajustada": 9.58
         },
         {
           "anio": 2021,
           "muertes": 289,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3398446,
-          "tasa_bruta": 8.5,
-          "tasa_ajustada": 10.47
+          "poblacion_femenina": 3378214,
+          "tasa_bruta": 8.55,
+          "tasa_ajustada": 10.6
         },
         {
           "anio": 2022,
           "muertes": 248,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3444837,
-          "tasa_bruta": 7.2,
-          "tasa_ajustada": 8.78
+          "poblacion_femenina": 3421641,
+          "tasa_bruta": 7.25,
+          "tasa_ajustada": 8.93
         }
       ]
     },
@@ -2211,146 +1975,128 @@
         {
           "anio": 2005,
           "muertes": 132,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1665209,
-          "tasa_bruta": 7.93,
-          "tasa_ajustada": 9.87
+          "poblacion_femenina": 1649617,
+          "tasa_bruta": 8.0,
+          "tasa_ajustada": 10.07
         },
         {
           "anio": 2006,
           "muertes": 134,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1696574,
-          "tasa_bruta": 7.9,
-          "tasa_ajustada": 9.75
+          "poblacion_femenina": 1680892,
+          "tasa_bruta": 7.97,
+          "tasa_ajustada": 9.96
         },
         {
           "anio": 2007,
           "muertes": 151,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1728315,
-          "tasa_bruta": 8.74,
-          "tasa_ajustada": 10.27
+          "poblacion_femenina": 1712443,
+          "tasa_bruta": 8.82,
+          "tasa_ajustada": 10.48
         },
         {
           "anio": 2008,
           "muertes": 169,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1760488,
-          "tasa_bruta": 9.6,
-          "tasa_ajustada": 11.22
+          "poblacion_femenina": 1744402,
+          "tasa_bruta": 9.69,
+          "tasa_ajustada": 11.46
         },
         {
           "anio": 2009,
           "muertes": 166,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1792934,
-          "tasa_bruta": 9.26,
-          "tasa_ajustada": 10.44
+          "poblacion_femenina": 1776711,
+          "tasa_bruta": 9.34,
+          "tasa_ajustada": 10.65
         },
         {
           "anio": 2010,
           "muertes": 173,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1825583,
-          "tasa_bruta": 9.48,
-          "tasa_ajustada": 10.63
+          "poblacion_femenina": 1809257,
+          "tasa_bruta": 9.56,
+          "tasa_ajustada": 10.85
         },
         {
           "anio": 2011,
           "muertes": 193,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1858826,
-          "tasa_bruta": 10.38,
-          "tasa_ajustada": 11.36
+          "poblacion_femenina": 1842204,
+          "tasa_bruta": 10.48,
+          "tasa_ajustada": 11.58
         },
         {
           "anio": 2012,
-          "muertes": 204,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 1892191,
-          "tasa_bruta": 10.78,
-          "tasa_ajustada": 11.44
+          "muertes": 203,
+          "poblacion_femenina": 1875506,
+          "tasa_bruta": 10.82,
+          "tasa_ajustada": 11.6
         },
         {
           "anio": 2013,
           "muertes": 217,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1925549,
-          "tasa_bruta": 11.27,
-          "tasa_ajustada": 11.76
+          "poblacion_femenina": 1908871,
+          "tasa_bruta": 11.37,
+          "tasa_ajustada": 11.98
         },
         {
           "anio": 2014,
           "muertes": 212,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1959493,
-          "tasa_bruta": 10.82,
-          "tasa_ajustada": 11.18
+          "poblacion_femenina": 1942524,
+          "tasa_bruta": 10.91,
+          "tasa_ajustada": 11.39
         },
         {
           "anio": 2015,
           "muertes": 211,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1993839,
-          "tasa_bruta": 10.58,
-          "tasa_ajustada": 10.73
+          "poblacion_femenina": 1976666,
+          "tasa_bruta": 10.67,
+          "tasa_ajustada": 10.92
         },
         {
           "anio": 2016,
           "muertes": 228,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2028755,
-          "tasa_bruta": 11.24,
-          "tasa_ajustada": 11.17
+          "poblacion_femenina": 2011297,
+          "tasa_bruta": 11.34,
+          "tasa_ajustada": 11.37
         },
         {
           "anio": 2017,
           "muertes": 241,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2063627,
-          "tasa_bruta": 11.68,
-          "tasa_ajustada": 11.3
+          "poblacion_femenina": 2046189,
+          "tasa_bruta": 11.78,
+          "tasa_ajustada": 11.5
         },
         {
           "anio": 2018,
           "muertes": 238,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2098165,
-          "tasa_bruta": 11.34,
-          "tasa_ajustada": 10.78
+          "poblacion_femenina": 2080897,
+          "tasa_bruta": 11.44,
+          "tasa_ajustada": 10.97
         },
         {
           "anio": 2019,
-          "muertes": 265,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 2130950,
-          "tasa_bruta": 12.44,
-          "tasa_ajustada": 11.53
+          "muertes": 264,
+          "poblacion_femenina": 2114556,
+          "tasa_bruta": 12.48,
+          "tasa_ajustada": 11.7
         },
         {
           "anio": 2021,
           "muertes": 279,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2184793,
-          "tasa_bruta": 12.77,
-          "tasa_ajustada": 11.47
+          "poblacion_femenina": 2171403,
+          "tasa_bruta": 12.85,
+          "tasa_ajustada": 11.65
         },
         {
           "anio": 2022,
           "muertes": 296,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2214356,
-          "tasa_bruta": 13.37,
-          "tasa_ajustada": 11.97
+          "poblacion_femenina": 2199575,
+          "tasa_bruta": 13.46,
+          "tasa_ajustada": 12.16
         },
         {
           "anio": 2023,
           "muertes": 301,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2243417,
-          "tasa_bruta": 13.42,
-          "tasa_ajustada": 11.43
+          "poblacion_femenina": 2228883,
+          "tasa_bruta": 13.5,
+          "tasa_ajustada": 11.62
         }
       ]
     },
@@ -2381,147 +2127,129 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 251,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 2712907,
-          "tasa_bruta": 9.25,
-          "tasa_ajustada": 14.39
+          "muertes": 250,
+          "poblacion_femenina": 2697991,
+          "tasa_bruta": 9.27,
+          "tasa_ajustada": 14.57
         },
         {
           "anio": 2006,
-          "muertes": 280,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 2741009,
-          "tasa_bruta": 10.22,
-          "tasa_ajustada": 15.06
+          "muertes": 278,
+          "poblacion_femenina": 2726959,
+          "tasa_bruta": 10.19,
+          "tasa_ajustada": 15.19
         },
         {
           "anio": 2007,
           "muertes": 257,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2768220,
-          "tasa_bruta": 9.28,
-          "tasa_ajustada": 13.68
+          "poblacion_femenina": 2754615,
+          "tasa_bruta": 9.33,
+          "tasa_ajustada": 13.93
         },
         {
           "anio": 2008,
           "muertes": 277,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2796435,
-          "tasa_bruta": 9.91,
-          "tasa_ajustada": 14.1
+          "poblacion_femenina": 2782327,
+          "tasa_bruta": 9.96,
+          "tasa_ajustada": 14.32
         },
         {
           "anio": 2009,
           "muertes": 283,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2827201,
-          "tasa_bruta": 10.01,
-          "tasa_ajustada": 13.73
+          "poblacion_femenina": 2811816,
+          "tasa_bruta": 10.06,
+          "tasa_ajustada": 13.96
         },
         {
           "anio": 2010,
           "muertes": 269,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2864400,
-          "tasa_bruta": 9.39,
-          "tasa_ajustada": 12.92
+          "poblacion_femenina": 2845799,
+          "tasa_bruta": 9.45,
+          "tasa_ajustada": 13.14
         },
         {
           "anio": 2011,
           "muertes": 344,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2904933,
-          "tasa_bruta": 11.84,
-          "tasa_ajustada": 15.85
+          "poblacion_femenina": 2884665,
+          "tasa_bruta": 11.93,
+          "tasa_ajustada": 16.12
         },
         {
           "anio": 2012,
           "muertes": 308,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2947857,
-          "tasa_bruta": 10.45,
-          "tasa_ajustada": 13.71
+          "poblacion_femenina": 2926397,
+          "tasa_bruta": 10.52,
+          "tasa_ajustada": 13.95
         },
         {
           "anio": 2013,
           "muertes": 324,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 2991588,
-          "tasa_bruta": 10.83,
-          "tasa_ajustada": 14.0
+          "poblacion_femenina": 2969724,
+          "tasa_bruta": 10.91,
+          "tasa_ajustada": 14.24
         },
         {
           "anio": 2014,
           "muertes": 346,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3036631,
-          "tasa_bruta": 11.39,
-          "tasa_ajustada": 14.61
+          "poblacion_femenina": 3014109,
+          "tasa_bruta": 11.48,
+          "tasa_ajustada": 14.85
         },
         {
           "anio": 2015,
           "muertes": 343,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3082404,
-          "tasa_bruta": 11.13,
-          "tasa_ajustada": 13.96
+          "poblacion_femenina": 3059516,
+          "tasa_bruta": 11.21,
+          "tasa_ajustada": 14.18
         },
         {
           "anio": 2016,
           "muertes": 370,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3128309,
-          "tasa_bruta": 11.83,
-          "tasa_ajustada": 14.62
+          "poblacion_femenina": 3105358,
+          "tasa_bruta": 11.91,
+          "tasa_ajustada": 14.86
         },
         {
           "anio": 2017,
           "muertes": 391,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3173845,
-          "tasa_bruta": 12.32,
-          "tasa_ajustada": 14.95
+          "poblacion_femenina": 3151077,
+          "tasa_bruta": 12.41,
+          "tasa_ajustada": 15.19
         },
         {
           "anio": 2018,
           "muertes": 403,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3219032,
-          "tasa_bruta": 12.52,
-          "tasa_ajustada": 14.84
+          "poblacion_femenina": 3196439,
+          "tasa_bruta": 12.61,
+          "tasa_ajustada": 15.06
         },
         {
           "anio": 2019,
           "muertes": 438,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3263525,
-          "tasa_bruta": 13.42,
-          "tasa_ajustada": 15.73
+          "poblacion_femenina": 3241280,
+          "tasa_bruta": 13.51,
+          "tasa_ajustada": 15.97
         },
         {
           "anio": 2020,
           "muertes": 491,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3310204,
-          "tasa_bruta": 14.83,
-          "tasa_ajustada": 17.04
+          "poblacion_femenina": 3286863,
+          "tasa_bruta": 14.94,
+          "tasa_ajustada": 17.3
         },
         {
           "anio": 2021,
           "muertes": 438,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3347880,
-          "tasa_bruta": 13.08,
-          "tasa_ajustada": 15.08
+          "poblacion_femenina": 3329042,
+          "tasa_bruta": 13.16,
+          "tasa_ajustada": 15.19
         },
         {
           "anio": 2022,
           "muertes": 456,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 3389984,
-          "tasa_bruta": 13.45,
-          "tasa_ajustada": 15.23
+          "poblacion_femenina": 3368933,
+          "tasa_bruta": 13.54,
+          "tasa_ajustada": 15.44
         }
       ]
     },
@@ -2553,146 +2281,128 @@
         {
           "anio": 2005,
           "muertes": 780,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14078939,
-          "tasa_bruta": 5.54,
-          "tasa_ajustada": 7.06
+          "poblacion_femenina": 14022214,
+          "tasa_bruta": 5.56,
+          "tasa_ajustada": 7.21
         },
         {
           "anio": 2006,
           "muertes": 685,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14183066,
-          "tasa_bruta": 4.83,
-          "tasa_ajustada": 5.97
+          "poblacion_femenina": 14131000,
+          "tasa_bruta": 4.85,
+          "tasa_ajustada": 6.09
         },
         {
           "anio": 2007,
-          "muertes": 756,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 14278733,
-          "tasa_bruta": 5.29,
-          "tasa_ajustada": 6.35
+          "muertes": 754,
+          "poblacion_femenina": 14230902,
+          "tasa_bruta": 5.3,
+          "tasa_ajustada": 6.46
         },
         {
           "anio": 2008,
           "muertes": 872,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14380698,
-          "tasa_bruta": 6.06,
-          "tasa_ajustada": 7.09
+          "poblacion_femenina": 14329713,
+          "tasa_bruta": 6.09,
+          "tasa_ajustada": 7.21
         },
         {
           "anio": 2009,
           "muertes": 839,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14481741,
-          "tasa_bruta": 5.79,
-          "tasa_ajustada": 6.6
+          "poblacion_femenina": 14431221,
+          "tasa_bruta": 5.81,
+          "tasa_ajustada": 6.7
         },
         {
           "anio": 2010,
           "muertes": 880,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14593669,
-          "tasa_bruta": 6.03,
-          "tasa_ajustada": 6.76
+          "poblacion_femenina": 14537706,
+          "tasa_bruta": 6.05,
+          "tasa_ajustada": 6.86
         },
         {
           "anio": 2011,
           "muertes": 898,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14720581,
-          "tasa_bruta": 6.1,
-          "tasa_ajustada": 6.67
+          "poblacion_femenina": 14657125,
+          "tasa_bruta": 6.13,
+          "tasa_ajustada": 6.76
         },
         {
           "anio": 2012,
           "muertes": 904,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14858223,
-          "tasa_bruta": 6.08,
-          "tasa_ajustada": 6.5
+          "poblacion_femenina": 14789403,
+          "tasa_bruta": 6.11,
+          "tasa_ajustada": 6.6
         },
         {
           "anio": 2013,
           "muertes": 998,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15005085,
-          "tasa_bruta": 6.65,
-          "tasa_ajustada": 6.96
+          "poblacion_femenina": 14931655,
+          "tasa_bruta": 6.68,
+          "tasa_ajustada": 7.06
         },
         {
           "anio": 2014,
           "muertes": 1034,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15170499,
-          "tasa_bruta": 6.82,
-          "tasa_ajustada": 7.01
+          "poblacion_femenina": 15087792,
+          "tasa_bruta": 6.85,
+          "tasa_ajustada": 7.11
         },
         {
           "anio": 2015,
           "muertes": 995,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15357402,
-          "tasa_bruta": 6.48,
-          "tasa_ajustada": 6.59
+          "poblacion_femenina": 15263950,
+          "tasa_bruta": 6.52,
+          "tasa_ajustada": 6.68
         },
         {
           "anio": 2016,
           "muertes": 923,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15584473,
-          "tasa_bruta": 5.92,
-          "tasa_ajustada": 5.98
+          "poblacion_femenina": 15470937,
+          "tasa_bruta": 5.97,
+          "tasa_ajustada": 6.05
         },
         {
           "anio": 2017,
           "muertes": 1030,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15820983,
-          "tasa_bruta": 6.51,
-          "tasa_ajustada": 6.4
+          "poblacion_femenina": 15702729,
+          "tasa_bruta": 6.56,
+          "tasa_ajustada": 6.49
         },
         {
           "anio": 2018,
           "muertes": 1290,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 16166661,
-          "tasa_bruta": 7.98,
-          "tasa_ajustada": 7.96
+          "poblacion_femenina": 15993822,
+          "tasa_bruta": 8.07,
+          "tasa_ajustada": 8.08
         },
         {
           "anio": 2019,
-          "muertes": 1382,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 16382240,
-          "tasa_bruta": 8.44,
-          "tasa_ajustada": 8.17
+          "muertes": 1381,
+          "poblacion_femenina": 16274448,
+          "tasa_bruta": 8.49,
+          "tasa_ajustada": 8.28
         },
         {
           "anio": 2020,
           "muertes": 1487,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 16581771,
-          "tasa_bruta": 8.97,
-          "tasa_ajustada": 8.55
+          "poblacion_femenina": 16482006,
+          "tasa_bruta": 9.02,
+          "tasa_ajustada": 8.66
         },
         {
           "anio": 2021,
-          "muertes": 1775,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 16733831,
-          "tasa_bruta": 10.61,
-          "tasa_ajustada": 10.08
+          "muertes": 1774,
+          "poblacion_femenina": 16657800,
+          "tasa_bruta": 10.65,
+          "tasa_ajustada": 10.17
         },
         {
           "anio": 2022,
           "muertes": 1614,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 16913450,
-          "tasa_bruta": 9.54,
-          "tasa_ajustada": 8.86
+          "poblacion_femenina": 16823641,
+          "tasa_bruta": 9.59,
+          "tasa_ajustada": 8.96
         }
       ]
     },
@@ -2722,130 +2432,114 @@
         {
           "anio": 2005,
           "muertes": 364,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1965461,
-          "tasa_bruta": 18.52,
-          "tasa_ajustada": 12.58
+          "poblacion_femenina": 1968028,
+          "tasa_bruta": 18.5,
+          "tasa_ajustada": 12.67
         },
         {
           "anio": 2006,
           "muertes": 387,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1959768,
-          "tasa_bruta": 19.75,
-          "tasa_ajustada": 14.08
+          "poblacion_femenina": 1962616,
+          "tasa_bruta": 19.72,
+          "tasa_ajustada": 14.14
         },
         {
           "anio": 2007,
-          "muertes": 417,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 1953869,
-          "tasa_bruta": 21.34,
-          "tasa_ajustada": 14.11
+          "muertes": 416,
+          "poblacion_femenina": 1956817,
+          "tasa_bruta": 21.26,
+          "tasa_ajustada": 14.14
         },
         {
           "anio": 2008,
           "muertes": 413,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1947445,
-          "tasa_bruta": 21.21,
-          "tasa_ajustada": 14.05
+          "poblacion_femenina": 1950657,
+          "tasa_bruta": 21.17,
+          "tasa_ajustada": 14.1
         },
         {
           "anio": 2009,
           "muertes": 440,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1941331,
-          "tasa_bruta": 22.66,
-          "tasa_ajustada": 14.63
+          "poblacion_femenina": 1944390,
+          "tasa_bruta": 22.63,
+          "tasa_ajustada": 14.68
         },
         {
           "anio": 2010,
           "muertes": 409,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1928891,
-          "tasa_bruta": 21.2,
-          "tasa_ajustada": 13.1
+          "poblacion_femenina": 1935111,
+          "tasa_bruta": 21.14,
+          "tasa_ajustada": 13.2
         },
         {
           "anio": 2011,
           "muertes": 430,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1912135,
-          "tasa_bruta": 22.49,
-          "tasa_ajustada": 13.81
+          "poblacion_femenina": 1920514,
+          "tasa_bruta": 22.39,
+          "tasa_ajustada": 13.92
         },
         {
           "anio": 2012,
           "muertes": 435,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1893775,
-          "tasa_bruta": 22.97,
-          "tasa_ajustada": 13.59
+          "poblacion_femenina": 1902953,
+          "tasa_bruta": 22.86,
+          "tasa_ajustada": 13.7
         },
         {
           "anio": 2013,
           "muertes": 415,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1874528,
-          "tasa_bruta": 22.14,
-          "tasa_ajustada": 13.03
+          "poblacion_femenina": 1884150,
+          "tasa_bruta": 22.03,
+          "tasa_ajustada": 13.13
         },
         {
           "anio": 2014,
           "muertes": 454,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1854404,
-          "tasa_bruta": 24.48,
-          "tasa_ajustada": 13.62
+          "poblacion_femenina": 1864467,
+          "tasa_bruta": 24.35,
+          "tasa_ajustada": 13.72
         },
         {
           "anio": 2015,
           "muertes": 432,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1833272,
-          "tasa_bruta": 23.56,
-          "tasa_ajustada": 12.51
+          "poblacion_femenina": 1843838,
+          "tasa_bruta": 23.43,
+          "tasa_ajustada": 12.59
         },
         {
           "anio": 2016,
           "muertes": 436,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1811006,
-          "tasa_bruta": 24.08,
-          "tasa_ajustada": 13.34
+          "poblacion_femenina": 1822138,
+          "tasa_bruta": 23.93,
+          "tasa_ajustada": 13.41
         },
         {
           "anio": 2017,
           "muertes": 445,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1731085,
-          "tasa_bruta": 25.71,
-          "tasa_ajustada": 13.31
+          "poblacion_femenina": 1771044,
+          "tasa_bruta": 25.13,
+          "tasa_ajustada": 13.24
         },
         {
           "anio": 2021,
           "muertes": 415,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1712498,
-          "tasa_bruta": 24.23,
-          "tasa_ajustada": 10.11
+          "poblacion_femenina": 1717659,
+          "tasa_bruta": 24.16,
+          "tasa_ajustada": 10.15
         },
         {
           "anio": 2022,
           "muertes": 396,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1712887,
+          "poblacion_femenina": 1712691,
           "tasa_bruta": 23.12,
-          "tasa_ajustada": 9.96
+          "tasa_ajustada": 9.98
         },
         {
           "anio": 2023,
           "muertes": 453,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1716009,
-          "tasa_bruta": 26.4,
-          "tasa_ajustada": 10.92
+          "poblacion_femenina": 1714451,
+          "tasa_bruta": 26.42,
+          "tasa_ajustada": 10.96
         }
       ]
     },
@@ -2876,147 +2570,129 @@
       "serie": [
         {
           "anio": 2005,
-          "muertes": 666,
-          "muertes_edad_desconocida": 3,
-          "poblacion_femenina": 1693707,
-          "tasa_bruta": 39.32,
-          "tasa_ajustada": 25.0
+          "muertes": 663,
+          "poblacion_femenina": 1692631,
+          "tasa_bruta": 39.17,
+          "tasa_ajustada": 25.04
         },
         {
           "anio": 2006,
-          "muertes": 678,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 1696718,
-          "tasa_bruta": 39.96,
-          "tasa_ajustada": 25.28
+          "muertes": 677,
+          "poblacion_femenina": 1695214,
+          "tasa_bruta": 39.94,
+          "tasa_ajustada": 25.38
         },
         {
           "anio": 2007,
-          "muertes": 612,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 1700625,
-          "tasa_bruta": 35.99,
-          "tasa_ajustada": 23.06
+          "muertes": 608,
+          "poblacion_femenina": 1698671,
+          "tasa_bruta": 35.79,
+          "tasa_ajustada": 23.03
         },
         {
           "anio": 2008,
           "muertes": 580,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1704747,
-          "tasa_bruta": 34.02,
-          "tasa_ajustada": 21.93
+          "poblacion_femenina": 1702685,
+          "tasa_bruta": 34.06,
+          "tasa_ajustada": 22.05
         },
         {
           "anio": 2009,
-          "muertes": 616,
-          "muertes_edad_desconocida": 1,
-          "poblacion_femenina": 1709279,
-          "tasa_bruta": 36.04,
-          "tasa_ajustada": 22.85
+          "muertes": 615,
+          "poblacion_femenina": 1707014,
+          "tasa_bruta": 36.03,
+          "tasa_ajustada": 22.93
         },
         {
           "anio": 2010,
-          "muertes": 610,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 1713829,
-          "tasa_bruta": 35.59,
-          "tasa_ajustada": 21.33
+          "muertes": 608,
+          "poblacion_femenina": 1711554,
+          "tasa_bruta": 35.52,
+          "tasa_ajustada": 21.36
         },
         {
           "anio": 2012,
           "muertes": 582,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1722438,
-          "tasa_bruta": 33.79,
-          "tasa_ajustada": 20.44
+          "poblacion_femenina": 1720163,
+          "tasa_bruta": 33.83,
+          "tasa_ajustada": 20.53
         },
         {
           "anio": 2013,
-          "muertes": 634,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 1727651,
-          "tasa_bruta": 36.7,
-          "tasa_ajustada": 21.61
+          "muertes": 632,
+          "poblacion_femenina": 1725045,
+          "tasa_bruta": 36.64,
+          "tasa_ajustada": 21.64
         },
         {
           "anio": 2014,
-          "muertes": 616,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 1733110,
-          "tasa_bruta": 35.54,
-          "tasa_ajustada": 20.86
+          "muertes": 612,
+          "poblacion_femenina": 1730380,
+          "tasa_bruta": 35.37,
+          "tasa_ajustada": 20.82
         },
         {
           "anio": 2015,
-          "muertes": 662,
-          "muertes_edad_desconocida": 4,
-          "poblacion_femenina": 1738829,
-          "tasa_bruta": 38.07,
-          "tasa_ajustada": 22.49
+          "muertes": 658,
+          "poblacion_femenina": 1735968,
+          "tasa_bruta": 37.9,
+          "tasa_ajustada": 22.45
         },
         {
           "anio": 2016,
-          "muertes": 688,
-          "muertes_edad_desconocida": 6,
-          "poblacion_femenina": 1743666,
-          "tasa_bruta": 39.46,
-          "tasa_ajustada": 22.96
+          "muertes": 682,
+          "poblacion_femenina": 1741249,
+          "tasa_bruta": 39.17,
+          "tasa_ajustada": 22.86
         },
         {
           "anio": 2017,
           "muertes": 611,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1747196,
-          "tasa_bruta": 34.97,
-          "tasa_ajustada": 20.42
+          "poblacion_femenina": 1745429,
+          "tasa_bruta": 35.01,
+          "tasa_ajustada": 20.51
         },
         {
           "anio": 2018,
           "muertes": 668,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1749540,
-          "tasa_bruta": 38.18,
-          "tasa_ajustada": 22.88
+          "poblacion_femenina": 1748367,
+          "tasa_bruta": 38.21,
+          "tasa_ajustada": 22.98
         },
         {
           "anio": 2019,
           "muertes": 724,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1749935,
-          "tasa_bruta": 41.37,
-          "tasa_ajustada": 23.28
+          "poblacion_femenina": 1749738,
+          "tasa_bruta": 41.38,
+          "tasa_ajustada": 23.36
         },
         {
           "anio": 2020,
           "muertes": 604,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1750996,
-          "tasa_bruta": 34.49,
-          "tasa_ajustada": 19.48
+          "poblacion_femenina": 1750466,
+          "tasa_bruta": 34.51,
+          "tasa_ajustada": 19.57
         },
         {
           "anio": 2021,
           "muertes": 666,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1747529,
-          "tasa_bruta": 38.11,
-          "tasa_ajustada": 21.28
+          "poblacion_femenina": 1749262,
+          "tasa_bruta": 38.07,
+          "tasa_ajustada": 21.34
         },
         {
           "anio": 2022,
           "muertes": 657,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1745473,
-          "tasa_bruta": 37.64,
-          "tasa_ajustada": 21.06
+          "poblacion_femenina": 1746502,
+          "tasa_bruta": 37.62,
+          "tasa_ajustada": 21.13
         },
         {
           "anio": 2023,
           "muertes": 643,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 1744668,
-          "tasa_bruta": 36.86,
-          "tasa_ajustada": 20.68
+          "poblacion_femenina": 1745070,
+          "tasa_bruta": 36.85,
+          "tasa_ajustada": 20.77
         }
       ]
     },
@@ -3042,98 +2718,86 @@
         {
           "anio": 2005,
           "muertes": 1425,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 13511212,
-          "tasa_bruta": 10.55,
-          "tasa_ajustada": 13.74
+          "poblacion_femenina": 13397680,
+          "tasa_bruta": 10.64,
+          "tasa_ajustada": 14.0
         },
         {
           "anio": 2006,
           "muertes": 1415,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 13734332,
-          "tasa_bruta": 10.3,
-          "tasa_ajustada": 12.95
+          "poblacion_femenina": 13622773,
+          "tasa_bruta": 10.39,
+          "tasa_ajustada": 13.19
         },
         {
           "anio": 2007,
-          "muertes": 1465,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 13950212,
-          "tasa_bruta": 10.5,
-          "tasa_ajustada": 13.1
+          "muertes": 1463,
+          "poblacion_femenina": 13842274,
+          "tasa_bruta": 10.57,
+          "tasa_ajustada": 13.33
         },
         {
           "anio": 2008,
-          "muertes": 1511,
-          "muertes_edad_desconocida": 2,
-          "poblacion_femenina": 14156712,
-          "tasa_bruta": 10.67,
-          "tasa_ajustada": 13.08
+          "muertes": 1509,
+          "poblacion_femenina": 14053461,
+          "tasa_bruta": 10.74,
+          "tasa_ajustada": 13.3
         },
         {
           "anio": 2009,
           "muertes": 1643,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14354765,
-          "tasa_bruta": 11.45,
-          "tasa_ajustada": 13.73
+          "poblacion_femenina": 14255741,
+          "tasa_bruta": 11.53,
+          "tasa_ajustada": 13.98
         },
         {
           "anio": 2010,
           "muertes": 1697,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14549028,
-          "tasa_bruta": 11.66,
-          "tasa_ajustada": 13.65
+          "poblacion_femenina": 14451896,
+          "tasa_bruta": 11.74,
+          "tasa_ajustada": 13.89
         },
         {
           "anio": 2011,
           "muertes": 1942,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14744814,
-          "tasa_bruta": 13.17,
-          "tasa_ajustada": 15.16
+          "poblacion_femenina": 14646920,
+          "tasa_bruta": 13.26,
+          "tasa_ajustada": 15.42
         },
         {
           "anio": 2012,
           "muertes": 2067,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 14937000,
-          "tasa_bruta": 13.84,
-          "tasa_ajustada": 15.61
+          "poblacion_femenina": 14840906,
+          "tasa_bruta": 13.93,
+          "tasa_ajustada": 15.87
         },
         {
           "anio": 2013,
           "muertes": 2062,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15121398,
-          "tasa_bruta": 13.64,
-          "tasa_ajustada": 15.07
+          "poblacion_femenina": 15029200,
+          "tasa_bruta": 13.72,
+          "tasa_ajustada": 15.32
         },
         {
           "anio": 2014,
           "muertes": 2204,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15297351,
-          "tasa_bruta": 14.41,
-          "tasa_ajustada": 15.64
+          "poblacion_femenina": 15209374,
+          "tasa_bruta": 14.49,
+          "tasa_ajustada": 15.9
         },
         {
           "anio": 2015,
           "muertes": 2317,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15460050,
-          "tasa_bruta": 14.99,
-          "tasa_ajustada": 15.96
+          "poblacion_femenina": 15378701,
+          "tasa_bruta": 15.07,
+          "tasa_ajustada": 16.21
         },
         {
           "anio": 2016,
           "muertes": 2513,
-          "muertes_edad_desconocida": 0,
-          "poblacion_femenina": 15510438,
-          "tasa_bruta": 16.2,
-          "tasa_ajustada": 16.82
+          "poblacion_femenina": 15485246,
+          "tasa_bruta": 16.23,
+          "tasa_ajustada": 17.05
         }
       ]
     }
