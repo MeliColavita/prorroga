@@ -464,127 +464,54 @@ body {
   font-size: clamp(0.95rem, 1.8vw, 1.2rem);
   text-align: center;
   line-height: 1.35;
-  transform-origin: 50% 100%;
-  transition: transform 1.6s var(--ease-in-out);
-  /* Por el tema, los subtítulos van en grises: los rosas se redefinen solo acá adentro */
-  --rose: #b9afb6;
-  --rose-strong: #e4dde2;
 }
-/* Antes de la vela, los subtítulos van más grandes en el centro de la pantalla; cuando aparece, bajan sobre la barra */
-#intro:not(.con-vela) .intro-caption {
-  transform: translate(-50%, calc(-47vh + 23px + 2.5rem)) scale(1.3);
+/* Subtítulos: la frase entra con un fundido lento; cada palabra aparece suave, apenas más grande,
+   y vuelve a su tamaño cuando entra la siguiente (--g = tiempo entre palabras, lo pone script.js) */
+.intro-caption.cc-entra {
+  animation: ccFrase 1s ease both;
 }
-/* ---------- Subtítulos animados (script.js arma cada palabra con su retraso --d) ---------- */
 .cc-w {
   display: inline-block;
   opacity: 0;
-  animation: ccEntra 0.55s var(--ease-out) var(--d, 0s) forwards;
-}
-.cc-pausa .cc-w {
-  animation-play-state: paused;
-}
-.cc-ella {
-  font-family: var(--serif);
-  font-style: italic; /* la voz de Mariana */
-}
-.cc-g {
-  font-family: var(--serif);
-  font-size: 1.45em;
-  line-height: 1;
-  color: var(--rose-strong);
-  animation-name: ccCrece;
-  animation-duration: 0.8s;
-}
-.cc-c {
-  font-size: 0.82em;
-  color: var(--text-dim);
-}
-.cc-a {
-  font-family: var(--serif);
-  font-size: 1.3em;
-  line-height: 1;
-  color: var(--rose);
-  animation-name: ccAdelanta;
-  animation-duration: 0.9s;
-}
-.cc-s {
-  font-family: var(--serif);
-  font-size: 2.4em;
-  line-height: 1;
-  color: var(--rose-strong);
-  animation-name: ccPesa;
-  animation-duration: 1.4s;
-}
-.cc-t {
+  transform-origin: 50% 70%;
   animation:
-    ccEntra 0.55s var(--ease-out) var(--d, 0s) forwards,
-    ccTiembla 0.5s ease-in-out calc(var(--d, 0s) + 0.55s) 3;
+    ccPalabra 0.6s ease var(--d, 0s) forwards,
+    ccAchica 0.6s ease calc(var(--d, 0s) + var(--g, 0.3s)) forwards;
 }
-@keyframes ccEntra {
+@keyframes ccFrase {
   from {
     opacity: 0;
-    transform: translateY(0.35em);
+  }
+}
+@keyframes ccPalabra {
+  from {
+    opacity: 0;
+    transform: translateY(0.2em) scale(1.09);
     filter: blur(4px);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: scale(1.09);
     filter: none;
   }
 }
-@keyframes ccCrece {
+@keyframes ccAchica {
   from {
-    opacity: 0;
-    transform: scale(0.6);
-    filter: blur(6px);
+    opacity: 1;
+    transform: scale(1.09);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: none;
-  }
-}
-@keyframes ccAdelanta {
-  from {
-    opacity: 0;
-    transform: translateY(-0.5em) scale(1.25);
-    letter-spacing: 0.2em;
-    filter: blur(5px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    letter-spacing: normal;
-    filter: none;
-  }
-}
-@keyframes ccPesa {
-  from {
-    opacity: 0;
-    transform: scale(1.5);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
-@keyframes ccTiembla {
-  25% {
-    transform: translateX(-1.5px);
-  }
-  75% {
-    transform: translateX(1.5px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .intro-caption.cc-entra,
   .cc-w {
     animation: none;
     opacity: 1;
   }
 }
-
 #intro .skip-btn {
   position: absolute;
   right: 3vw;
