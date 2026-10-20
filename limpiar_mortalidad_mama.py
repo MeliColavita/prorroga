@@ -16,7 +16,7 @@ Fuentes
   * Población femenina por edad: Naciones Unidas, World Population Prospects 2024,
     archivo oficial WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx
     (https://population.un.org/wpp/ > Download Files > Standard Projections > Population >
-    Population by Single Age - Female). Hojas "Estimates" (2005-2023) y "Medium variant" (2024).
+    Population by Single Age - Female). Hoja "Estimates" (2005-2023).
     Se resume en poblacion_wpp2024_latam.csv con la opción --generar-poblacion.
     Se usa WPP porque el archivo "pop" de la OMS no tiene población de casi ningún
     país latinoamericano después de 2005. El portal de la OMS también usa WPP.
@@ -45,7 +45,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Parámetros
 # ---------------------------------------------------------------------------
-ANIO_DESDE, ANIO_HASTA = 2005, 2024
+ANIO_DESDE, ANIO_HASTA = 2005, 2023
 SEXO_FEMENINO = 2
 
 # Código OMS -> (nombre en español, código numérico ISO usado por WPP)
@@ -143,21 +143,14 @@ def leer_defunciones(archivos):
         raise ValueError("Deaths1 no coincide con la suma por edades")
 
     # Pasar a formato largo con los grupos de edad finales
-    largo = df.melt(id_vars=["Country", "Year", "Deaths1", "Deaths26"],
+    largo = df.melt(id_vars=["Country", "Year"],
                     value_vars=list(COLUMNAS_A_GRUPO),
                     var_name="col", value_name="muertes")
     largo["grupo"] = largo["col"].map(COLUMNAS_A_GRUPO)
-    largo = largo.groupby(["Country", "Year", "Deaths1", "Deaths26", "grupo"],
+    largo = largo.groupby(["Country", "Year", "grupo"],
                           as_index=False)["muertes"].sum()
 
-    # Repartir las muertes de edad desconocida en proporción a las conocidas
-    conocidas = largo.groupby(["Country", "Year"])["muertes"].transform("sum")
-    largo["muertes"] = np.where(
-        conocidas > 0,
-        largo["muertes"] + largo["Deaths26"] * largo["muertes"] / conocidas.replace(0, np.nan),
-        largo["muertes"],
-    )
-    return largo.rename(columns={"Deaths1": "muertes_total", "Deaths26": "edad_desconocida"})
+    return largo
 
 
 # ---------------------------------------------------------------------------
@@ -166,15 +159,11 @@ def leer_defunciones(archivos):
 def generar_poblacion(archivo_onu, salida="poblacion_wpp2024_latam.csv"):
     """Arma el CSV de población femenina por grupo quinquenal desde el archivo oficial de la ONU:
     WPP2024_POP_F01_3_POPULATION_SINGLE_AGE_FEMALE.xlsx (File POP/01-3, miles de personas al 1 de julio).
-    Hoja "Estimates" = 1950-2023; hoja "Medium variant" = 2024-2100 (se usa solo 2024)."""
+    Usa la hoja "Estimates" (1950-2023)."""
     edades = list(range(100)) + ["100+"]
-    partes = []
-    for hoja in ["Estimates", "Medium variant"]:
-        df = pd.read_excel(archivo_onu, sheet_name=hoja, header=16)   # fila 17 = encabezados
-        df.columns = [str(c) for c in df.columns]
-        df = df[["Location code", "Year"] + [str(e) for e in edades]]
-        partes.append(df)
-    pob = pd.concat(partes, ignore_index=True)
+    pob = pd.read_excel(archivo_onu, sheet_name="Estimates", header=16)   # fila 17 = encabezados
+    pob.columns = [str(c) for c in pob.columns]
+    pob = pob[["Location code", "Year"] + [str(e) for e in edades]]
 
     # Location code de la ONU = código numérico ISO del país
     iso_a_oms = {iso: oms for oms, (_, iso) in PAISES_LATAM.items()}
@@ -211,10 +200,9 @@ def calcular_tasas(muertes, poblacion):
 
     def resumir(g):
         return pd.Series({
-            "muertes": int(round(g["muertes_total"].iloc[0])),
-            "muertes_edad_desconocida": int(round(g["edad_desconocida"].iloc[0])),
+            "muertes": int(round(g["muertes"].sum())),
             "poblacion_femenina": int(g["poblacion"].sum()),
-            "tasa_bruta": g["muertes_total"].iloc[0] / g["poblacion"].sum() * 1e5,
+            "tasa_bruta": g["muertes"].sum() / g["poblacion"].sum() * 1e5,
             "tasa_ajustada": (g["tasa_especifica"] * g["peso"]).sum() / g["peso"].sum() * 1e5,
         })
 
@@ -238,7 +226,6 @@ def exportar_json(tasas, codigos_paises, salida):
                 {
                     "anio": int(r.Year),
                     "muertes": int(r.muertes),
-                    "muertes_edad_desconocida": int(r.muertes_edad_desconocida),
                     "poblacion_femenina": int(r.poblacion_femenina),
                     "tasa_bruta": round(float(r.tasa_bruta), 2),
                     "tasa_ajustada": round(float(r.tasa_ajustada), 2),
@@ -253,10 +240,10 @@ def exportar_json(tasas, codigos_paises, salida):
             "indicador": "Mortalidad por cáncer de mama (CIE-10 C50), mujeres",
             "unidad_tasas": "muertes por 100.000 mujeres",
             "tasa_ajustada": "Estandarización directa, población estándar mundial OMS (Ahmad et al., 2001), 18 grupos de edad (0-4 ... 85+)",
-            "edad_desconocida": "Las muertes sin edad se reparten proporcionalmente entre los grupos para la tasa ajustada; la tasa bruta usa el total",
+            "edad_desconocida": "Las muertes sin edad registrada no se incluyen en las tasas ni en 'muertes'",
             "periodo": f"{ANIO_DESDE}-{ANIO_HASTA}",
             "fuente_defunciones": "WHO Mortality Database (actualización 23/02/2026)",
-            "fuente_poblacion": "UN World Population Prospects 2024, File POP/01-3: Female population by single age (población al 1 de julio; 2005-2023 = Estimates, 2024 = Medium variant)",
+            "fuente_poblacion": "UN World Population Prospects 2024, File POP/01-3: Female population by single age (población al 1 de julio, hoja Estimates)",
             "paises_sin_datos_en_el_periodo": sin_datos,
             "aviso": "Defunciones registradas: la cobertura y calidad del registro varía entre países. Análisis propio; la OMS solo provee los datos originales.",
         },

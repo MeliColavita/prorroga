@@ -13,22 +13,27 @@
   const COLOR_ARG = '#ff6f9c'; // --rose-strong
   const COLOR_OTRO = '#b9a7e0'; // lila: se distingue del rosa sobre fondo oscuro
   const ANIO_MIN = 2005;
-  const ANIO_MAX = 2024;
+  const ANIO_MAX = 2023;
   const TITULO_INICIAL = 'Argentina frente a otros países de América Latina';
   const SIN_PAIS = 'Elegí un país'; // lo que dice el botón antes de elegir
 
   const SUB_CMP =
-    'Muertes por cáncer de mama cada 100.000 mujeres, ajustadas por edad. América Latina, 2005–2024.';
+    'Muertes por cáncer de mama cada 100.000 mujeres, ajustadas por edad. América Latina, 2005–2023.';
   const SRC_CMP = [
     {
-      autor: 'OMS (2026)',
-      etiqueta: 'WHO Mortality Database',
-      url: 'https://www.who.int/data/data-collection-tools/who-mortality-database',
+      autor: 'OMS(2001)',
+      etiqueta: 'Población estándar mundial',
+      url: 'https://cdn.who.int/media/docs/default-source/gho-documents/global-health-estimates/gpe_discussion_paper_series_paper31_2001_age_standardization_rates.pdf',
     },
     {
       autor: 'Naciones Unidas (2024)',
-      etiqueta: 'World Population Prospects 2024',
-      url: 'https://population.un.org/wpp/',
+      etiqueta: 'Perspectivas de la Población Mundial',
+      url: 'https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Population',
+    },
+    {
+      autor: 'OMS (2026)',
+      etiqueta: 'Datasets de mortalidad',
+      url: 'https://www.who.int/data/data-collection-tools/who-mortality-database',
     },
   ];
   /*const NOTA_CMP =
@@ -69,8 +74,20 @@
     '<ul class="cp-lista" id="cpLista" role="listbox" aria-label="Países de América Latina" tabindex="-1" hidden></ul>' +
     '<select id="cpSelect" hidden></select>' +
     '</div>' +
+    '<button type="button" class="br-tab-btn cp-todos-btn" id="cpTodosBtn" aria-pressed="false">Ver todos</button>' +
     '</div>' +
     '<div class="cp-chart"><canvas id="cpChart"></canvas></div>' +
+    '<div class="cp-todos" id="cpTodos" hidden>' +
+    '<div class="cp-ranking" id="cpRanking" role="list" aria-label="Países ordenados por tasa ajustada"></div>' +
+    '<div class="br-year-ctl cp-todos-anio">' +
+    '<label class="br-year-lbl" for="cpTodosAnio">Año: <b id="cpTodosAnioLbl"></b></label>' +
+    '<input type="range" id="cpTodosAnio" min="' +
+    ANIO_MIN +
+    '" max="' +
+    ANIO_MAX +
+    '" step="1" />' +
+    '</div>' +
+    '</div>' +
     '<div class="br-axis-note">' +
     '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
     '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad. El eje empieza en 0.</p></div>' +
@@ -409,7 +426,7 @@
     for (let a = desde; a <= hasta; a++) if (!datos[otro].serie.has(a)) faltan.push(a);
     const partes = [];
     if (desde > ANIO_MIN) partes.push(otro + ' tiene datos desde ' + desde);
-    if (hasta < ANIO_MAX - 1) partes.push(otro + ' tiene datos hasta ' + hasta);
+    if (hasta < ANIO_MAX) partes.push(otro + ' tiene datos hasta ' + hasta);
     if (faltan.length) partes.push('sin datos de ' + otro + ' en ' + faltan.join(', '));
     return partes.length ? partes.join('; ') + '.' : '';
   }
@@ -449,18 +466,18 @@
     if (hayArg && hayOtro) {
       const vArg = sArg.get(a);
       const vOtro = sOtro.get(a);
-      const dif = ((vArg - vOtro) / vOtro) * 100;
-      if (Math.abs(dif) < 5) {
-        titulo.textContent = 'En ' + a + ', Argentina y ' + otro + ' tuvieron una tasa parecida';
+      const dif = vArg - vOtro; // Diferencia en puntos de tasa (tasa de Argentina menos la del otro país), con 1 decimal.
+      if (fmt1(Math.abs(dif)) === '0,0') {
+        titulo.textContent = 'En ' + a + ', Argentina y ' + otro + ' tuvieron la misma tasa';
       } else {
         titulo.textContent =
           'En ' +
           a +
-          ', la tasa de Argentina fue un ' +
-          Math.round(Math.abs(dif)).toLocaleString('es-AR') +
-          ' % ' +
-          (dif > 0 ? 'más alta' : 'más baja') +
-          ' que la de ' +
+          ', Argentina tuvo ' +
+          fmt1(Math.abs(dif)) +
+          ' muertes cada 100.000 mujeres ' +
+          (dif > 0 ? 'más' : 'menos') +
+          ' que ' +
           otro;
       }
       dato.append(
@@ -558,7 +575,7 @@
   canvas.setAttribute('role', 'img');
   canvas.setAttribute(
     'aria-label',
-    'Gráfico de la tasa de mortalidad por cáncer de mama ajustada por edad: Argentina comparada con otro país de América Latina, 2005 a 2024. Con las flechas izquierda y derecha recorrés los años.',
+    'Gráfico de la tasa de mortalidad por cáncer de mama ajustada por edad: Argentina comparada con otro país de América Latina, 2005 a 2023. Con las flechas izquierda y derecha recorrés los años.',
   );
   // Teclado: flechas izquierda/derecha recorren los años (como en "Por año").
   canvas.addEventListener('keydown', (e) => {
@@ -566,7 +583,127 @@
     e.preventDefault();
     elegirAnio(anioActual + (e.key === 'ArrowRight' ? 1 : -1));
   });
+  // ---------- "Ver todos": todos los países a la vez (ranking de barras) ----------
+  const todosBtn = panel.querySelector('#cpTodosBtn');
+  const todos = panel.querySelector('#cpTodos');
+  const ranking = panel.querySelector('#cpRanking');
+  const todosAnio = panel.querySelector('#cpTodosAnio');
+  const todosAnioLbl = panel.querySelector('#cpTodosAnioLbl');
+  const ALTO_FILA = 14; // px por país
+  const ROSA_ALTO = [194, 87, 127]; // #c2577f: tasa más alta
+  const ROSA_BAJO = [92, 45, 69]; // #5c2d45: tasa más baja (Argentina siempre va en --rose-strong)
+  let modoTodos = false;
+  let filas = null; // { país: fila }
+  let topeRanking = 0;
 
+  // Argentina y los mismos países que la lista (sin los que tienen advertencia).
+  function paisesRanking() {
+    return [PAIS_FIJO, ...[...select.options].map((o) => o.value)];
+  }
+
+  function armarFilas() {
+    if (filas) return;
+    filas = {};
+    paisesRanking().forEach((n) => {
+      const fila = document.createElement('div');
+      fila.className = 'cp-fila' + (n === PAIS_FIJO ? ' cp-fila-arg' : '');
+      fila.setAttribute('role', 'listitem');
+      fila.innerHTML =
+        '<span class="cp-fila-nombre"></span>' +
+        '<span class="cp-fila-barra"><span class="cp-fila-relleno"></span><span class="cp-fila-valor"></span></span>';
+      fila.querySelector('.cp-fila-nombre').textContent = n;
+      ranking.appendChild(fila);
+      filas[n] = fila;
+    });
+    // Escala fija para todos los años: así el largo de las barras se puede comparar entre años.
+    paisesRanking().forEach((n) =>
+      datos[n].serie.forEach((v) => (topeRanking = Math.max(topeRanking, v))),
+    );
+    topeRanking = Math.ceil(topeRanking / 5) * 5;
+  }
+
+  // t = 0 para la tasa más alta, 1 para la más baja: de rosa intenso a rosa oscuro.
+  function colorRanking(t) {
+    return 'rgb(' + ROSA_ALTO.map((v, i) => Math.round(v + (ROSA_BAJO[i] - v) * t)).join(',') + ')';
+  }
+
+  function mostrarRanking(a) {
+    armarFilas();
+    todosAnioLbl.textContent = a;
+    todosAnio.style.setProperty('--br-fill', ((a - ANIO_MIN) / (ANIO_MAX - ANIO_MIN)) * 100 + '%');
+    const conDato = paisesRanking()
+      .filter((n) => datos[n].serie.has(a))
+      .sort((x, y) => datos[y].serie.get(a) - datos[x].serie.get(a));
+    const sinDato = paisesRanking().filter((n) => !datos[n].serie.has(a));
+
+    ranking.style.height = conDato.length * ALTO_FILA + 'px';
+    conDato.forEach((n, i) => {
+      const fila = filas[n];
+      const v = datos[n].serie.get(a);
+      fila.hidden = false;
+      fila.style.top = i * ALTO_FILA + 'px';
+      const barra = fila.querySelector('.cp-fila-relleno');
+      // El número va pegado a la punta de la barra: se le reservan 40px.
+      barra.style.width = 'calc((100% - 40px) * ' + v / topeRanking + ')';
+      if (n !== PAIS_FIJO) {
+        barra.style.background = colorRanking(conDato.length > 1 ? i / (conDato.length - 1) : 0);
+      }
+      fila.querySelector('.cp-fila-valor').textContent = fmt1(v);
+    });
+    sinDato.forEach((n) => (filas[n].hidden = true));
+
+    // Título y dato de abajo: el puesto de Argentina ese año.
+    dato.textContent = '';
+    const puesto = conDato.indexOf(PAIS_FIJO) + 1;
+    if (!puesto) {
+      titulo.textContent = 'En ' + a + ' no hay datos de Argentina';
+    } else {
+      titulo.textContent =
+        'En ' +
+        a +
+        ', Argentina tuvo ' +
+        (puesto === 1 ? 'la tasa más alta' : 'la ' + puesto + '.ª tasa más alta') +
+        ' de ' +
+        conDato.length +
+        ' países';
+      dato.append(
+        'En ' + a + ': ',
+        numero(datos[PAIS_FIJO].serie.get(a), false),
+        ' muertes cada 100.000 mujeres en Argentina.',
+      );
+    }
+    if (sinDato.length) {
+      const s = document.createElement('span');
+      s.className = 'cp-aviso';
+      s.textContent = 'Sin datos de ' + a + ': ' + sinDato.join(', ') + '.';
+      dato.appendChild(s);
+    }
+  }
+
+  // Cambia entre el gráfico de a un país y el ranking de todos.
+  function cambiarModo(enTodos) {
+    modoTodos = enTodos;
+    panel.classList.toggle('cp-modo-todos', enTodos);
+    todosBtn.setAttribute('aria-pressed', String(enTodos));
+    todosBtn.textContent = enTodos ? 'Ver de a un país' : 'Ver todos';
+    todos.hidden = !enTodos;
+    cerrarLista();
+    if (!datos) return;
+    if (enTodos) {
+      todosAnio.value = ANIO_MAX;
+      todosAnio.classList.remove('br-year-used'); // el circulito vuelve a latir
+      mostrarRanking(ANIO_MAX);
+    } else {
+      actualizarTextos(select.value, anioActual);
+      if (chart) chart.resize();
+    }
+  }
+
+  todosBtn.addEventListener('click', () => cambiarModo(!modoTodos));
+  todosAnio.addEventListener('input', () => {
+    todosAnio.classList.add('br-year-used');
+    mostrarRanking(Number(todosAnio.value));
+  });
   // ---------- Abrir / cerrar ----------
   let abierto = false;
   let subGuardado = '';
@@ -596,7 +733,7 @@
     });
 
     // Cada vez que se abre: solo Argentina y el botón vuelve a "Elegí un país" (sin puntito).
-
+    cambiarModo(false); // siempre arranca de a un país
     cargarDatos()
       .then(() => {
         if (!abierto) return;

@@ -1153,22 +1153,111 @@
   }
 }
 
-/* ============ COMPARAR CON OTROS PAÍSES: instrucción rosa junto al botón del país ============
-   Al abrir se ve solo Argentina. La instrucción (formato .em-prompt de modulo1.css, con el
-   puntito que late) invita a elegir un país y se desvanece al elegirlo. */
-#cpPanel .cp-paises .em-prompt {
-  margin: 0 0 0 4px;
-  font-size: 0.95rem;
-  transition:
-    opacity 0.4s ease,
-    visibility 0.4s;
+/* ============ COMPARAR: "Ver todos" (ranking de todos los países) ============
+   Lo arma comparar_paises.js. La barra de años reutiliza .br-year-ctl ("Por provincia"). */
+/* Botón "Ver todos": misma forma que las pestañas, a la derecha de la fila de países. */
+#cpPanel .cp-todos-btn {
+  margin-left: auto;
 }
-#cpPanel .cp-paises .em-prompt.br-prompt-gone {
-  opacity: 0;
-  visibility: hidden;
+#cpPanel .cp-todos-btn[aria-pressed='true'] {
+  background: var(--br-rose-strong);
+  color: #1a0510;
+  border-color: var(--br-rose-strong);
+  box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
+}
+/* En "Ver todos" se ocultan el gráfico de líneas y los chips "Argentina vs. país". */
+#cpPanel.cp-modo-todos .cp-chart,
+#cpPanel.cp-modo-todos .cp-paises > :not(.cp-todos-btn) {
+  display: none;
+}
+.cp-todos[hidden] {
+  display: none;
+}
+.cp-todos {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+/* Filas ubicadas con "top" según el puesto: al cambiar de año se reordenan deslizándose. */
+.cp-ranking {
+  position: relative;
+  transition: height 0.4s ease;
+}
+.cp-fila {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 14px;
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--br-text-dim);
+  transition: top 0.5s ease;
+}
+.cp-fila[hidden] {
+  display: none;
+}
+.cp-fila-nombre {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Barra + número pegado a su punta. */
+.cp-fila-barra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cp-fila-relleno {
+  flex: none;
+  height: 9px;
+  border-radius: 0 999px 999px 0;
+  transition:
+    width 0.5s ease,
+    background 0.5s ease;
+}
+.cp-fila-valor {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+/* Argentina se destaca con el rosa fuerte del sitio. */
+.cp-fila-arg {
+  color: var(--br-text);
+  font-weight: 700;
+}
+.cp-fila-arg .cp-fila-relleno {
+  background: var(--br-rose-strong);
+  box-shadow: 0 0 10px var(--br-rose-glow);
+}
+.cp-fila-arg .cp-fila-valor {
+  color: var(--br-rose-strong);
+}
+/* Barra de años en una sola línea: "Año: 2023" a la izquierda, la barra a la derecha. */
+.br-year-ctl.cp-todos-anio {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
+}
+.cp-todos-anio .br-year-lbl {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .cp-fila {
+    grid-template-columns: 96px 1fr;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  #cpPanel .cp-paises .em-prompt {
+  .cp-ranking,
+  .cp-fila,
+  .cp-fila-relleno {
     transition: none;
   }
 }
