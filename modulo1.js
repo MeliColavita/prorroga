@@ -394,7 +394,7 @@
     prompt.className =
       'em-prompt em-prompt-tipo em-reveal-fade' + (tipoState.revealed ? '' : ' em-shown');
     prompt.innerHTML =
-      '<span class="em-prompt-dot" aria-hidden="true"></span>Arrastrá la barra para adivinar.'; // en 2 renglones: en uno solo quedaba muy larga
+      '<span class="em-prompt-dot" aria-hidden="true"></span>Arrastrá la barra para estimar.'; // en 2 renglones: en uno solo quedaba muy larga
     top.appendChild(prompt);
 
     const feedback = document.createElement('div');
@@ -406,7 +406,7 @@
       const span = feedback.firstChild;
       if (animar && !reduceMotion) {
         span.style.display = 'inline-block';
-        span.style.animationDelay = '0.9s';
+        span.style.animationDelay = '0s'; // ahora el texto es lo PRIMERO que aparece
         span.style.animationFillMode = 'backwards';
         span.classList.add('em-fade-in');
       }
@@ -587,6 +587,32 @@
     footRow.appendChild(emSrc);
     container.appendChild(footRow);
 
+    // Texto del resultado ("Dijiste 14.400. Se estiman 20.750: un 44% más."). Lo usan el foco inicial y reveal().
+    function mensajeResultado() {
+      const guess = tipoState.guess;
+      const ratio = real / guess;
+      const dijiste = 'Dijiste <b>' + formatNumber(guess) + '</b>. ';
+      const seEstiman = 'Se estiman <b>' + formatNumber(real) + '</b>';
+      if (guess === real) {
+        return 'Acertaste: se estiman <b>' + formatNumber(real) + '</b> casos por año.';
+      } else if (Math.abs(ratio - 1) < 0.1) {
+        return (
+          'Estuviste cerca: dijiste <b>' +
+          formatNumber(guess) +
+          '</b> y se estiman <b>' +
+          formatNumber(real) +
+          '</b>.'
+        );
+      } else if (ratio >= 3) {
+        return dijiste + seEstiman + ': más del triple.';
+      } else if (ratio >= 2) {
+        return dijiste + seEstiman + ': más del doble.';
+      } else if (ratio > 1) {
+        return dijiste + seEstiman + ': un ' + Math.round((ratio - 1) * 100) + '% más.';
+      }
+      return dijiste + seEstiman + ': un ' + Math.round((1 - ratio) * 100) + '% menos.';
+    }
+
     // reveal(doAnimate): muestra la respuesta real de Mama.
     function reveal(doAnimate) {
       tipoState.revealed = true;
@@ -717,33 +743,10 @@
         valEl.textContent = formatNumber(real);
       }
 
-      // Mensaje de resultado: corto, de tono intermedio y con "se estiman" porque 20.750 es una estimación de GLOBOCAN.
-      const ratio = real / guess;
-      const dijiste = 'Dijiste <b>' + formatNumber(guess) + '</b>. ';
-      const seEstiman = 'Se estiman <b>' + formatNumber(real) + '</b>';
-      let msg;
-      if (guess === real) {
-        msg = 'Acertaste: se estiman <b>' + formatNumber(real) + '</b> casos por año.';
-      } else if (Math.abs(ratio - 1) < 0.1) {
-        msg =
-          'Estuviste cerca: dijiste <b>' +
-          formatNumber(guess) +
-          '</b> y se estiman <b>' +
-          formatNumber(real) +
-          '</b>.';
-      } else if (ratio >= 3) {
-        msg = dijiste + seEstiman + ': más del triple.';
-      } else if (ratio >= 2) {
-        msg = dijiste + seEstiman + ': más del doble.';
-      } else if (ratio > 1) {
-        msg = dijiste + seEstiman + ': un ' + Math.round((ratio - 1) * 100) + '% más.';
-      } else {
-        msg = dijiste + seEstiman + ': un ' + Math.round((1 - ratio) * 100) + '% menos.';
-      }
-      // No se agrega "Eso es N diagnósticos por día" al final de la respuesta.
-      setFeedback(msg, doAnimate);
+      // Con animación, el texto ya se mostró en el "foco" (ver el click de btnConfirm).
+      // Al reconstruir el estado sin animación (volver de otra pestaña) se escribe acá.
+      if (!doAnimate) setFeedback(mensajeResultado(), false);
     }
-
     // setupDrag(): arma la zona de arrastre sobre la columna de Mama (.em-plot) con la barra punteada y la manija "↕" (Pointer Events para mouse y touch).
     function setupDrag() {
       const valEl = mama.querySelector('.em-val');
@@ -904,13 +907,62 @@
         e.preventDefault();
       });
 
+      // Cuánto dura el foco (ms) con SOLO el texto en pantalla. Subilo o bajalo a gusto.
+      const FOCO_MS = 1500;
+
       btnConfirm.addEventListener('click', function () {
         if (!moved) return;
         dragging = false;
         if (ro) ro.disconnect();
         zone.remove();
         btnConfirm.remove();
-        reveal(true);
+
+        // 1) FOCO: el panel se oculta y el texto aparece CENTRADO en el lugar del panel.
+        tipoState.revealed = true;
+        panel1.classList.add('em-foco');
+        prompt.classList.remove('em-shown');
+        setFeedback(mensajeResultado(), true);
+        feedback.classList.add('em-shown');
+
+        // FLIP: se mide dónde está el texto (fila de pestañas) y dónde es el centro del panel,
+        // y se lo traslada ahí (con un poco de zoom) sin transición.
+        const ESCALA_FOCO = 1.35; // cuánto se agranda mientras está en el centro
+        let movido = false;
+        if (!reduceMotion) {
+          const fr = feedback.getBoundingClientRect();
+          const pr = panel1.getBoundingClientRect();
+          const cr = chart.getBoundingClientRect();
+          const dx = pr.left + pr.width / 2 - (fr.left + fr.width / 2);
+          // Vertical: el centro del área de las barras (el gráfico), no el del panel entero.
+          const dy = cr.top + cr.height / 2 - (fr.top + fr.height / 2);
+          feedback.style.position = 'relative';
+          feedback.style.zIndex = '5';
+          feedback.style.transformOrigin = '50% 50%';
+          feedback.style.transform =
+            'translate(' + dx + 'px,' + dy + 'px) scale(' + ESCALA_FOCO + ')';
+          movido = true;
+        }
+
+        // 2) Pasado el tiempo, aparece todo lo demás y el texto se desliza a su lugar de siempre.
+        setTimeout(
+          function () {
+            panel1.classList.remove('em-foco');
+            if (movido) {
+              feedback.style.transition =
+                'opacity .4s ease, visibility 0s linear, transform .9s cubic-bezier(.3,.7,.2,1)';
+              feedback.style.transform = '';
+              setTimeout(function () {
+                feedback.style.transition = '';
+                feedback.style.position = '';
+                feedback.style.zIndex = '';
+                feedback.style.transformOrigin = '';
+              }, 1000);
+            }
+            if (!chart.isConnected) return; // cambió de pestaña o reinició durante la pausa
+            reveal(true);
+          },
+          reduceMotion ? 0 : FOCO_MS,
+        );
       });
     }
 
@@ -1070,7 +1122,7 @@
     const prompt = document.createElement('div');
     prompt.className = 'em-prompt em-prompt-tipo';
     prompt.innerHTML =
-      '<span class="em-prompt-dot" aria-hidden="true"></span>Tocá una barra para ver la cantidad en un rango de edad.';
+      '<span class="em-prompt-dot" aria-hidden="true"></span>Presioná una barra para ver la cantidad en un rango de edad.';
     container.appendChild(prompt);
 
     const chart = document.createElement('div');

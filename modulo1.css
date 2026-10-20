@@ -1031,3 +1031,14 @@
     margin: 8px 0 0;
   }
 }
+
+/* FOCO EN EL RESULTADO: al confirmar, el panel (barras, datos, botones, fuente) se oculta un instante
+   y solo se ve el texto "Dijiste X. Se estiman Y..." (que vive en la fila de pestañas, fuera del panel).
+   Al sacar la clase, el panel aparece con un fundido. */
+.em-panel {
+  transition: opacity 0.5s ease;
+}
+.em-panel.em-foco {
+  opacity: 0;
+  pointer-events: none;
+}
