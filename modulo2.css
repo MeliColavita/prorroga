@@ -493,6 +493,15 @@
   line-height: 1.4;
   color: var(--br-text);
 }
+.br-tasa-tipo {
+  margin-right: auto;
+  align-self: center;
+  padding-left: 10px; /* = layout.padding.left de los gráficos: arranca donde el eje Y */
+  font-family: var(--br-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--br-text);
+}
 /* Dato principal de "Por año": mujeres que mueren por día.
    Mismo estilo que tenían los números grandes (serif, rosa, con brillo). */
 .br-day {
@@ -1159,11 +1168,13 @@
 #cpPanel .cp-todos-btn {
   margin-left: auto;
 }
-#cpPanel .cp-todos-btn[aria-pressed='true'] {
-  background: var(--br-rose-strong);
-  color: #1a0510;
-  border-color: var(--br-rose-strong);
-  box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
+#cpPanel .cp-todos-btn.cp-todos-blink {
+  animation: em-confirm-blink 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  #cpPanel .cp-todos-btn.cp-todos-blink {
+    animation: none;
+  }
 }
 /* En "Ver todos" se ocultan el gráfico de líneas y los chips "Argentina vs. país". */
 #cpPanel.cp-modo-todos .cp-chart,
