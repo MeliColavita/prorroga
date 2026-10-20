@@ -613,57 +613,17 @@
       return dijiste + seEstiman + ': un ' + Math.round((1 - ratio) * 100) + '% menos.';
     }
 
-    // reveal(doAnimate): muestra la respuesta real de Mama.
-    function reveal(doAnimate) {
-      tipoState.revealed = true;
-      // Se usa classList (no .hidden) para que estos elementos sigan ocupando su lugar y la tarjeta no cambie de alto al revelar.
-      prompt.classList.remove('em-shown');
-      feedback.classList.add('em-shown');
-      // Guía: apenas se revela el resultado, "¿Y si sumamos los otros 4?" titila para invitar al paso siguiente.
-      if (doAnimate) {
-        btnSum.classList.add('em-btn-blink');
-        // Mientras titila, "Probar de nuevo" va con el borde apagado (gris) para que se note bien cuál es el paso siguiente.
-        btnReset.classList.add('em-btn-quiet');
-      }
-      actions.classList.add('em-shown');
-      axisNote.classList.add('em-shown');
-      statsCol.classList.add('em-shown');
-      if (doAnimate) statsCol.querySelectorAll('.em-stat-value').forEach(countUpPct);
-
-      // Las otras 4 columnas (ocultas hasta ahora, ver "em-col-pending" al crear las columnas) aparecen con su altura y datos reales.
-      const others = cols.slice(1);
-      mama.querySelector('.em-lbl').textContent = data[0].categoria; // "Cáncer de mama" -> "Mama"
-      const mamaX0 = mama.getBoundingClientRect().left;
-      data.slice(1).forEach(function (d, idx) {
-        const col = others[idx];
-        col.querySelector('.em-val').textContent = formatNumber(d.valor);
-        col.querySelector('.em-lbl').textContent = d.categoria;
+    // Las otras 4 columnas ocupan su lugar (así Mama ya queda a la izquierda) pero invisibles.
+    const otras = cols.slice(1);
+    function prepararOtras() {
+      otras.forEach(function (col) {
         col.classList.remove('em-col-pending');
+        col.style.opacity = '0';
       });
-      if (doAnimate) slide(mama, mamaX0 - mama.getBoundingClientRect().left);
+    }
 
-      // Cada columna aparece UNA POR UNA, de izquierda a derecha.
-      others.forEach(function (col, idx) {
-        const b = col.querySelector('.em-bar');
-        const pctOther = (data[idx + 1].valor / TIPO_MAX) * 100;
-        if (!doAnimate || reduceMotion) {
-          b.style.height = pctOther + '%';
-          return;
-        }
-        const delay = 350 + idx * 140;
-        col.animate(
-          [
-            { opacity: 0, transform: 'translateY(10px)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 450, delay: delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' },
-        );
-        b.style.height = '0%';
-        setTimeout(function () {
-          b.style.height = pctOther + '%'; // el crecimiento lo anima .em-bar (transition:height, modulo1.css)
-        }, delay);
-      });
-
+    // FASE 1: solo la barra de Mama con su valor real y "Tu respuesta".
+    function revealMama(doAnimate) {
       const plot = mama.querySelector('.em-plot');
       const bar = mama.querySelector('.em-bar');
       const valEl = mama.querySelector('.em-val');
@@ -675,19 +635,15 @@
       const guess = tipoState.guess;
       const pct = (real / TIPO_MAX) * 100;
 
-      // Barra "Tu respuesta": va SUPERPUESTA a la barra real, con la misma escala (% de .em-plot).
+      // Barra "Tu respuesta": superpuesta a la barra real, con la misma escala.
       const oldGhost = mama.querySelector('.em-guess-ghost');
       if (oldGhost) oldGhost.remove();
       const ghost = document.createElement('div');
       ghost.className = 'em-guess-ghost';
       ghost.style.height = (guess / TIPO_MAX) * 100 + '%';
-      // El cartel sale hacia la izquierda: "Tu respuesta" y debajo el valor que puso la persona.
       ghost.innerHTML = '<span>Tu respuesta</span>';
       plot.appendChild(ghost);
 
-      // Orden de las barras. Si la respuesta es IGUAL O MAYOR que el real, la barra rosa va adelante
-      // y la gris atrás (solo asoma por encima). Si es menor, la gris va adelante, como antes.
-      // El orden se fija acá, en línea, para que ninguna regla del CSS lo pise.
       if (guess >= real) {
         ghost.style.zIndex = '1';
         bar.style.zIndex = '2';
@@ -696,27 +652,23 @@
         bar.style.zIndex = '';
       }
 
-      // El número real pasa por encima de la barra de la respuesta (si no, quedaría tapado).
       valEl.classList.add('em-val-sobre');
 
-      // Si el número real (20.750) pisaría la línea de "Tu respuesta", se mete adentro de su barra, pegado al tope.
       function acomodarNumero() {
         if (!valEl.isConnected) return;
-        const H = plot.clientHeight; // alto en px del área de dibujo
-        const T = (real / TIPO_MAX) * H; // altura del tope de la barra real
-        const L = (guess / TIPO_MAX) * H; // altura de la línea de la respuesta
-        const h = valEl.offsetHeight; // alto del número
-        // El número ocupa de T+6 a T+6+h (px desde el piso); la línea mide 2px y termina en L. Se deja 3px de margen.
+        const H = plot.clientHeight;
+        const T = (real / TIPO_MAX) * H;
+        const L = (guess / TIPO_MAX) * H;
+        const h = valEl.offsetHeight;
         const choca = L > T + 3 && L - 2 < T + 6 + h + 3;
         if (choca) {
-          valEl.style.setProperty('--em-val-baja', h + 10 + 'px'); // 6px del margen original + 4px adentro de la barra
+          valEl.style.setProperty('--em-val-baja', h + 10 + 'px');
           valEl.classList.add('em-val-dentro');
         } else {
           valEl.classList.remove('em-val-dentro');
         }
       }
       acomodarNumero();
-      // Si cambia el tamaño del gráfico (ventana, zoom), se vuelve a calcular. Se desconecta solo cuando el gráfico se reconstruye.
       if (window.ResizeObserver) {
         const roNum = new ResizeObserver(function () {
           if (!plot.isConnected) {
@@ -729,10 +681,9 @@
       }
 
       if (doAnimate && !reduceMotion) {
-        // Arranca en 0 sin transición y recién ahí crece animada.
         bar.style.transition = 'none';
         bar.style.height = '0%';
-        void bar.offsetWidth; // fuerza un reflow: sin esto, el navegador podría saltearse el 0% y no animar nada
+        void bar.offsetWidth;
         requestAnimationFrame(function () {
           bar.style.transition = 'height .9s cubic-bezier(.2,.8,.2,1)';
           bar.style.height = pct + '%';
@@ -742,9 +693,62 @@
         bar.style.height = pct + '%';
         valEl.textContent = formatNumber(real);
       }
+    }
 
-      // Con animación, el texto ya se mostró en el "foco" (ver el click de btnConfirm).
-      // Al reconstruir el estado sin animación (volver de otra pestaña) se escribe acá.
+    // FASE 2: todo lo demás (otras 4 barras, datos fijos, botones, eje).
+    function revealResto(doAnimate) {
+      if (doAnimate) {
+        btnSum.classList.add('em-btn-blink');
+        btnReset.classList.add('em-btn-quiet');
+      }
+      actions.classList.add('em-shown');
+      axisNote.classList.add('em-shown');
+      statsCol.classList.add('em-shown');
+      if (doAnimate) {
+        statsCol.querySelectorAll('.em-stat-value').forEach(function (el) {
+          // Fija el ancho FINAL antes de contar: así el texto de al lado no cambia de renglones y el gráfico no cambia de alto.
+          el.style.minWidth = el.getBoundingClientRect().width + 'px';
+          countUpPct(el);
+        });
+      }
+
+      mama.querySelector('.em-lbl').textContent = data[0].categoria; // "Cáncer de mama" -> "Mama"
+      prepararOtras(); // no hace nada si la fase 1 ya las acomodó
+      otras.forEach(function (col, idx) {
+        const d = data[idx + 1];
+        col.querySelector('.em-val').textContent = formatNumber(d.valor);
+        col.querySelector('.em-lbl').textContent = d.categoria;
+        const b = col.querySelector('.em-bar');
+        const pctOther = (d.valor / TIPO_MAX) * 100;
+        if (!doAnimate || reduceMotion) {
+          col.style.opacity = '';
+          b.style.height = pctOther + '%';
+          return;
+        }
+        const delay = 350 + idx * 140;
+        col.animate(
+          [
+            { opacity: 0, transform: 'translateY(10px)' },
+            { opacity: 1, transform: 'none' },
+          ],
+          { duration: 450, delay: delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' },
+        );
+        col.style.opacity = '';
+        b.style.height = '0%';
+        setTimeout(function () {
+          b.style.height = pctOther + '%';
+        }, delay);
+      });
+    }
+
+    // reveal(): las dos fases juntas, sin pausa (al volver de otra pestaña o con "reducir movimiento").
+    function reveal(doAnimate) {
+      tipoState.revealed = true;
+      prompt.classList.remove('em-shown');
+      feedback.classList.add('em-shown');
+      prepararOtras();
+      revealMama(doAnimate);
+      revealResto(doAnimate);
       if (!doAnimate) setFeedback(mensajeResultado(), false);
     }
     // setupDrag(): arma la zona de arrastre sobre la columna de Mama (.em-plot) con la barra punteada y la manija "↕" (Pointer Events para mouse y touch).
@@ -907,8 +911,10 @@
         e.preventDefault();
       });
 
-      // Cuánto dura el foco (ms) con SOLO el texto en pantalla. Subilo o bajalo a gusto.
-      const FOCO_MS = 1500;
+      // Cuánto (ms) queda el texto al lado de Mama antes de volver a su lugar.
+      const HOLD_MS = 1000;
+      const VUELO_MS = 900;
+      const ESCALA_GRANDE = 1.35; // cuánto más grande se ve junto a la barra de Mama (1 = tamaño normal)
 
       btnConfirm.addEventListener('click', function () {
         if (!moved) return;
@@ -917,52 +923,109 @@
         zone.remove();
         btnConfirm.remove();
 
-        // 1) FOCO: el panel se oculta y el texto aparece CENTRADO en el lugar del panel.
         tipoState.revealed = true;
-        panel1.classList.add('em-foco');
         prompt.classList.remove('em-shown');
-        setFeedback(mensajeResultado(), true);
-        feedback.classList.add('em-shown');
+        setFeedback(mensajeResultado(), false); // el texto real queda oculto en la fila de pestañas
 
-        // FLIP: se mide dónde está el texto (fila de pestañas) y dónde es el centro del panel,
-        // y se lo traslada ahí (con un poco de zoom) sin transición.
-        const ESCALA_FOCO = 1.35; // cuánto se agranda mientras está en el centro
-        let movido = false;
-        if (!reduceMotion) {
-          const fr = feedback.getBoundingClientRect();
-          const pr = panel1.getBoundingClientRect();
-          const cr = chart.getBoundingClientRect();
-          const dx = pr.left + pr.width / 2 - (fr.left + fr.width / 2);
-          // Vertical: el centro del área de las barras (el gráfico), no el del panel entero.
-          const dy = cr.top + cr.height / 2 - (fr.top + fr.height / 2);
-          feedback.style.position = 'relative';
-          feedback.style.zIndex = '5';
-          feedback.style.transformOrigin = '50% 50%';
-          feedback.style.transform =
-            'translate(' + dx + 'px,' + dy + 'px) scale(' + ESCALA_FOCO + ')';
-          movido = true;
+        if (reduceMotion) {
+          reveal(true);
+          return;
         }
 
-        // 2) Pasado el tiempo, aparece todo lo demás y el texto se desliza a su lugar de siempre.
-        setTimeout(
-          function () {
-            panel1.classList.remove('em-foco');
-            if (movido) {
-              feedback.style.transition =
-                'opacity .4s ease, visibility 0s linear, transform .9s cubic-bezier(.3,.7,.2,1)';
-              feedback.style.transform = '';
-              setTimeout(function () {
-                feedback.style.transition = '';
-                feedback.style.position = '';
-                feedback.style.zIndex = '';
-                feedback.style.transformOrigin = '';
-              }, 1000);
-            }
-            if (!chart.isConnected) return; // cambió de pestaña o reinició durante la pausa
-            reveal(true);
-          },
-          reduceMotion ? 0 : FOCO_MS,
-        );
+        // FASE 1: Mama se desliza a su lugar y sube su barra con "Tu respuesta".
+        const x0 = mama.getBoundingClientRect().left;
+        prepararOtras();
+        slide(mama, x0 - mama.getBoundingClientRect().left);
+        revealMama(true);
+
+        // Se mide TODO ahora (una sola vez), así durante el viaje no hay lecturas de layout.
+        const cr = chart.getBoundingClientRect();
+        const fr = feedback.getBoundingClientRect(); // destino final: el texto real
+        const c1 = cols[1].getBoundingClientRect();
+        const c4 = cols[4].getBoundingClientRect();
+        const plotR = cols[1].querySelector('.em-plot').getBoundingClientRect();
+
+        // El texto flotante vive en su posición FINAL y con su tamaño normal;
+        // transform lo ubica (y agranda) en el hueco de las otras 4 barras.
+        const flota = document.createElement('div');
+        flota.className = 'em-feedback';
+        flota.innerHTML = '<span>' + mensajeResultado() + '</span>';
+        Object.assign(flota.style, {
+          position: 'absolute',
+          left: fr.left - cr.left + 'px',
+          width: fr.width + 'px',
+          margin: '0',
+          minHeight: '0',
+          textAlign: 'center',
+          zIndex: '5',
+          pointerEvents: 'none',
+          transformOrigin: '50% 50%',
+        });
+        chart.appendChild(flota);
+        const topFinal = fr.top - cr.top + (fr.height - flota.offsetHeight) / 2;
+        flota.style.top = topFinal + 'px';
+
+        // Escala: la pedida, pero sin que el texto se salga del hueco.
+        const huecoW = c4.right - c1.left;
+        const textoW = Math.min(flota.firstChild.getBoundingClientRect().width, fr.width);
+        const escala = Math.max(1, Math.min(ESCALA_GRANDE, (huecoW * 0.95) / textoW));
+
+        // Desplazamiento del centro final al centro del hueco.
+        const centroFinalX = fr.left - cr.left + fr.width / 2;
+        const centroFinalY = topFinal + flota.offsetHeight / 2;
+        const huecoX = (c1.left + c4.right) / 2 - cr.left;
+        const huecoY = plotR.top - cr.top + plotR.height / 2;
+        const inicio =
+          'translate(' +
+          (huecoX - centroFinalX) +
+          'px,' +
+          (huecoY - centroFinalY) +
+          'px) scale(' +
+          escala +
+          ')';
+        flota.style.transform = inicio;
+        flota.animate([{ opacity: 0 }, { opacity: 1 }], {
+          duration: 500,
+          delay: 350,
+          fill: 'backwards',
+        });
+
+        // FASE 2: el texto vuelve a su lugar PRIMERO; lo pesado (barras, contadores) arranca un poco después.
+        setTimeout(function () {
+          if (!chart.isConnected) return; // cambió de pestaña o reinició durante la pausa
+
+          // Relevo: el texto real aparece exactamente donde termina el flotante.
+          function relevo() {
+            feedback.style.transition = 'none';
+            feedback.classList.add('em-shown');
+            void feedback.offsetWidth;
+            feedback.style.transition = '';
+            flota.remove();
+          }
+
+          let vuelo = null;
+          try {
+            vuelo = flota.animate(
+              [{ transform: inicio }, { transform: 'translate(0px,0px) scale(1)' }],
+              {
+                duration: VUELO_MS,
+                easing: 'cubic-bezier(.3,.7,.2,1)',
+                fill: 'forwards',
+              },
+            );
+          } catch (err) {
+            console.error('Animación del texto:', err);
+          }
+
+          // El relevo depende de que la animación TERMINE, no de un timer.
+          if (vuelo) vuelo.finished.then(relevo, relevo);
+          else relevo();
+
+          // Lo pesado arranca después de que el vuelo ya está en marcha (no compite por el primer frame).
+          setTimeout(function () {
+            if (chart.isConnected) revealResto(true);
+          }, 120);
+        }, HOLD_MS);
       });
     }
 
