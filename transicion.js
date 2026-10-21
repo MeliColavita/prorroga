@@ -9,7 +9,7 @@
     modulo: { src: 'sonidos/modulo.MP3', vol: 0.5 }, // al cambiar de módulo
     pestana: { src: 'sonidos/pestana.MP3', vol: 0.4 }, // al cambiar de pestaña
     final: { src: 'sonidos/final.MP3', vol: 0.6 }, // al tocar "una última cosa"
-      resultado: { src: 'sonidos/resultado.MP3', vol: 0.1 }, // módulo 1: al confirmar la barra y ver el resultado
+    resultado: { src: 'sonidos/resultado.MP3', vol: 0.1 }, // módulo 1: al confirmar la barra y ver el resultado
   };
   const audios = {};
   let silenciado = false;
@@ -585,7 +585,7 @@
   const BARRA_APARECE = 900; // ms: aparece en el centro (mientras se desvanece la intro)
   const BARRA_PAUSA = 300; // ms: se queda quieta, grande (el "segundo de protagonismo")
   const BARRA_VUELVE = 800; // ms: vuelve a su lugar
-  const BARRA_ESCALA_MAX = 1.5; // cuántas veces más grande, como máximo (en pantallas angostas baja sola)
+  const BARRA_ESCALA_MAX = 1.3; // cuántas veces más grande, como máximo (en pantallas angostas baja sola)
   const BARRA_DURACION = BARRA_APARECE + BARRA_PAUSA + BARRA_VUELVE;
 
   // Si se llegó con "Volver a la presentación", la barra no se vuelve a presentar.
