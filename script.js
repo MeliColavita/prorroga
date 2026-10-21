@@ -61,23 +61,29 @@ function enterExperience() {
   intro.setAttribute('aria-hidden', 'true');
   introCaption.hidden = true;
 
-  // Arranca el video del capítulo activo (los otros arrancan al navegar a ellos).
+  // Presentación de la barra: los botones aparecen grandes en el centro y vuelven a su lugar. Devuelve cuánto dura (ms).
+  const espera =
+    window.Transicion && window.Transicion.presentarBarra ? window.Transicion.presentarBarra() : 0;
+
+  // Arranca el video del capítulo activo (los otros arrancan al navegar a ellos); espera a que termine la presentación.
   const activeVideo = document.querySelector('.chapter-video.active');
   if (activeVideo) {
     activeVideo.currentTime = 0;
-    activeVideo
-      .play()
-      .catch((err) => console.warn('No se pudo reproducir el video del capítulo activo:', err));
+    setTimeout(() => {
+      activeVideo
+        .play()
+        .catch((err) => console.warn('No se pudo reproducir el video del capítulo activo:', err));
+    }, espera);
   }
 
-  // Sonido de módulo, música de fondo (transicion.js) y animación de entrada; la animación espera 700 ms al fundido de la intro.
+  // Sonido de módulo, música de fondo (transicion.js) y animación de entrada; la animación espera a que termine la presentación (o 700 ms al fundido de la intro).
   if (window.Transicion) {
     window.Transicion.sfx('modulo');
     if (window.Transicion.musica) window.Transicion.musica();
     window.Transicion.entrar(
       document.querySelector('.chapter.active'),
       document.querySelector('.nav-item.active'),
-      700,
+      espera ? espera + 120 : 700,
     );
   }
 }
@@ -376,7 +382,14 @@ document.querySelectorAll('.ui-tab').forEach(function (btn) {
 
 // ---------- Volver a la presentación: recarga la página (intro, audio y videos como al inicio) ----------
 const navBack = document.getElementById('navBack');
-if (navBack) navBack.addEventListener('click', () => location.reload());
+if (navBack)
+  navBack.addEventListener('click', () => {
+    // Marca para que, tras recargar, no se repita la presentación de la barra
+    try {
+      sessionStorage.setItem('saltarPresentacionBarra', '1');
+    } catch (e) {}
+    location.reload();
+  });
 
 // ---------- Fuente con links (compartido) ---------- la usan los tres modulos
 //   fuentes: [{ autor, etiqueta, url }]
