@@ -403,7 +403,7 @@
     // setFeedback(html): escribe el mensaje de resultado envuelto en un <span>.
     function setFeedback(html, animar) {
       feedback.innerHTML = '<span>' + html + '</span>';
-      feedback.classList.toggle('em-fb-suma', /^(Los otros 4|Tocá)/.test(html)); // marca "Los otros 4..." y "Tocá..."
+      feedback.classList.toggle('em-fb-suma', /^(Los otros 4|Presioná)/.test(html)); // marca "Los otros 4..." y "Tocá..."
       const span = feedback.firstChild;
       if (animar && !reduceMotion) {
         span.style.display = 'inline-block';
@@ -1149,7 +1149,7 @@
           });
           slide(mama, x0 - mama.getBoundingClientRect().left);
         }
-        setFeedback('Tocá <b>' + SUM_LABEL + '</b> para compararlos con Mama.');
+        setFeedback('Presioná <b>' + SUM_LABEL + '</b> para compararlos con Mama.');
         btnSum.textContent = SUM_LABEL;
       }
       btnSum.disabled = false;
