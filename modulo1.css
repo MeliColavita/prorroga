@@ -717,7 +717,6 @@
 
 /* .em-tipo-result: ahora solo contiene los 2 datos fijos, en un solo renglón y centrados. */
 .em-tipo-result {
-  /* margin-top fijo: la tarjeta no se estira al alto de la vela de al lado, así que no hay espacio sobrante para centrar con flexbox. */
   margin-top: 44px;
 }
 .em-tipo-result-stats {
@@ -725,6 +724,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 24px;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 12px;
 }
 /* .em-stat de base apila número y etiqueta; acá cada dato va en un solo renglón (número rosa + texto gris) alineado por el piso del texto. */
 .em-tipo-result-stats .em-stat {
@@ -754,10 +755,7 @@
   grid-column: 1;
   grid-row: 2;
 }
-/* Letra un poco más grande para estos 2 datos, limitada acá porque .em-stat-value/.em-stat-label también los usa "Casos por edad". */
-.em-tipo-result-stats .em-stat-value {
-  font-size: 1.55rem; /* un poco más grande que el tamaño base (1.4rem) de .em-stat-value */
-}
+
 .em-tipo-result-stats .em-stat-label {
   font-size: 0.9rem; /* un poco más grande que el tamaño base (0.8rem) de .em-stat-label */
 }
@@ -890,7 +888,14 @@
 .em-card .em-foot {
   margin-top: var(--ui-gap-titulo);
 }
-
+/* "Por tipo": pie pegado al texto de arriba (sin el espacio entre "hombres" y la bajada) */
+.em-card .em-tipo-result + .em-foot {
+  margin-top: 0;
+}
+/* "Por tipo": "Fuente" sin margen arriba, para que el pie no quede más alto que su texto */
+.em-card .em-tipo-result + .em-foot .ui-src {
+  margin-top: 0;
+}
 /* "POR TIPO": BARRAS MÁS ALTAS: los datos fijos usan el espacio parejo entre bloques y el gráfico crece con esos px. */
 @media (min-height: 761px) {
   .em-card .em-tipo-result {
@@ -1014,15 +1019,30 @@
   flex-wrap: wrap;
 }
 @container (min-width: 560px) {
-  .em-card .em-tabs .em-tipo-top > .em-prompt-tipo {
+  .em-card .em-tabs .em-tipo-top > .em-prompt-tipo,
+  .em-card .em-tabs .em-tipo-top > .em-feedback {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: calc(
-      100% - 380px
-    ); /* deja libres las pestañas a la izquierda y el mismo espacio a la derecha */
+    width: calc(100% - 380px);
     pointer-events: none;
+    text-align: center;
+  }
+  .em-card .em-tabs .em-tipo-top > .em-feedback {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+    left: 267px; /* todos los resultados empiezan en la línea roja */
+    transform: translateY(-50%);
+    text-align: left;
+  }
+  /* "Los otros 4..." y "Tocá...": empiezan en la línea roja */
+  .em-card .em-tabs .em-tipo-top > .em-feedback.em-fb-suma {
+    left: 231px;
+  }
+  .em-card .em-tabs .em-tipo-top > .em-feedback > span {
+    white-space: nowrap;
   }
 }
 @container (max-width: 559px) {
