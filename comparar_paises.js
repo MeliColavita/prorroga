@@ -604,7 +604,8 @@
   const ranking = panel.querySelector('#cpRanking');
   const todosAnio = panel.querySelector('#cpTodosAnio');
   const todosAnioLbl = panel.querySelector('#cpTodosAnioLbl');
-  const ALTO_FILA = 14; // px por país
+  const ALTO_FILA = 14; // px por país (como máximo: en pantallas bajas se achica, ver mostrarRanking)
+  const TARJETA_FIJA = window.matchMedia('(min-width: 881px)');
   const ROSA_ALTO = [194, 87, 127]; // #c2577f: tasa más alta
   const ROSA_BAJO = [92, 45, 69]; // #5c2d45: tasa más baja (Argentina siempre va en --rose-strong)
   let modoTodos = false;
@@ -652,24 +653,7 @@
       .sort((x, y) => datos[y].serie.get(a) - datos[x].serie.get(a));
     const sinDato = paisesRanking().filter((n) => !datos[n].serie.has(a));
 
-    ranking.style.height = conDato.length * ALTO_FILA + 'px';
-    conDato.forEach((n, i) => {
-      const fila = filas[n];
-      const v = datos[n].serie.get(a);
-      fila.hidden = false;
-      fila.style.top = i * ALTO_FILA + 'px';
-      const barra = fila.querySelector('.cp-fila-relleno');
-      // El número va pegado a la punta de la barra: se le reservan 40px.
-      barra.style.width = 'calc((100% - 40px) * ' + v / topeRanking + ')';
-      if (n !== PAIS_FIJO) {
-        barra.style.background = colorRanking(conDato.length > 1 ? i / (conDato.length - 1) : 0);
-      }
-      fila.querySelector('.cp-fila-valor').textContent = fmt1(v);
-    });
-    sinDato.forEach((n) => (filas[n].hidden = true));
-
-    // Título y dato de abajo: el puesto de Argentina ese año.
-    dato.textContent = '';
+    // Título: el puesto de Argentina ese año.
     const puesto = conDato.indexOf(PAIS_FIJO) + 1;
     if (!puesto) {
       titulo.textContent = 'En ' + a + ' no hay datos de Argentina';
@@ -700,12 +684,51 @@
         ' de ' +
         conDato.length +
         ' países';
+    }
+    datoRanking(a);
+
+    // Alto de cada fila: ALTO_FILA, salvo que no entren todos los países en el lugar que deja
+    // la tarjeta de alto fijo (pantallas bajas): ahí cada fila se achica lo justo y la barra
+    // de años queda siempre abajo, sin tapar el dato ni el pie. Se mide después del título y
+    // del dato, porque los dos cambian el lugar disponible.
+    let alto = ALTO_FILA;
+    if (TARJETA_FIJA.matches) {
+      const libre =
+        todos.clientHeight -
+        todosAnio.parentElement.offsetHeight -
+        parseFloat(getComputedStyle(todos).rowGap || 0);
+      alto = Math.max(1, Math.min(ALTO_FILA, libre / conDato.length));
+    }
+    ranking.style.setProperty('--cp-fila', alto + 'px'); // alto, letra y barra de cada fila (modulo2.css)
+    ranking.style.height = conDato.length * alto + 'px';
+    conDato.forEach((n, i) => {
+      const fila = filas[n];
+      const v = datos[n].serie.get(a);
+      fila.hidden = false;
+      fila.style.top = i * alto + 'px';
+      const barra = fila.querySelector('.cp-fila-relleno');
+      // El número va pegado a la punta de la barra: se le reservan 40px.
+      barra.style.width = 'calc((100% - 40px) * ' + v / topeRanking + ')';
+      if (n !== PAIS_FIJO) {
+        barra.style.background = colorRanking(conDato.length > 1 ? i / (conDato.length - 1) : 0);
+      }
+      fila.querySelector('.cp-fila-valor').textContent = fmt1(v);
+    });
+    sinDato.forEach((n) => (filas[n].hidden = true));
+  }
+
+  // Dato de abajo de "Ver todos": la tasa de Argentina y los países sin datos ese año.
+  function datoRanking(a) {
+    dato.textContent = '';
+    const sArg = datos[PAIS_FIJO].serie;
+    if (sArg.has(a)) {
       dato.append(
         'En ' + a + ': ',
-        numero(datos[PAIS_FIJO].serie.get(a), false),
+        numero(sArg.get(a), false),
         ' muertes cada 100.000 mujeres en Argentina.',
       );
     }
+    const sinDato = paisesRanking().filter((n) => !datos[n].serie.has(a));
     if (sinDato.length) {
       const s = document.createElement('span');
       s.className = 'cp-aviso';
@@ -713,6 +736,51 @@
       dato.appendChild(s);
     }
   }
+
+  // ---------- La fila de abajo reserva siempre el mismo alto ---------
+  const pie = panel.querySelector('.cp-pie');
+  function reservarAltoPie() {
+    if (!datos || !abierto || !dato.offsetWidth) return; // sin datos o panel oculto
+    pie.style.minHeight = '';
+    let alto = 0;
+    const otros = [...select.options].map((o) => o.value);
+    for (let a = ANIO_MIN; a <= ANIO_MAX; a++) {
+      otros.forEach((otro) => {
+        actualizarTextos(otro, a);
+        alto = Math.max(alto, pie.offsetHeight);
+      });
+      datoRanking(a);
+      alto = Math.max(alto, pie.offsetHeight);
+    }
+    pie.style.minHeight = alto + 'px';
+    // vuelve a dejar el título y el dato de lo que se está viendo
+    if (modoTodos) mostrarRanking(Number(todosAnio.value));
+    else actualizarTextos(select.value, anioActual);
+  }
+
+  // ---------- La subtarjeta usa el renglón libre del pie ----------
+
+  function usarRenglonLibre() {
+    panel.style.height = '';
+    srcSub.style.minHeight = '';
+    if (!abierto || !TARJETA_FIJA.matches || !srcSub.offsetHeight) return;
+    const rango = document.createRange();
+    rango.selectNodeContents(srcSub);
+    const renglones = rango.getClientRects();
+    if (!renglones.length) return;
+    const texto = renglones[renglones.length - 1].bottom - renglones[0].top;
+    // la fila del pie no baja del alto del botón "Fuente", que va al lado
+    const libre = Math.floor(srcSub.clientHeight - Math.max(texto, srcBox.offsetHeight));
+    if (libre < 1) return; // el texto ya ocupa los 2 renglones
+    srcSub.style.minHeight = '0px';
+    panel.style.height = 'calc(var(--br-alto-panel) + ' + libre + 'px)';
+  }
+
+  // Al cambiar el tamaño: primero el lugar de la subtarjeta, después el alto del dato y las filas.
+  window.addEventListener('resize', () => {
+    usarRenglonLibre();
+    reservarAltoPie();
+  });
 
   // Cambia entre el gráfico de a un país y el ranking de todos.
   function cambiarModo(enTodos) {
@@ -765,6 +833,7 @@
     panel.classList.add('br-fade-in');
 
     srcSub.textContent = SUB_CMP;
+    usarRenglonLibre();
     uiFuenteSalir(srcBox, function () {
       if (abierto) uiFuente(srcBox, SRC_CMP);
     });
@@ -781,6 +850,7 @@
         select.value = '';
         mostrarPais('');
         chart.resize();
+        reservarAltoPie();
       })
       .catch(() => {});
   }
@@ -796,6 +866,7 @@
     cerrarInfo();
     btn.setAttribute('aria-pressed', 'false');
     panel.classList.add('br-hidden');
+    usarRenglonLibre(); // con abierto = false, solo saca los ajustes y el pie vuelve a reservar 2 renglones
     if (!restaurar) return;
 
     panelAnio.classList.remove('br-hidden');
