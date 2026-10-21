@@ -243,13 +243,17 @@
   stroke-width: 2.5;
 }
 .br-widget svg.has-selection.br-mode-pct path.br-province:hover:not(.active) {
-  stroke: var(--br-land-border);
-  stroke-width: 1;
+  stroke: var(--br-bg);
+  stroke-width: 1.5;
 }
 .br-widget svg.br-mode-pct g.br-dots {
   display: none;
 }
-
+/* Línea fina oscura entre provincias: el cambio de color se lee como "otra provincia". */
+.br-widget svg.br-mode-pct path.br-province {
+  stroke: var(--br-bg);
+  stroke-width: 1.5;
+}
 /* Botón Cantidad / Porcentaje: arriba a la derecha de la columna del mapa */
 .br-map-mode {
   position: absolute;
@@ -305,7 +309,15 @@
   width: 12px;
   height: 110px;
   border-radius: 6px;
-  background: linear-gradient(to bottom, #ff6f9c, #4a2e48);
+  /* 5 bloques con los mismos colores que PCT_CLASES (modulo2.js), del más alto al más bajo */
+  background: linear-gradient(
+    to bottom,
+    #ff5c92 0 20%,
+    #f590b4 20% 40%,
+    #c9b4bf 40% 60%,
+    #806b77 60% 80%,
+    #4a3c45 80% 100%
+  );
 }
 
 /* Pantalla angosta: el botón y la referencia van debajo del mapa, en horizontal,
@@ -336,7 +348,15 @@
     order: 2;
     width: 140px;
     height: 10px;
-    background: linear-gradient(to right, #4a2e48, #ff6f9c);
+    /* horizontal: del más bajo (izquierda) al más alto (derecha) */
+    background: linear-gradient(
+      to right,
+      #4a3c45 0 20%,
+      #806b77 20% 40%,
+      #c9b4bf 40% 60%,
+      #f590b4 60% 80%,
+      #ff5c92 80% 100%
+    );
   }
   .br-pct-hi {
     order: 3;
@@ -1176,9 +1196,10 @@
     animation: none;
   }
 }
-/* En "Ver todos" se ocultan el gráfico de líneas y los chips "Argentina vs. país". */
+
 #cpPanel.cp-modo-todos .cp-chart,
-#cpPanel.cp-modo-todos .cp-paises > :not(.cp-todos-btn) {
+#cpPanel.cp-modo-todos .cp-paises > :not(.cp-todos-btn),
+#cpPanel.cp-modo-todos .br-tasa-tipo {
   display: none;
 }
 .cp-todos[hidden] {
