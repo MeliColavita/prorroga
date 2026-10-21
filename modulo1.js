@@ -924,6 +924,7 @@
         btnConfirm.remove();
 
         tipoState.revealed = true;
+               if (window.Transicion) window.Transicion.sfx('resultado'); // efecto de sonido del resultado 
         prompt.classList.remove('em-shown');
         setFeedback(mensajeResultado(), false); // el texto real queda oculto en la fila de pestañas
 
