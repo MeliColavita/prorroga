@@ -75,7 +75,13 @@
     btn.dataset.tip = apagado ? tipOff : tipOn;
   }
   function pintarSilencio() {
-    pintarBoton(btnSfx, silenciado, 'efectos de sonido', 'Efectos de sonido: activados', 'Efectos de sonido: silenciados');
+    pintarBoton(
+      btnSfx,
+      silenciado,
+      'efectos de sonido',
+      'Efectos de sonido: activados',
+      'Efectos de sonido: silenciados',
+    );
   }
   if (btnSfx) {
     btnSfx.addEventListener('click', () => {
@@ -142,7 +148,13 @@
     if (!musica.paused) fundirMusica(volMusica, 1500);
   }
   function pintarMusica() {
-    pintarBoton(btnMusica, musicaOff, 'música de fondo', 'Música de fondo: activada', 'Música de fondo: silenciada');
+    pintarBoton(
+      btnMusica,
+      musicaOff,
+      'música de fondo',
+      'Música de fondo: activada',
+      'Música de fondo: silenciada',
+    );
   }
   if (btnMusica) {
     btnMusica.addEventListener('click', () => {
@@ -567,6 +579,72 @@
     else listo();
   }
 
+  // ---------- PRESENTACIÓN INICIAL DE LA BARRA ----------
+  // Los botones aparecen grandes en el centro de la pantalla, se quedan un momento y vuelven a su lugar.
+  const BARRA_APARECE = 900; // ms: aparece en el centro (mientras se desvanece la intro)
+  const BARRA_PAUSA = 300; // ms: se queda quieta, grande (el "segundo de protagonismo")
+  const BARRA_VUELVE = 800; // ms: vuelve a su lugar
+  const BARRA_ESCALA_MAX = 2.6; // cuántas veces más grande, como máximo (en pantallas angostas baja sola)
+  const BARRA_DURACION = BARRA_APARECE + BARRA_PAUSA + BARRA_VUELVE;
+
+  // Si se llegó con "Volver a la presentación", la barra no se vuelve a presentar.
+  // La marca se lee y se borra apenas carga la página: una recarga normal (F5) o una visita nueva vuelven a mostrarla.
+  let saltarPresentacion = false;
+  try {
+    saltarPresentacion = sessionStorage.getItem('saltarPresentacionBarra') === '1';
+    sessionStorage.removeItem('saltarPresentacionBarra');
+  } catch (e) {}
+
+  function presentarBarra() {
+    const barra = document.querySelector('.side-nav');
+    if (saltarPresentacion || !barra || !barra.animate || reducirMovimiento() || items.length < 2)
+      return 0;
+
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const r = barra.getBoundingClientRect();
+    const a = items[0].getBoundingClientRect();
+    const b = items[items.length - 1].getBoundingClientRect();
+    const filaX = (a.left + b.right) / 2; // centro de la fila de botones
+    const filaY = a.top + a.height / 2;
+    const escala = Math.max(1, Math.min(BARRA_ESCALA_MAX, (W * 0.8) / (b.right - a.left)));
+
+    // La barra tiene "zoom: 1.12": los px de transform se multiplican por ese zoom. Se mide cuánto, para compensarlo.
+    barra.style.transform = 'translateX(100px)';
+    const k = (items[0].getBoundingClientRect().left - a.left) / 100 || 1;
+    barra.style.transform = '';
+
+    const dx = (W / 2 - filaX) / k;
+    const dy = (H / 2 - filaY) / k;
+    barra.style.transformOrigin = (filaX - r.left) / k + 'px ' + (filaY - r.top) / k + 'px';
+    barra.classList.add('nav-presenta');
+    document.body.classList.add('nav-solo');
+
+    const centro = 'translate(' + dx + 'px,' + dy + 'px) scale(' + escala + ')';
+    const sale = 'translate(' + dx + 'px,' + dy + 'px) scale(' + escala * 0.8 + ')';
+    const anim = barra.animate(
+      [
+        { opacity: 0, transform: sale, offset: 0, easing: 'cubic-bezier(.22,1,.36,1)' },
+        { opacity: 1, transform: centro, offset: BARRA_APARECE / BARRA_DURACION },
+        {
+          opacity: 1,
+          transform: centro,
+          offset: (BARRA_APARECE + BARRA_PAUSA) / BARRA_DURACION,
+          easing: 'cubic-bezier(.45,.05,.25,1)',
+        },
+        { opacity: 1, transform: 'translate(0px,0px) scale(1)', offset: 1 },
+      ],
+      { duration: BARRA_DURACION, fill: 'backwards' },
+    );
+    function fin() {
+      barra.classList.remove('nav-presenta');
+      barra.style.transformOrigin = '';
+      document.body.classList.remove('nav-solo');
+    }
+    anim.finished.then(fin, fin);
+    return BARRA_DURACION;
+  }
+
   // ---------- API: entrar() anima la entrada; sfx() suena un efecto; musica() arranca la música ----------
   function entrar(capitulo, item, retraso) {
     pintarBarra();
@@ -579,6 +657,7 @@
 
   window.Transicion = {
     entrar: entrar,
+    presentarBarra: presentarBarra,
     sfx: sfx,
     musica: arrancarMusica,
     pintarBarra: pintarBarra,
