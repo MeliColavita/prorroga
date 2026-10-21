@@ -150,7 +150,13 @@ def leer_defunciones(archivos):
     largo = largo.groupby(["Country", "Year", "grupo"],
                           as_index=False)["muertes"].sum()
 
-    return largo
+    registradas = int(df["Deaths1"].sum())
+    sin_edad = {
+        "sin_edad": int(df["Deaths26"].sum()),
+        "registradas": registradas,
+        "porcentaje": round(df["Deaths26"].sum() / registradas * 100, 3),
+    }
+    return largo, sin_edad
 
 
 # ---------------------------------------------------------------------------
@@ -212,7 +218,7 @@ def calcular_tasas(muertes, poblacion):
 # ---------------------------------------------------------------------------
 # 4. JSON
 # ---------------------------------------------------------------------------
-def exportar_json(tasas, codigos_paises, salida):
+def exportar_json(tasas, codigos_paises, salida, sin_edad):
     nombres_oms = dict(zip(codigos_paises["country"], codigos_paises["name"]))
     paises = {}
     for codigo, g in tasas.sort_values(["Country", "Year"]).groupby("Country"):
@@ -241,6 +247,9 @@ def exportar_json(tasas, codigos_paises, salida):
             "unidad_tasas": "muertes por 100.000 mujeres",
             "tasa_ajustada": "Estandarización directa, población estándar mundial OMS (Ahmad et al., 2001), 18 grupos de edad (0-4 ... 85+)",
             "edad_desconocida": "Las muertes sin edad registrada no se incluyen en las tasas ni en 'muertes'",
+            "muertes_sin_edad": sin_edad["sin_edad"],
+            "muertes_registradas": sin_edad["registradas"],
+            "porcentaje_sin_edad": sin_edad["porcentaje"],
             "periodo": f"{ANIO_DESDE}-{ANIO_HASTA}",
             "fuente_defunciones": "WHO Mortality Database (actualización 23/02/2026)",
             "fuente_poblacion": "UN World Population Prospects 2024, File POP/01-3: Female population by single age (población al 1 de julio, hoja Estimates)",
@@ -271,11 +280,11 @@ def main():
     if not args.mortalidad:
         ap.error("Falta --mortalidad")
 
-    muertes = leer_defunciones(args.mortalidad)
+    muertes, sin_edad = leer_defunciones(args.mortalidad)
     poblacion = leer_poblacion(args.poblacion)
     tasas = calcular_tasas(muertes, poblacion)
     codigos = pd.read_csv(args.paises)
-    exportar_json(tasas, codigos, args.salida)
+    exportar_json(tasas, codigos, args.salida, sin_edad)
 
 if __name__ == "__main__":
     main()

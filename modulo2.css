@@ -249,6 +249,25 @@
 .br-widget svg.br-mode-pct g.br-dots {
   display: none;
 }
+/* Porcentaje escrito sobre cada provincia: solo en "Porcentaje". Blanco con contorno oscuro*/
+.br-widget svg .br-pct-labels {
+  display: none;
+  pointer-events: none;
+}
+.br-widget svg.br-mode-pct .br-pct-labels {
+  display: inline;
+}
+.br-pct-labels text {
+  fill: #fff;
+  stroke: var(--br-bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-family: var(--br-sans);
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
 /* Línea fina oscura entre provincias: el cambio de color se lee como "otra provincia". */
 .br-widget svg.br-mode-pct path.br-province {
   stroke: var(--br-bg);
@@ -512,6 +531,8 @@
   font-size: 0.78rem;
   line-height: 1.4;
   color: var(--br-text);
+  text-align: justify;
+  hyphens: auto;
 }
 .br-tasa-tipo {
   margin-right: auto;
@@ -537,9 +558,11 @@
   text-shadow: 0 0 18px var(--br-rose-glow);
 }
 .br-day-lbl {
-  margin-top: 2px;
+  margin-top: 0;
   font-size: 0.9rem;
-  color: var(--br-text);
+  line-height: 1.3;
+  color: var(--br-text-dim); /* mismo gris que los datos de la columna izquierda */
+  white-space: nowrap; /* dos renglones exactos (el <br> de index.html marca el corte) */
 }
 
 /* Datos secundarios: una sola línea, en gris. */
@@ -796,7 +819,12 @@
 }
 
 .br-stats-right {
-  text-align: center;
+  /* número a la izquierda y la frase al lado, en dos renglones */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: left;
   padding-left: 16px;
   border-left: 1px solid var(--br-panel-border); /* separador fino entre columnas */
 }
@@ -817,6 +845,9 @@
     padding-left: 0;
     border-top: 1px solid var(--br-panel-border);
     padding-top: 10px;
+  }
+  .br-day-lbl {
+    white-space: normal; /* en celular, que se acomode al ancho */
   }
 }
 
@@ -1201,6 +1232,10 @@
 #cpPanel.cp-modo-todos .cp-paises > :not(.cp-todos-btn),
 #cpPanel.cp-modo-todos .br-tasa-tipo {
   display: none;
+}
+/* En "Ver todos" la "i" baja un poco: queda separada de la barra de años. */
+#cpPanel.cp-modo-todos .br-axis-note {
+  margin-top: 10px;
 }
 .cp-todos[hidden] {
   display: none;

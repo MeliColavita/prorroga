@@ -21,7 +21,7 @@
     'Muertes por cáncer de mama cada 100.000 mujeres, ajustadas por edad. América Latina, 2005–2023.';
   const SRC_CMP = [
     {
-      autor: 'OMS(2001)',
+      autor: 'OMS (2001)',
       etiqueta: 'Población estándar mundial',
       url: 'https://cdn.who.int/media/docs/default-source/gho-documents/global-health-estimates/gpe_discussion_paper_series_paper31_2001_age_standardization_rates.pdf',
     },
@@ -91,7 +91,7 @@
     '<div class="br-axis-note">' +
     '<span class="br-tasa-tipo">Tasa ajustada por edad</span>' +
     '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
-    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad. El eje empieza en 0.</p></div>' +
+    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad: permite comparar países. Por eso, y porque usa fuentes internacionales (OMS y ONU), no coincide con “Por año”. Excluye las muertes sin edad registrada (0,05 % del total). El registro varía entre países. El eje empieza en 0.</p></div>' +
     '</div>' +
     '<p class="cp-dato" id="cpDato">Cargando datos…</p>' +
     '</div>';
@@ -127,6 +127,14 @@
   // Usa las mismas clases que el de "Por año" (.br-axis-note, .br-info-btn, .br-info-pop en modulo2.css).
   const infoBtn = panel.querySelector('#cpInfoBtn');
   const infoPop = panel.querySelector('#cpInfoPop');
+  const infoTexto = infoPop.querySelector('p');
+  const INFO_UNO = infoTexto.textContent;
+  const INFO_TODOS =
+    'Tasa ajustada por edad: permite comparar países. Por eso, y porque usa fuentes ' +
+    'internacionales (OMS y ONU), no coincide con “Por año”. ' +
+    'Excluye las muertes sin edad registrada (0,05 % del total). ' +
+    'Solo incluye los países con datos del año elegido; Honduras no se incluye por registro muy incompleto. ' +
+    'Una tasa baja puede reflejar subregistro.';
   function cerrarInfo() {
     infoPop.hidden = true;
     infoBtn.setAttribute('aria-expanded', 'false');
@@ -622,7 +630,7 @@
     paisesRanking().forEach((n) =>
       datos[n].serie.forEach((v) => (topeRanking = Math.max(topeRanking, v))),
     );
-    topeRanking = Math.ceil(topeRanking / 5) * 5;
+    topeRanking = Math.ceil(topeRanking);
   }
 
   // t = 0 para la tasa más alta, 1 para la más baja: de rosa intenso a rosa oscuro.
@@ -661,11 +669,29 @@
     if (!puesto) {
       titulo.textContent = 'En ' + a + ' no hay datos de Argentina';
     } else {
+      // Puesto con palabras hasta el 10 ("la segunda tasa más alta"); después, "el puesto 11".
+      const ORDINALES = [
+        '',
+        '',
+        'segunda',
+        'tercera',
+        'cuarta',
+        'quinta',
+        'sexta',
+        'séptima',
+        'octava',
+        'novena',
+        'décima',
+      ];
       titulo.textContent =
         'En ' +
         a +
         ', Argentina tuvo ' +
-        (puesto === 1 ? 'la tasa más alta' : 'la ' + puesto + '.ª tasa más alta') +
+        (puesto === 1
+          ? 'la tasa más alta'
+          : puesto <= 10
+            ? 'la ' + ORDINALES[puesto] + ' tasa más alta'
+            : 'el puesto ' + puesto) +
         ' de ' +
         conDato.length +
         ' países';
@@ -690,6 +716,7 @@
     todosBtn.setAttribute('aria-pressed', String(enTodos));
     todosBtn.textContent = enTodos ? 'Ver de a un país' : 'Ver todos';
     todos.hidden = !enTodos;
+    infoTexto.textContent = enTodos ? INFO_TODOS : INFO_UNO; // la "i" explica la vista que se ve
     cerrarLista();
     if (!datos) return;
     if (enTodos) {
