@@ -1257,7 +1257,10 @@
     entro = true;
     if (REDUCIDO) dibujar(performance.now());
   }
+
+  const capitulo3 = panel.closest('.chapter');
   function revisarEntrada() {
+    if (capitulo3 && capitulo3.classList.contains('tr-c')) return;
     if (!entro && visible()) entrada();
   }
 
@@ -1270,6 +1273,13 @@
     attributes: true,
     attributeFilter: ['class'],
   });
+  // ...y cuando termina la animación de entrada al capítulo (se va "tr-c"), arranca el lazo
+  if (capitulo3) {
+    new MutationObserver(revisarEntrada).observe(capitulo3, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
   window.addEventListener('resize', ajustar);
   ajustar();
   revisarEntrada();
