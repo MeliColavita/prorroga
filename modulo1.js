@@ -1190,11 +1190,14 @@
     const topViejo = emTabsRow.querySelector('.em-tipo-top');
     if (topViejo) topViejo.remove();
     container.innerHTML = '';
+    const top = document.createElement('div');
+    top.className = 'em-tipo-top';
     const prompt = document.createElement('div');
-    prompt.className = 'em-prompt em-prompt-tipo';
+    prompt.className = 'em-prompt em-prompt-tipo em-prompt-edad';
     prompt.innerHTML =
       '<span class="em-prompt-dot" aria-hidden="true"></span>Presioná una barra para ver la cantidad en un rango de edad.';
-    container.appendChild(prompt);
+    top.appendChild(prompt);
+    emTabsRow.appendChild(top); // sube a la fila de las pestañas
 
     const chart = document.createElement('div');
     chart.className = 'em-chart-edad';
