@@ -140,7 +140,7 @@ body {
   font-family: var(--sans);
   font-style: normal;
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--text-dim);
   text-align: center;
