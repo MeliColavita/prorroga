@@ -584,7 +584,7 @@
   const BARRA_APARECE = 900; // ms: aparece en el centro (mientras se desvanece la intro)
   const BARRA_PAUSA = 300; // ms: se queda quieta, grande (el "segundo de protagonismo")
   const BARRA_VUELVE = 800; // ms: vuelve a su lugar
-  const BARRA_ESCALA_MAX = 2.6; // cuántas veces más grande, como máximo (en pantallas angostas baja sola)
+  const BARRA_ESCALA_MAX = 1.5; // cuántas veces más grande, como máximo (en pantallas angostas baja sola)
   const BARRA_DURACION = BARRA_APARECE + BARRA_PAUSA + BARRA_VUELVE;
 
   // Si se llegó con "Volver a la presentación", la barra no se vuelve a presentar.
