@@ -271,17 +271,17 @@
     let activeProvData = null; // provincia que está mostrando el gráfico ahora
 
     // ---------- Vista "Porcentaje": cada provincia pintada según su % ----------
-    // Escala fija (12% a 26%) para todos los años: así, al mover el slider,
-    // un cambio de color es un cambio real y no un re-escalado.
+    // 5 clases fijas para todos los años: así, al mover el slider, un cambio de color
     let mapMode = 'cantidad';
-    const PCT_MIN = 12;
-    const PCT_MAX = 26;
-    const COLOR_LOW = [74, 46, 72]; // #4a2e48 (mismo tono que --br-land-border)
-    const COLOR_HIGH = [255, 111, 156]; // #ff6f9c (--br-rose-strong)
+    const PCT_CLASES = [
+      { hasta: 15, color: '#4a3c45' }, // gris rosado oscuro: menos de 15 %
+      { hasta: 18, color: '#806b77' }, // gris rosado medio: 15 % a menos de 18 %
+      { hasta: 21, color: '#c9b4bf' }, // gris rosado claro: 18 % a menos de 21 %
+      { hasta: 24, color: '#f590b4' }, // rosa claro: 21 % a menos de 24 %
+      { hasta: Infinity, color: '#ff5c92' }, // rosa intenso: 24 % o más
+    ];
     function pctColor(pct) {
-      const t = Math.max(0, Math.min(1, (pct - PCT_MIN) / (PCT_MAX - PCT_MIN)));
-      const c = COLOR_LOW.map((lo, i) => Math.round(lo + (COLOR_HIGH[i] - lo) * t));
-      return `rgb(${c.join(',')})`;
+      return (PCT_CLASES.find((c) => pct < c.hasta) || PCT_CLASES[0]).color;
     }
     // Guarda el color de cada provincia en --br-fill (CABA usa el de Buenos Aires).
     // El CSS lo aplica solo cuando el mapa está en "Porcentaje" (.br-mode-pct).

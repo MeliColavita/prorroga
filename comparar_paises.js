@@ -89,6 +89,7 @@
     '</div>' +
     '</div>' +
     '<div class="br-axis-note">' +
+    '<span class="br-tasa-tipo">Tasa ajustada por edad</span>' +
     '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
     '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad. El eje empieza en 0.</p></div>' +
     '</div>' +
@@ -569,6 +570,7 @@
     if (!chart) return;
     mostrarPais(select.value);
     animarLinea();
+    if (!todosVisto) todosBtn.classList.add('cp-todos-blink');
   });
 
   canvas.setAttribute('tabindex', '0');
@@ -593,6 +595,7 @@
   const ROSA_ALTO = [194, 87, 127]; // #c2577f: tasa más alta
   const ROSA_BAJO = [92, 45, 69]; // #5c2d45: tasa más baja (Argentina siempre va en --rose-strong)
   let modoTodos = false;
+  let todosVisto = false; // ya se tocó "Ver todos" desde que se abrió el comparador
   let filas = null; // { país: fila }
   let topeRanking = 0;
 
@@ -699,7 +702,14 @@
     }
   }
 
-  todosBtn.addEventListener('click', () => cambiarModo(!modoTodos));
+  todosBtn.addEventListener('click', () => {
+    todosVisto = true;
+    todosBtn.classList.remove('cp-todos-blink'); // ya se tocó: deja de titilar
+    cambiarModo(!modoTodos);
+    subPanel.classList.remove('br-fade-in');
+    void subPanel.offsetWidth; // reinicia la animación (mismo truco que modulo2.js)
+    subPanel.classList.add('br-fade-in');
+  });
   todosAnio.addEventListener('input', () => {
     todosAnio.classList.add('br-year-used');
     mostrarRanking(Number(todosAnio.value));
@@ -734,6 +744,8 @@
 
     // Cada vez que se abre: solo Argentina y el botón vuelve a "Elegí un país" (sin puntito).
     cambiarModo(false); // siempre arranca de a un país
+    todosVisto = false; // "Ver todos" vuelve a titilar con el primer país que se elija
+    todosBtn.classList.remove('cp-todos-blink');
     cargarDatos()
       .then(() => {
         if (!abierto) return;
