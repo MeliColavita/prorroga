@@ -9,6 +9,7 @@
     modulo: { src: 'sonidos/modulo.MP3', vol: 0.5 }, // al cambiar de módulo
     pestana: { src: 'sonidos/pestana.MP3', vol: 0.4 }, // al cambiar de pestaña
     final: { src: 'sonidos/final.MP3', vol: 0.6 }, // al tocar "una última cosa"
+      resultado: { src: 'sonidos/resultado.MP3', vol: 0.1 }, // módulo 1: al confirmar la barra y ver el resultado
   };
   const audios = {};
   let silenciado = false;
