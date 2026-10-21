@@ -287,12 +287,69 @@
     // El CSS lo aplica solo cuando el mapa está en "Porcentaje" (.br-mode-pct).
     function paintChoropleth() {
       pathEls.forEach((o) => o.el.style.setProperty('--br-fill', pctColor(dataFor(o.data).pct)));
+      escribirEtiquetas();
     }
 
     const dotsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     dotsGroup.setAttribute('class', 'br-dots');
     svg.appendChild(dotsGroup);
 
+    // ---------- Porcentaje escrito sobre cada provincia (solo en "Porcentaje") ----------
+    // Texto blanco con contorno oscuro (ver .br-pct-labels en modulo2.css): se lee igual sobre los
+    // grises y sobre los rosas. CABA no lleva número porque es muy chica (su dato sale al pasar el cursor).
+    const pctLabels = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    pctLabels.setAttribute('class', 'br-pct-labels');
+    svg.appendChild(pctLabels);
+    let etiquetasUbicadas = false;
+
+    function ubicarEtiquetas() {
+      if (etiquetasUbicadas || !svg.getBoundingClientRect().width) return;
+      etiquetasUbicadas = true;
+      const pt = svg.createSVGPoint();
+      const N = 24; // puntos de prueba por lado
+      pathEls.forEach((o) => {
+        if (o.data.name === 'CABA') return;
+        const b = o.el.getBBox();
+        const dentro = [];
+        const fuera = [];
+        for (let i = -1; i <= N + 1; i++) {
+          for (let j = -1; j <= N + 1; j++) {
+            pt.x = b.x + (b.width * i) / N;
+            pt.y = b.y + (b.height * j) / N;
+            (o.el.isPointInFill(pt) ? dentro : fuera).push([pt.x, pt.y]);
+          }
+        }
+        let mejor = null;
+        let radio = 0;
+        dentro.forEach(([x, y]) => {
+          let d = Infinity;
+          fuera.forEach(([fx, fy]) => (d = Math.min(d, Math.hypot(x - fx, y - fy))));
+          if (d > radio) {
+            radio = d;
+            mejor = [x, y];
+          }
+        });
+        if (!mejor) return;
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', mejor[0]);
+        t.setAttribute('y', mejor[1]);
+        // letra más chica en las provincias angostas, para que el número no se salga
+        t.setAttribute('font-size', Math.max(10, Math.min(18, radio * 0.8)));
+        pctLabels.appendChild(t);
+        o.etiqueta = t;
+      });
+    }
+
+    // Escribe el porcentaje del año elegido en cada provincia, con 1 decimal (ej. "19,3%").
+    function escribirEtiquetas() {
+      ubicarEtiquetas();
+      pathEls.forEach((o) => {
+        if (!o.etiqueta) return;
+        const pct = dataFor(o.data).pct;
+        o.etiqueta.textContent =
+          pct.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+      });
+    }
     // Guarda las posiciones ya calculadas de cada provincia: al mover el slider
     // solo se calculan los puntos nuevos que falten, el resto se reutiliza.
     const dotCache = {};
@@ -527,6 +584,11 @@
       activeProvData = p; // la recordamos para poder redibujar al mover el slider
       provinceChart.data.datasets[0].data = [p.total];
       provinceChart.data.datasets[1].data = [p.cancer];
+      // Escala del gráfico: hasta 16.000 para las 4 provincias más grandes; hasta 4.000 para el resto.
+      const GRANDES = ['Buenos Aires', 'Córdoba', 'Santa Fe', 'Mendoza'];
+      const esGrande = GRANDES.includes(p.name);
+      provinceChart.options.scales.y.max = esGrande ? 16000 : 4000;
+      provinceChart.options.scales.y.ticks.stepSize = esGrande ? 4000 : 1000;
       provinceChart.update();
       chartTitleEl.textContent = p.name;
 
@@ -640,6 +702,7 @@
           b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
         });
         svg.classList.toggle('br-mode-pct', mapMode === 'pct');
+        if (mapMode === 'pct') escribirEtiquetas(); // primera vez: ya con el mapa visible
         if (pctLegend) pctLegend.classList.toggle('br-hidden', mapMode !== 'pct');
         tooltip.classList.remove('visible');
       });
