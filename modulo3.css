@@ -327,6 +327,26 @@
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
+/* Barra rosa siempre visible (como la lista de países del módulo 2): así se ve desde el inicio que se puede bajar. */
+.me-suggest::-webkit-scrollbar {
+  width: 8px;
+}
+.me-suggest::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 999px;
+  margin: 10px 0;
+}
+.me-suggest::-webkit-scrollbar-thumb {
+  background: var(--rose-strong);
+  border-radius: 999px;
+}
+/* Firefox no entiende lo de arriba: usa la versión estándar. */
+@supports not selector(::-webkit-scrollbar) {
+  .me-suggest {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rose-strong) var(--bg);
+  }
+}
 .me-suggest[hidden] {
   display: none;
 }
@@ -943,18 +963,30 @@
 }
 
 /* ---- "Una última cosa" a la altura de "Fuente" ----
-   Centrado en la misma línea que "Fuente" (modulo3.js lo alinea); en celular vuelve a su propia fila. */
+   Los dos comparten la última fila de la tarjeta: el botón al medio y "Fuente" a la derecha,
+   centrados en la misma línea siempre (lo resuelve el CSS, sin cálculos). En celular, el botón vuelve a su propia fila. */
 .me-body {
   min-height: 0;
 }
 @media (min-width: 681px) {
+  .me-card {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto 1fr auto; /* título, bajada, pista, cuerpo (estira) y fila de abajo */
+  }
+  .me-card > :not(.me-cierre) {
+    grid-column: 1 / -1; /* .me-cierre no: es absoluto y tiene que cubrir la tarjeta entera, como antes */
+  }
   .me-card > .me-final {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: max-content;
-    z-index: 1;
+    grid-row: 5;
+    grid-column: 2;
+    align-self: center;
+  }
+  .me-card > .ui-src {
+    grid-row: 5;
+    grid-column: 3;
+    align-self: center;
+    justify-self: end;
   }
 }
 /* ===== Créditos: "¡Muchas gracias!" al medio y una sola línea abajo de todo ===== */
