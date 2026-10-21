@@ -64,7 +64,10 @@
   panel.className = 'br-hidden';
   panel.innerHTML =
     '<div class="br-panel">' +
+    '<div class="cp-cabecera">' +
     '<h2 id="cpTitulo"></h2>' +
+    '<button type="button" class="br-tab-btn cp-todos-btn" id="cpTodosBtn" aria-pressed="false">Ver todos</button>' +
+    '</div>' +
     '<div class="cp-paises">' +
     '<span class="cp-chip"><span class="cp-dot cp-dot-arg" aria-hidden="true"></span>Argentina</span>' +
     '<span>vs.</span>' +
@@ -74,7 +77,6 @@
     '<ul class="cp-lista" id="cpLista" role="listbox" aria-label="Países de América Latina" tabindex="-1" hidden></ul>' +
     '<select id="cpSelect" hidden></select>' +
     '</div>' +
-    '<button type="button" class="br-tab-btn cp-todos-btn" id="cpTodosBtn" aria-pressed="false">Ver todos</button>' +
     '</div>' +
     '<div class="cp-chart"><canvas id="cpChart"></canvas></div>' +
     '<div class="cp-todos" id="cpTodos" hidden>' +
@@ -90,10 +92,14 @@
     '</div>' +
     '<div class="br-axis-note">' +
     '<span class="br-tasa-tipo">Tasa ajustada por edad</span>' +
-    '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
-    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad: permite comparar países. Por eso, y porque usa fuentes internacionales (OMS y ONU), no coincide con “Por año”. Excluye las muertes sin edad registrada (0,05 % del total). El registro varía entre países. El eje empieza en 0.</p></div>' +
     '</div>' +
+    '<div class="cp-pie">' +
     '<p class="cp-dato" id="cpDato">Cargando datos…</p>' +
+    '<div class="cp-info">' +
+    '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
+    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad: permite comparar países. Excluye las muertes sin edad registrada (0,05 % del total). El registro de datos varía entre países. El eje empieza en 0.</p></div>' +
+    '</div>' +
+    '</div>' +
     '</div>';
   panelAnio.insertAdjacentElement('afterend', panel);
 
@@ -130,8 +136,7 @@
   const infoTexto = infoPop.querySelector('p');
   const INFO_UNO = infoTexto.textContent;
   const INFO_TODOS =
-    'Tasa ajustada por edad: permite comparar países. Por eso, y porque usa fuentes ' +
-    'internacionales (OMS y ONU), no coincide con “Por año”. ' +
+    'Tasa ajustada por edad: permite comparar países. ' +
     'Excluye las muertes sin edad registrada (0,05 % del total). ' +
     'Solo incluye los países con datos del año elegido; Honduras no se incluye por registro muy incompleto. ' +
     'Una tasa baja puede reflejar subregistro.';
@@ -749,11 +754,6 @@
   function abrir() {
     if (abierto) return;
     abierto = true;
-    // Al menos el alto de la subtarjeta de "Por año": la tarjeta no salta (y si un título
-    // largo necesita más lugar, crece en vez de cortarse).
-    const subAnio = panelAnio.querySelector('.br-panel');
-    if (subAnio && subAnio.offsetHeight) subPanel.style.minHeight = subAnio.offsetHeight + 'px';
-
     subGuardado = srcSub.textContent;
     fuenteGuardada = srcBox.querySelector('p').innerHTML;
 
