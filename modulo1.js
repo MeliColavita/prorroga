@@ -403,6 +403,7 @@
     // setFeedback(html): escribe el mensaje de resultado envuelto en un <span>.
     function setFeedback(html, animar) {
       feedback.innerHTML = '<span>' + html + '</span>';
+      feedback.classList.toggle('em-fb-suma', /^(Los otros 4|Tocá)/.test(html)); // marca "Los otros 4..." y "Tocá..."
       const span = feedback.firstChild;
       if (animar && !reduceMotion) {
         span.style.display = 'inline-block';
@@ -803,7 +804,10 @@
         px = Math.max(6, Math.min(zone.clientHeight, px));
         curPx = px;
         gb.style.height = px + 'px';
-        tipoState.guess = Math.max(50, Math.round(((px / zone.clientHeight) * TIPO_MAX) / 50) * 50);
+        let g = Math.max(50, Math.round(((px / zone.clientHeight) * TIPO_MAX) / 50) * 50);
+        // Imán: si la barra está a menos de 1px del valor real, queda justo en él
+        if (Math.abs(g - real) <= TIPO_MAX / zone.clientHeight) g = real;
+        tipoState.guess = g;
         valEl.classList.remove('em-val-q'); // ya hay un número real adivinado: el "?" grande deja de aplicar
         // em-val-live: el número que se va eligiendo se ve más grande que los de las barras.
         valEl.classList.add('em-val-live');
@@ -906,6 +910,9 @@
           return;
         } else return;
         markMoved();
+        // Si el paso cruza el valor real, frena justo en él
+        const act = tipoState.guess;
+        if ((act < real && target > real) || (act > real && target < real)) target = real;
         target = Math.max(0, Math.min(TIPO_MAX, target));
         setFromPx((target / TIPO_MAX) * zone.clientHeight);
         e.preventDefault();
@@ -924,7 +931,7 @@
         btnConfirm.remove();
 
         tipoState.revealed = true;
-               if (window.Transicion) window.Transicion.sfx('resultado'); // efecto de sonido del resultado 
+        if (window.Transicion) window.Transicion.sfx('resultado'); // efecto de sonido del resultado
         prompt.classList.remove('em-shown');
         setFeedback(mensajeResultado(), false); // el texto real queda oculto en la fila de pestañas
 
