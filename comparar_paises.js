@@ -97,7 +97,7 @@
     '<p class="cp-dato" id="cpDato">Cargando datos…</p>' +
     '<div class="cp-info">' +
     '<button class="br-info-btn" id="cpInfoBtn" type="button" aria-label="Cómo leer este gráfico" aria-expanded="false" aria-controls="cpInfoPop">i</button>' +
-    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad: permite comparar países. Excluye las muertes sin edad registrada (0,05 % del total). El registro de datos varía entre países. El eje empieza en 0.</p></div>' +
+    '<div class="br-info-pop" id="cpInfoPop" role="note" hidden><p>Tasa ajustada por edad: permite comparar países. Excluye las muertes sin edad registrada (0,05 % del total). El registro de datos varía entre países. Una tasa baja puede reflejar subregistro. El eje empieza en 0.</p></div>' +
     '</div>' +
     '</div>' +
     '</div>';
