@@ -363,7 +363,11 @@
 
 /* ---- Fila: lazo de puntos (izquierda) + resultados (derecha) ---- */
 .me-finder {
-  --me-h: clamp(200px, calc(100dvh - 550px), 300px); /* alto del canvas y la lista: sale del alto de la ventana */
+  --me-h: clamp(
+    200px,
+    calc(100dvh - 550px),
+    300px
+  ); /* alto del canvas y la lista: sale del alto de la ventana */
   display: flex;
   gap: 18px;
   align-items: stretch;
@@ -982,7 +986,9 @@
   font-style: italic;
   font-size: clamp(1.25rem, 4cqw, 2rem); /* tamaño del texto */
   line-height: 1.2;
-  --gracias-color: var(--text-dim); /* color de las letras (el mismo gris que los nombres): cambialo acá */
+  --gracias-color: var(
+    --text-dim
+  ); /* color de las letras (el mismo gris que los nombres): cambialo acá */
 }
 .me-gracias-off {
   visibility: hidden; /* ocupa el lugar del texto; lo que se ve es el SVG */
@@ -1065,5 +1071,66 @@
 @media (prefers-reduced-motion: reduce) {
   .me-creditos {
     transition: none;
+  }
+}
+/* ===== Botón "... una última cosa" =====
+   Estado inicial (gris): idéntico a "Probar de nuevo" del módulo 1 (.em-btn + .em-btn-quiet):
+   fondo transparente, texto claro y borde gris.
+   Estado "listo" (.me-final--listo): el rosa de siempre, con titileo. */
+
+.me-card > .me-final {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+  /* se mantienen opacity/transform/filter (los usa el cierre) y se suman los colores
+     para que el paso de gris a rosa sea suave */
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease,
+    filter 0.2s,
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+/* Hover en gris: el mismo tinte rosa que .em-btn:hover del módulo 1 */
+.me-card > .me-final:hover {
+  background: rgba(255, 111, 156, 0.12);
+  filter: none;
+}
+
+/* Estado listo: rosa lleno (el que tenía hasta ahora) + titileo */
+.me-card > .me-final.me-final--listo {
+  background: var(--rose-strong);
+  color: #1a0510;
+  border-color: var(--rose-strong);
+  box-shadow: 0 6px 18px rgba(255, 111, 156, 0.35);
+  animation: me-final-titila 2.4s ease-in-out infinite;
+}
+.me-card > .me-final.me-final--listo:hover {
+  background: var(--rose-strong);
+  filter: brightness(1.1);
+}
+
+/* Mismo ritmo (2.4s) y mismo halo (anillo de 4px, rosa al 20%) que em-confirm-blink del módulo 1.
+   No se reutiliza esa animación tal cual porque cambia el color del texto, y sobre el
+   botón rosa lleno el texto claro no se leería. Acá solo titila el halo. */
+@keyframes me-final-titila {
+  0%,
+  100% {
+    box-shadow:
+      0 6px 18px rgba(255, 111, 156, 0.35),
+      0 0 0 0 rgba(255, 111, 156, 0);
+  }
+  50% {
+    box-shadow:
+      0 6px 18px rgba(255, 111, 156, 0.35),
+      0 0 0 4px rgba(255, 111, 156, 0.2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .me-card > .me-final.me-final--listo {
+    animation: none;
   }
 }

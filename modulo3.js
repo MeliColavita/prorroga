@@ -195,7 +195,9 @@
     if (typeof SIN_MAMOGRAFO === 'undefined') return;
     const provs = SIN_MAMOGRAFO.provincias;
     // Una localidad que ya tiene mamógrafos (igual o con "Capital", ej. Córdoba -> Córdoba Capital) no se suma como "sin"
-    const conMamografo = new Set(localidades.map((l) => norm(l.localidad) + '|' + norm(l.provincia)));
+    const conMamografo = new Set(
+      localidades.map((l) => norm(l.localidad) + '|' + norm(l.provincia)),
+    );
     SIN_MAMOGRAFO.filas.forEach((f) => {
       const prov = norm(provs[f[2]]);
       const loc = norm(f[0]);
@@ -1358,4 +1360,22 @@
   if (chico.addEventListener) chico.addEventListener('change', alinear);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(alinear);
   alinear();
+})();
+
+// ============ Botón "... una última cosa": gris hasta que se escribe en el buscador ============
+(function () {
+  const input = document.getElementById('me-search-input');
+  const clear = document.getElementById('me-search-clear');
+  const btn = document.getElementById('me-final');
+  if (!input || !btn) return;
+
+  function actualizar() {
+    // con texto escrito: rosa + titileo; sin texto: vuelve al gris
+    btn.classList.toggle('me-final--listo', input.value.trim().length > 0);
+  }
+
+  input.addEventListener('input', actualizar);
+  // la "×" borra el texto por código (no dispara "input"), por eso se escucha su click
+  if (clear) clear.addEventListener('click', () => setTimeout(actualizar, 0));
+  actualizar(); // estado inicial: gris
 })();
