@@ -147,11 +147,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center; /* el grupo de barras (columnas de 100px como máximo, ver .em-col) queda centrado en el gráfico */
-  gap: clamp(
-    4px,
-    1vw,
-    10px
-  ); /* separación entre barras, entre 4px y 10px según el ancho */
+  gap: clamp(4px, 1vw, 10px); /* separación entre barras, entre 4px y 10px según el ancho */
   height: 220px;
   padding-top: 30px; /* aire arriba para que el número más alto no se pegue al borde */
   position: relative;
@@ -218,6 +214,9 @@
   ); /* tamaño de respaldo: modulo1.js lo ajusta a la barra punteada de cada pantalla (ver placeQ) */
   line-height: 1; /* caja justa al signo, para poder centrarlo adentro de la barra punteada */
   z-index: 2; /* por encima del fondo rosado de la barra punteada (.em-guess-zone), no detrás */
+  pointer-events: none; /* el mouse atraviesa el "?": no hay hover ni manito */
+  cursor: default;
+  user-select: none;
 }
 /* .em-val-live: el número que se va eligiendo al arrastrar, más grande que los de las barras (se saca al revelar). */
 .em-val-live {
@@ -248,6 +247,9 @@
   transition:
     height 0.5s ease,
     background 0.25s ease;
+}
+.em-chart-tipo .em-bar {
+  cursor: default;
 }
 
 /* .em-plot: el área de dibujo de cada columna (todo MENOS la etiqueta). */
@@ -389,29 +391,62 @@
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }
-/* Línea punteada que marca dónde quedó la respuesta adivinada, una vez revelada la real. */
-/* left:0/right:0: solo el ancho de la columna de Mama; modulo1.js le pone "bottom" en % de .em-plot. */
-.em-guess-line {
+/* BARRA "Tu respuesta": misma anchura que la real, superpuesta. 
+   El color se define UNA sola vez acá (--em-resp-color) y lo usan los bordes y la línea. */
+.em-guess-ghost {
+  --em-resp-gris: #6e4f5d; /* COLOR ÚNICO de la respuesta: acá se cambia */
+  --em-resp-color: var(--em-resp-gris); /* bordes y línea, del mismo color que el relleno */
   position: absolute;
-  left: 0;
-  right: 0;
-  border-top: 2px dashed var(--text);
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 96px);
+  box-sizing: border-box;
+  background: var(--em-resp-gris); /* relleno sólido, sin transparencia */
+  border-left: 2px dashed var(--em-resp-color);
+  border-right: 2px dashed var(--em-resp-color);
+  border-top: 0; /* el borde de arriba lo dibuja la línea (::before), así es uno solo */
+  border-bottom: 0;
+  border-radius: 0; /* sin esquinas redondeadas: la línea llega recta hasta el borde */
   pointer-events: none;
-  z-index: 1;
+  z-index: 3; /* arriba de la barra real */
 }
-.em-guess-line span {
+
+/* LÍNEA ÚNICA: arranca a la izquierda de la barra y sigue recta hasta su borde derecho, tapando todo el tope. */
+.em-guess-ghost::before {
+  content: '';
   position: absolute;
-  right: 0;
-  top: -1.4em;
-  font-size: 0.72rem;
-  color: var(--text);
-  white-space: nowrap;
-  background: var(--panel);
-  padding: 0 4px;
+  top: 0;
+  left: -15px; /* 2px del borde de la barra + 36px de línea hacia afuera (largo editable) */
+  right: -2px; /* cubre también el borde derecho */
+  height: 2px;
+  background: var(--em-resp-color);
 }
-/* Respuesta cerca del valor real: la línea pasa por donde está el número. */
-.em-guess-line-below span {
-  top: 4px;
+
+/* CARTEL "Tu respuesta": pegado al extremo izquierdo de la línea, centrado en su altura. */
+.em-guess-ghost span {
+  position: absolute;
+  right: calc(100% + 21px); /* 15px (donde empieza la línea) + 6px de separación */
+  top: 1px; /* centro de la línea (que mide 2px) */
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.78rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* El número real (20.750) queda por encima de la barra de la respuesta. */
+.em-bar-mama > .em-val.em-val-sobre {
+  z-index: 4;
+}
+
+/* El 20.750 pisaba la línea de "Tu respuesta": pasa adentro de su barra, pegado al tope (la distancia la calcula modulo1.js). */
+.em-bar-mama > .em-val.em-val-dentro {
+  transform: translateX(-50%) translateY(var(--em-val-baja, 0px)); /* mantiene el centrado y lo baja */
+  text-shadow: 0 1px 3px rgba(26, 5, 16, 0.55); /* se lee mejor sobre el rosa de la barra */
+  transition:
+    opacity 0.3s ease,
+    transform 0.25s ease;
 }
 
 /* ---- "Casos por tipo": la pila "Los otros 4 juntos" ---- */
@@ -657,7 +692,9 @@
 }
 /* Solo "Casos por edad": la oración gris debajo de los números rosas un poco más grande (+1px). */
 .em-inline-stats .em-stat-label {
-  font-size: calc(0.8rem + 1px); /* un poco más grande que el tamaño base (0.8rem) de .em-stat-label */
+  font-size: calc(
+    0.8rem + 1px
+  ); /* un poco más grande que el tamaño base (0.8rem) de .em-stat-label */
 }
 /* "Casos por edad" antes del primer toque: los 2 datos quedan vacíos, pero ocupando su lugar. */
 .em-inline-stats.em-stats-empty .em-stat {
@@ -726,9 +763,7 @@
 }
 /* La bajada del pie iguala el tamaño agrandado de los datos fijos (clase propia; no toca .ui-sub). */
 .em-foot-sub-lg {
-  font-size: var(
-    --ui-fs-pie
-  ); /* mismo valor en las 2 pestañas, desde la variable compartida */
+  font-size: var(--ui-fs-pie); /* mismo valor en las 2 pestañas, desde la variable compartida */
 }
 
 /* .em-foot: la bajada + "Fuente" en la misma fila, al pie de la tarjeta, en las 2 pestañas. */
@@ -984,7 +1019,9 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: calc(100% - 380px); /* deja libres las pestañas a la izquierda y el mismo espacio a la derecha */
+    width: calc(
+      100% - 380px
+    ); /* deja libres las pestañas a la izquierda y el mismo espacio a la derecha */
     pointer-events: none;
   }
 }
@@ -993,4 +1030,15 @@
     flex: 1 1 100%;
     margin: 8px 0 0;
   }
+}
+
+/* FOCO EN EL RESULTADO: al confirmar, el panel (barras, datos, botones, fuente) se oculta un instante
+   y solo se ve el texto "Dijiste X. Se estiman Y..." (que vive en la fila de pestañas, fuera del panel).
+   Al sacar la clase, el panel aparece con un fundido. */
+.em-panel {
+  transition: opacity 0.5s ease;
+}
+.em-panel.em-foco {
+  opacity: 0;
+  pointer-events: none;
 }

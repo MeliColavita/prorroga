@@ -394,7 +394,7 @@
     prompt.className =
       'em-prompt em-prompt-tipo em-reveal-fade' + (tipoState.revealed ? '' : ' em-shown');
     prompt.innerHTML =
-      '<span class="em-prompt-dot" aria-hidden="true"></span>Arrastrá la barra para adivinar.'; // en 2 renglones: en uno solo quedaba muy larga
+      '<span class="em-prompt-dot" aria-hidden="true"></span>Arrastrá la barra para descubrir.'; // en 2 renglones: en uno solo quedaba muy larga
     top.appendChild(prompt);
 
     const feedback = document.createElement('div');
@@ -406,7 +406,7 @@
       const span = feedback.firstChild;
       if (animar && !reduceMotion) {
         span.style.display = 'inline-block';
-        span.style.animationDelay = '0.9s';
+        span.style.animationDelay = '0s'; // ahora el texto es lo PRIMERO que aparece
         span.style.animationFillMode = 'backwards';
         span.classList.add('em-fade-in');
       }
@@ -587,57 +587,43 @@
     footRow.appendChild(emSrc);
     container.appendChild(footRow);
 
-    // reveal(doAnimate): muestra la respuesta real de Mama.
-    function reveal(doAnimate) {
-      tipoState.revealed = true;
-      // Se usa classList (no .hidden) para que estos elementos sigan ocupando su lugar y la tarjeta no cambie de alto al revelar.
-      prompt.classList.remove('em-shown');
-      feedback.classList.add('em-shown');
-      // Guía: apenas se revela el resultado, "¿Y si sumamos los otros 4?" titila para invitar al paso siguiente.
-      if (doAnimate) {
-        btnSum.classList.add('em-btn-blink');
-        // Mientras titila, "Probar de nuevo" va con el borde apagado (gris) para que se note bien cuál es el paso siguiente.
-        btnReset.classList.add('em-btn-quiet');
-      }
-      actions.classList.add('em-shown');
-      axisNote.classList.add('em-shown');
-      statsCol.classList.add('em-shown');
-      if (doAnimate) statsCol.querySelectorAll('.em-stat-value').forEach(countUpPct);
-
-      // Las otras 4 columnas (ocultas hasta ahora, ver "em-col-pending" al crear las columnas) aparecen con su altura y datos reales.
-      const others = cols.slice(1);
-      mama.querySelector('.em-lbl').textContent = data[0].categoria; // "Cáncer de mama" -> "Mama"
-      const mamaX0 = mama.getBoundingClientRect().left;
-      data.slice(1).forEach(function (d, idx) {
-        const col = others[idx];
-        col.querySelector('.em-val').textContent = formatNumber(d.valor);
-        col.querySelector('.em-lbl').textContent = d.categoria;
-        col.classList.remove('em-col-pending');
-      });
-      if (doAnimate) slide(mama, mamaX0 - mama.getBoundingClientRect().left);
-
-      // Cada columna aparece UNA POR UNA, de izquierda a derecha.
-      others.forEach(function (col, idx) {
-        const b = col.querySelector('.em-bar');
-        const pctOther = (data[idx + 1].valor / TIPO_MAX) * 100;
-        if (!doAnimate || reduceMotion) {
-          b.style.height = pctOther + '%';
-          return;
-        }
-        const delay = 350 + idx * 140;
-        col.animate(
-          [
-            { opacity: 0, transform: 'translateY(10px)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 450, delay: delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' },
+    // Texto del resultado ("Dijiste 14.400. Se estiman 20.750: un 44% más."). Lo usan el foco inicial y reveal().
+    function mensajeResultado() {
+      const guess = tipoState.guess;
+      const ratio = real / guess;
+      const dijiste = 'Dijiste <b>' + formatNumber(guess) + '</b>. ';
+      const seEstiman = 'Se estiman <b>' + formatNumber(real) + '</b>';
+      if (guess === real) {
+        return 'Acertaste: se estiman <b>' + formatNumber(real) + '</b> casos por año.';
+      } else if (Math.abs(ratio - 1) < 0.1) {
+        return (
+          'Estuviste cerca: dijiste <b>' +
+          formatNumber(guess) +
+          '</b> y se estiman <b>' +
+          formatNumber(real) +
+          '</b>.'
         );
-        b.style.height = '0%';
-        setTimeout(function () {
-          b.style.height = pctOther + '%'; // el crecimiento lo anima .em-bar (transition:height, modulo1.css)
-        }, delay);
-      });
+      } else if (ratio >= 3) {
+        return dijiste + seEstiman + ': más del triple.';
+      } else if (ratio >= 2) {
+        return dijiste + seEstiman + ': más del doble.';
+      } else if (ratio > 1) {
+        return dijiste + seEstiman + ': un ' + Math.round((ratio - 1) * 100) + '% más.';
+      }
+      return dijiste + seEstiman + ': un ' + Math.round((1 - ratio) * 100) + '% menos.';
+    }
 
+    // Las otras 4 columnas ocupan su lugar (así Mama ya queda a la izquierda) pero invisibles.
+    const otras = cols.slice(1);
+    function prepararOtras() {
+      otras.forEach(function (col) {
+        col.classList.remove('em-col-pending');
+        col.style.opacity = '0';
+      });
+    }
+
+    // FASE 1: solo la barra de Mama con su valor real y "Tu respuesta".
+    function revealMama(doAnimate) {
       const plot = mama.querySelector('.em-plot');
       const bar = mama.querySelector('.em-bar');
       const valEl = mama.querySelector('.em-val');
@@ -649,22 +635,55 @@
       const guess = tipoState.guess;
       const pct = (real / TIPO_MAX) * 100;
 
-      // Línea punteada "Tu respuesta": va dentro de .em-plot, en %, con la misma escala que la barra real.
-      const oldLine = mama.querySelector('.em-guess-line');
-      if (oldLine) oldLine.remove();
-      const line = document.createElement('div');
-      line.className = 'em-guess-line';
-      // Si la respuesta quedó cerca del valor real, "Tu respuesta" va debajo de la línea para no tapar el número.
-      if (Math.abs(guess - real) / real < 0.15) line.classList.add('em-guess-line-below');
-      line.style.bottom = (guess / TIPO_MAX) * 100 + '%';
-      line.innerHTML = '<span>Tu respuesta</span>';
-      plot.appendChild(line);
+      // Barra "Tu respuesta": superpuesta a la barra real, con la misma escala.
+      const oldGhost = mama.querySelector('.em-guess-ghost');
+      if (oldGhost) oldGhost.remove();
+      const ghost = document.createElement('div');
+      ghost.className = 'em-guess-ghost';
+      ghost.style.height = (guess / TIPO_MAX) * 100 + '%';
+      ghost.innerHTML = '<span>Tu respuesta</span>';
+      plot.appendChild(ghost);
+
+      if (guess >= real) {
+        ghost.style.zIndex = '1';
+        bar.style.zIndex = '2';
+      } else {
+        ghost.style.zIndex = '3';
+        bar.style.zIndex = '';
+      }
+
+      valEl.classList.add('em-val-sobre');
+
+      function acomodarNumero() {
+        if (!valEl.isConnected) return;
+        const H = plot.clientHeight;
+        const T = (real / TIPO_MAX) * H;
+        const L = (guess / TIPO_MAX) * H;
+        const h = valEl.offsetHeight;
+        const choca = L > T + 3 && L - 2 < T + 6 + h + 3;
+        if (choca) {
+          valEl.style.setProperty('--em-val-baja', h + 10 + 'px');
+          valEl.classList.add('em-val-dentro');
+        } else {
+          valEl.classList.remove('em-val-dentro');
+        }
+      }
+      acomodarNumero();
+      if (window.ResizeObserver) {
+        const roNum = new ResizeObserver(function () {
+          if (!plot.isConnected) {
+            roNum.disconnect();
+            return;
+          }
+          acomodarNumero();
+        });
+        roNum.observe(plot);
+      }
 
       if (doAnimate && !reduceMotion) {
-        // Arranca en 0 sin transición y recién ahí crece animada.
         bar.style.transition = 'none';
         bar.style.height = '0%';
-        void bar.offsetWidth; // fuerza un reflow: sin esto, el navegador podría saltearse el 0% y no animar nada
+        void bar.offsetWidth;
         requestAnimationFrame(function () {
           bar.style.transition = 'height .9s cubic-bezier(.2,.8,.2,1)';
           bar.style.height = pct + '%';
@@ -674,34 +693,64 @@
         bar.style.height = pct + '%';
         valEl.textContent = formatNumber(real);
       }
-
-      // Mensaje de resultado: corto, de tono intermedio y con "se estiman" porque 20.750 es una estimación de GLOBOCAN.
-      const ratio = real / guess;
-      const dijiste = 'Dijiste <b>' + formatNumber(guess) + '</b>. ';
-      const seEstiman = 'Se estiman <b>' + formatNumber(real) + '</b>';
-      let msg;
-      if (guess === real) {
-        msg = 'Acertaste: se estiman <b>' + formatNumber(real) + '</b> casos por año.';
-      } else if (Math.abs(ratio - 1) < 0.1) {
-        msg =
-          'Estuviste cerca: dijiste <b>' +
-          formatNumber(guess) +
-          '</b> y se estiman <b>' +
-          formatNumber(real) +
-          '</b>.';
-      } else if (ratio >= 3) {
-        msg = dijiste + seEstiman + ': más del triple.';
-      } else if (ratio >= 2) {
-        msg = dijiste + seEstiman + ': más del doble.';
-      } else if (ratio > 1) {
-        msg = dijiste + seEstiman + ': un ' + Math.round((ratio - 1) * 100) + '% más.';
-      } else {
-        msg = dijiste + seEstiman + ': un ' + Math.round((1 - ratio) * 100) + '% menos.';
-      }
-      // No se agrega "Eso es N diagnósticos por día" al final de la respuesta.
-      setFeedback(msg, doAnimate);
     }
 
+    // FASE 2: todo lo demás (otras 4 barras, datos fijos, botones, eje).
+    function revealResto(doAnimate) {
+      if (doAnimate) {
+        btnSum.classList.add('em-btn-blink');
+        btnReset.classList.add('em-btn-quiet');
+      }
+      actions.classList.add('em-shown');
+      axisNote.classList.add('em-shown');
+      statsCol.classList.add('em-shown');
+      if (doAnimate) {
+        statsCol.querySelectorAll('.em-stat-value').forEach(function (el) {
+          // Fija el ancho FINAL antes de contar: así el texto de al lado no cambia de renglones y el gráfico no cambia de alto.
+          el.style.minWidth = el.getBoundingClientRect().width + 'px';
+          countUpPct(el);
+        });
+      }
+
+      mama.querySelector('.em-lbl').textContent = data[0].categoria; // "Cáncer de mama" -> "Mama"
+      prepararOtras(); // no hace nada si la fase 1 ya las acomodó
+      otras.forEach(function (col, idx) {
+        const d = data[idx + 1];
+        col.querySelector('.em-val').textContent = formatNumber(d.valor);
+        col.querySelector('.em-lbl').textContent = d.categoria;
+        const b = col.querySelector('.em-bar');
+        const pctOther = (d.valor / TIPO_MAX) * 100;
+        if (!doAnimate || reduceMotion) {
+          col.style.opacity = '';
+          b.style.height = pctOther + '%';
+          return;
+        }
+        const delay = 350 + idx * 140;
+        col.animate(
+          [
+            { opacity: 0, transform: 'translateY(10px)' },
+            { opacity: 1, transform: 'none' },
+          ],
+          { duration: 450, delay: delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' },
+        );
+        col.style.opacity = '';
+        b.style.height = '0%';
+        setTimeout(function () {
+          b.style.height = pctOther + '%';
+        }, delay);
+      });
+    }
+
+    // reveal(): las dos fases juntas, sin pausa (al volver de otra pestaña o con "reducir movimiento").
+    function reveal(doAnimate) {
+      tipoState.revealed = true;
+      prompt.classList.remove('em-shown');
+      feedback.classList.add('em-shown');
+      prepararOtras();
+      revealMama(doAnimate);
+      revealResto(doAnimate);
+      if (!doAnimate) setFeedback(mensajeResultado(), false);
+    }
     // setupDrag(): arma la zona de arrastre sobre la columna de Mama (.em-plot) con la barra punteada y la manija "↕" (Pointer Events para mouse y touch).
     function setupDrag() {
       const valEl = mama.querySelector('.em-val');
@@ -862,13 +911,121 @@
         e.preventDefault();
       });
 
+      // Cuánto (ms) queda el texto al lado de Mama antes de volver a su lugar.
+      const HOLD_MS = 1000;
+      const VUELO_MS = 900;
+      const ESCALA_GRANDE = 1.35; // cuánto más grande se ve junto a la barra de Mama (1 = tamaño normal)
+
       btnConfirm.addEventListener('click', function () {
         if (!moved) return;
         dragging = false;
         if (ro) ro.disconnect();
         zone.remove();
         btnConfirm.remove();
-        reveal(true);
+
+        tipoState.revealed = true;
+        prompt.classList.remove('em-shown');
+        setFeedback(mensajeResultado(), false); // el texto real queda oculto en la fila de pestañas
+
+        if (reduceMotion) {
+          reveal(true);
+          return;
+        }
+
+        // FASE 1: Mama se desliza a su lugar y sube su barra con "Tu respuesta".
+        const x0 = mama.getBoundingClientRect().left;
+        prepararOtras();
+        slide(mama, x0 - mama.getBoundingClientRect().left);
+        revealMama(true);
+
+        // Se mide TODO ahora (una sola vez), así durante el viaje no hay lecturas de layout.
+        const cr = chart.getBoundingClientRect();
+        const fr = feedback.getBoundingClientRect(); // destino final: el texto real
+        const c1 = cols[1].getBoundingClientRect();
+        const c4 = cols[4].getBoundingClientRect();
+        const plotR = cols[1].querySelector('.em-plot').getBoundingClientRect();
+
+        // El texto flotante vive en su posición FINAL y con su tamaño normal;
+        // transform lo ubica (y agranda) en el hueco de las otras 4 barras.
+        const flota = document.createElement('div');
+        flota.className = 'em-feedback';
+        flota.innerHTML = '<span>' + mensajeResultado() + '</span>';
+        Object.assign(flota.style, {
+          position: 'absolute',
+          left: fr.left - cr.left + 'px',
+          width: fr.width + 'px',
+          margin: '0',
+          minHeight: '0',
+          textAlign: 'center',
+          zIndex: '5',
+          pointerEvents: 'none',
+          transformOrigin: '50% 50%',
+        });
+        chart.appendChild(flota);
+        const topFinal = fr.top - cr.top + (fr.height - flota.offsetHeight) / 2;
+        flota.style.top = topFinal + 'px';
+
+        // Escala: la pedida, pero sin que el texto se salga del hueco.
+        const huecoW = c4.right - c1.left;
+        const textoW = Math.min(flota.firstChild.getBoundingClientRect().width, fr.width);
+        const escala = Math.max(1, Math.min(ESCALA_GRANDE, (huecoW * 0.95) / textoW));
+
+        // Desplazamiento del centro final al centro del hueco.
+        const centroFinalX = fr.left - cr.left + fr.width / 2;
+        const centroFinalY = topFinal + flota.offsetHeight / 2;
+        const huecoX = (c1.left + c4.right) / 2 - cr.left;
+        const huecoY = plotR.top - cr.top + plotR.height / 2;
+        const inicio =
+          'translate(' +
+          (huecoX - centroFinalX) +
+          'px,' +
+          (huecoY - centroFinalY) +
+          'px) scale(' +
+          escala +
+          ')';
+        flota.style.transform = inicio;
+        flota.animate([{ opacity: 0 }, { opacity: 1 }], {
+          duration: 500,
+          delay: 350,
+          fill: 'backwards',
+        });
+
+        // FASE 2: el texto vuelve a su lugar PRIMERO; lo pesado (barras, contadores) arranca un poco después.
+        setTimeout(function () {
+          if (!chart.isConnected) return; // cambió de pestaña o reinició durante la pausa
+
+          // Relevo: el texto real aparece exactamente donde termina el flotante.
+          function relevo() {
+            feedback.style.transition = 'none';
+            feedback.classList.add('em-shown');
+            void feedback.offsetWidth;
+            feedback.style.transition = '';
+            flota.remove();
+          }
+
+          let vuelo = null;
+          try {
+            vuelo = flota.animate(
+              [{ transform: inicio }, { transform: 'translate(0px,0px) scale(1)' }],
+              {
+                duration: VUELO_MS,
+                easing: 'cubic-bezier(.3,.7,.2,1)',
+                fill: 'forwards',
+              },
+            );
+          } catch (err) {
+            console.error('Animación del texto:', err);
+          }
+
+          // El relevo depende de que la animación TERMINE, no de un timer.
+          if (vuelo) vuelo.finished.then(relevo, relevo);
+          else relevo();
+
+          // Lo pesado arranca después de que el vuelo ya está en marcha (no compite por el primer frame).
+          setTimeout(function () {
+            if (chart.isConnected) revealResto(true);
+          }, 120);
+        }, HOLD_MS);
       });
     }
 
@@ -883,8 +1040,12 @@
       const sumValEl = sumCol.querySelector('.em-val');
 
       // La línea "Tu respuesta" (si todavía está, de cuando se reveló) se borra apenas se toca cualquiera de los dos botones.
-      const guessLine = mama.querySelector('.em-guess-line');
-      if (guessLine) guessLine.remove();
+      const guessGhost = mama.querySelector('.em-guess-ghost');
+      if (guessGhost) guessGhost.remove();
+
+      // Sin la línea de respuesta, el número real vuelve arriba de su barra.
+      const numMama = mama.querySelector('.em-val');
+      if (numMama) numMama.classList.remove('em-val-dentro');
 
       if (tipoState.merged) {
         const x0 = mama.getBoundingClientRect().left;
@@ -1024,7 +1185,7 @@
     const prompt = document.createElement('div');
     prompt.className = 'em-prompt em-prompt-tipo';
     prompt.innerHTML =
-      '<span class="em-prompt-dot" aria-hidden="true"></span>Tocá una barra para ver la cantidad en un rango de edad.';
+      '<span class="em-prompt-dot" aria-hidden="true"></span>Presioná una barra para ver la cantidad en un rango de edad.';
     container.appendChild(prompt);
 
     const chart = document.createElement('div');
@@ -1241,7 +1402,10 @@
     if (introEl) mo.observe(introEl, { attributes: true, attributeFilter: ['class'] });
     if (chapterEl) {
       mo.observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
-      new MutationObserver(revisarCambioDeModulo).observe(chapterEl, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(revisarCambioDeModulo).observe(chapterEl, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
     }
   }
 })();

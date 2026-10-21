@@ -1522,7 +1522,6 @@ body {
   }
 }
 
-
 /* La vela usa el margen real de cada escalón para llegar hasta la barra;
    object-position evita que el recorte suba la llama en pantallas bajas. */
 @media (min-width: 901px) and (max-height: 760px) {
@@ -1578,10 +1577,10 @@ body {
 }
 .nav-item .num {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   margin: 0;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem + 6px);
   background: var(--panel);
   border: 1px solid rgba(255, 255, 255, 0.28);
   transition:
@@ -1592,7 +1591,7 @@ body {
     opacity 0.3s;
 }
 .nav-item .label {
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + 2px);
   white-space: nowrap;
 }
 .nav-item:not(.active):hover {
@@ -1633,10 +1632,10 @@ body {
 }
 @keyframes navOrbita {
   from {
-    transform: rotate(0) translateX(19px);
+    transform: rotate(0) translateX(21px);
   }
   to {
-    transform: rotate(360deg) translateX(19px);
+    transform: rotate(360deg) translateX(21px);
   }
 }
 /* el capítulo que sigue late con un pulso */
@@ -1914,4 +1913,62 @@ button.em-tab:active,
   .mov-cascada > * {
     animation: none;
   }
+}
+/* ============ PRESENTACIÓN INICIAL DE LA BARRA ============
+   Al entrar a la experiencia, los botones aparecen grandes en el centro y después vuelven a su lugar (ver presentarBarra en transicion.js). */
+
+/* La vela se oculta mientras dura la presentación y aparece con fundido al terminar. */
+.chapter-media {
+  transition: opacity 0.8s ease;
+}
+body.nav-solo .chapter-media {
+  opacity: 0;
+}
+
+/* Durante la presentación solo se ven los botones 1, 2 y 3: sin fondo, sin franja y sin clicks. */
+.side-nav .nav-sonido {
+  transition: opacity 0.5s ease;
+}
+.side-nav.nav-presenta {
+  background: none;
+  border-top-color: transparent;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+.side-nav.nav-presenta .nav-sonido,
+.side-nav.nav-presenta .nav-back {
+  opacity: 0;
+}
+/* El círculo del capítulo activo se apaga (tr-lift) cuando arrancan las bolitas, no antes. */
+.side-nav.nav-presenta .nav-item.tr-lift .num {
+  opacity: 1;
+}
+/* Presentación inicial: círculos rosas, quietos (sin órbita ni pulso). */
+.side-nav.nav-presenta .nav-item .num {
+  background: rgba(255, 111, 156, 0.14);
+  color: var(--rose);
+  border-color: var(--rose-strong);
+  box-shadow:
+    0 0 14px var(--rose-glow),
+    inset 0 0 10px rgba(255, 111, 156, 0.25);
+  animation: none;
+}
+.side-nav.nav-presenta .nav-item .num::after {
+  display: none;
+}
+.side-nav.nav-presenta .nav-item .label {
+  color: var(--rose);
+}
+/* El hilo de bolitas también se ve rosa, más suave */
+.side-nav.nav-presenta .nav-trail i {
+  background: var(--rose-strong);
+  opacity: 0.55;
+  box-shadow: 0 0 6px var(--rose-glow);
+  transition: none;
+}
+.side-nav.nav-presenta .nav-item .num::after {
+  display: none;
+}
+.side-nav.nav-presenta .nav-item .label {
+  color: var(--text-dim);
 }
