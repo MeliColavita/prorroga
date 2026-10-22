@@ -54,6 +54,8 @@ function enterExperience() {
   audio.pause();
   audio.currentTime = 0;
   introVideo.pause();
+  // El botón que se tocó (Continuar / Saltear intro) todavía tiene el foco: se lo saca antes de ocultar
+  if (intro.contains(document.activeElement)) document.activeElement.blur();
   // Sacar "started"/"ended": si no, los controles de la intro siguen recibiendo clicks por encima de los módulos.
   intro.classList.remove('started', 'ended', 'failed');
   intro.classList.add('hidden');
