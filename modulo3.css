@@ -1076,7 +1076,7 @@
   white-space: nowrap;
 }
 
-/* Nombres + "CONTAR CON DATOS 2026" en una sola línea, pegados al pie de la tarjeta */
+/* "CONTAR CON DATOS 2026" centrado, pegado al pie de la tarjeta */
 .me-creditos-linea {
   position: absolute;
   left: 0;
